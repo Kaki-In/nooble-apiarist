@@ -1,8 +1,8 @@
 import database as _database
 import local_utils.images as _local_utils_images
-import database_layering as _database_layering
+import database_layering.facades as _database_layering_facades
 
-class AccountDatabaseElement(_database_layering.DatabaseElementFacade[int]):
+class NoobleAccount(_database_layering_facades.DatabaseElementFacade[int]):
     def exists(self) -> bool:
         return self.get_element().exists()
     

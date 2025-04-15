@@ -1,9 +1,9 @@
 import database as _database
-import database_layering as _database_layering
+import database_layering.facades as _database_layering_facades
 
 import local_utils.images as _local_utils_images
 
-class ClassDatabaseElement(_database_layering.DatabaseElementFacade[int]):
+class NoobleClass(_database_layering_facades.DatabaseElementFacade[int]):
     def get_id(self) -> int:
         return self.get_element().get_configuration().get_id()
     

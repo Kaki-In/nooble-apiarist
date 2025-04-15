@@ -1,7 +1,7 @@
 import database as _database
-import database_layering as _database_layering
+import database_layering.facades as _database_layering_facades
 
-class ClassSubscriptionDatabaseElement(_database_layering.AssociativeDatabaseElementFacade[int, int]):
+class NoobleClassSubscription(_database_layering_facades.AssociativeDatabaseElementFacade[int, int]):
     def get_account_id(self) -> int:
         return self.get_element().get_configuration().get_first_id()
     

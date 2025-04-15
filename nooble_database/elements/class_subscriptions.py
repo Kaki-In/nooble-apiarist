@@ -1,16 +1,16 @@
 from .class_subscription import *
 
 import database as _database
-import database_layering as _database_layering
+import database_layering.facades as _database_layering_facades
 
-class ClassSubscriptionsListDatabaseTable(_database_layering.DatabaseAssociativeTableFacade[int, int]):
-    def get_subscription(self, account: int, nooble_class: int) -> ClassSubscriptionDatabaseElement:
-        return ClassSubscriptionDatabaseElement(self.get_table().get_element(account, nooble_class))
+class NoobleClassSubscriptionsList(_database_layering_facades.DatabaseAssociativeTableFacade[int, int]):
+    def get_subscription(self, account: int, nooble_class: int) -> NoobleClassSubscription:
+        return NoobleClassSubscription(self.get_table().get_element(account, nooble_class))
     
     def delete_section(self, account: int, nooble_class: int) -> None:
         self.get_table().delete_element(self.get_subscription(account, nooble_class).get_element())
 
-    def get_account_subscriptions(self, account: int, teaching: bool | None = None) -> list[ClassSubscriptionDatabaseElement]:
+    def get_account_subscriptions(self, account: int, teaching: bool | None = None) -> list[NoobleClassSubscription]:
         if teaching is None:
             elements = self.get_table().find_elements_with_clause(
                 _database.SQLColumn('class'), 
@@ -29,9 +29,9 @@ class ClassSubscriptionsListDatabaseTable(_database_layering.DatabaseAssociative
                 )
             )
 
-        return [ClassSubscriptionDatabaseElement(element) for element in elements]
+        return [NoobleClassSubscription(element) for element in elements]
 
-    def get_class_subscriptions(self, class_id: int, teaching: bool | None = None) -> list[ClassSubscriptionDatabaseElement]:
+    def get_class_subscriptions(self, class_id: int, teaching: bool | None = None) -> list[NoobleClassSubscription]:
         if teaching is None:
             elements = self.get_table().find_elements_with_clause(
                 _database.SQLColumn('account'), 
@@ -49,7 +49,7 @@ class ClassSubscriptionsListDatabaseTable(_database_layering.DatabaseAssociative
                     )
                 )
             )
-        return [ClassSubscriptionDatabaseElement(element) for element in elements]
+        return [NoobleClassSubscription(element) for element in elements]
 
 
 

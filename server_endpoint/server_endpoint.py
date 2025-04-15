@@ -17,7 +17,7 @@ class ServerEndpoint(_T.Generic[_configuration_type]):
     def get_configuration(self) -> _configuration_type:
         return self._configuration
 
-    def add_action(self, name: str, action: ServerEndpointAction, *methods: str) -> None:
+    def add_action(self, name: str, action: ServerEndpointAction[_configuration_type], *methods: str) -> None:
         async def action_launcher():
             return await action(self._configuration, _quart.request)
         

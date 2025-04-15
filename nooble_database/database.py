@@ -1,33 +1,55 @@
-from .accounts import AccountsListDatabaseTable
-from .activity_save_files import ActivitySaveFilesListDatabaseTable
-from .class_sections import ClassSectionsListDatabaseTable
-from .class_subscriptions import ClassSubscriptionsListDatabaseTable
+from .elements import NoobleDatabase
 
-import database_layering as _database_layering
+import database as _database
+import database_layering.enums as _database_layering_enums
+import database_layering.cached_elements as _database_layering_cached
 
-class NoobleDatabase(_database_layering.DatabaseFacade):
-    def get_accounts_list(self) -> AccountsListDatabaseTable:
-        return AccountsListDatabaseTable(
-            self.get_database().get_table('accounts')
-        )
-    
-    def get_activity_save_files_list(self) -> ActivitySaveFilesListDatabaseTable:
-        return ActivitySaveFilesListDatabaseTable(
-            self.get_database().get_table('activity_savefiles')
-        )
-    
-    def get_classes_list(self) -> ClassSectionsListDatabaseTable:
-        return ClassSectionsListDatabaseTable(
-            self.get_database().get_table('classes')
-        )
-    
-    def get_class_sections(self) -> ClassSectionsListDatabaseTable:
-        return ClassSectionsListDatabaseTable(
-            self.get_database().get_table('class_sections')
-        )
-    
-    def get_class_subscriptions_list(self) -> ClassSubscriptionsListDatabaseTable:
-        return ClassSubscriptionsListDatabaseTable(
-            self.get_database().get_associative_table('class_subscriptions', 'account', 'class')
-        )
+class CachedNoobleDatabase(NoobleDatabase):
+    def __init__(self, configuration: _database.DatabaseConfiguration) -> None:
+        super().__init__(_database_layering_cached.CachedDatabase(configuration, 
+            accounts = (_database_layering_enums.CachedTableType.AUTO_INCREMENT_TABLE, 'id', 
+                [
+                    'id',
+                    'surname',
+                    'name',
+                    'password',
+                    'image',
+                    'mail',
+                    'description',
+                    'is-admin',
+                    'verified'
+                ]
+            ),
+            activity_savefiles = (_database_layering_enums.CachedTableType.AUTO_INCREMENT_TABLE, 'id', 
+                [
+                    'id',
+                    'type',
+                    'content',
+                    'section'
+                ]
+            ),
+            classes = (_database_layering_enums.CachedTableType.AUTO_INCREMENT_TABLE, 'id', 
+                [
+                    'id',
+                    'name',
+                    'thumbnail',
+                    'section'
+                ]
+            ),
+            class_sections = (_database_layering_enums.CachedTableType.AUTO_INCREMENT_TABLE, 'id', 
+                [
+                    'id',
+                    'type',
+                    'content',
+                ]
+            ),
+            class_subscriptions = (_database_layering_enums.CachedTableType.ASSOCIATIVE_TABLE, ('account', 'class'),
+                [
+                    'account',
+                    'class',
+                    'as teacher'
+                ]
+            ),
+        ))
+
 
