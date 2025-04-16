@@ -25,7 +25,7 @@ class CachedAutoIncrementDatabaseTable(_database.DatabaseTable[int], _CachedElem
         return int(
             self.get_configuration().get_database().send_sql_queries_for_result(  
                 _show_query(self.get_configuration().get_name())
-            )[0]['Auto_increment'][0]
+            )[0]['Auto_increment']
         )
     
     def download_updates(self) -> None:
