@@ -50,7 +50,7 @@ class DatabaseConfiguration():
             
             connection.commit()
         except Exception as exc:
-            print("Error while handling query", queries)
+            print("Error while handling query", *queries)
             raise
     
     def send_sql_queries_for_result(self, *queries: SQLQueryRule) -> tuple[dict[str, _T.Any]]:
@@ -69,5 +69,5 @@ class DatabaseConfiguration():
         
             return result # type: ignore
         except Exception as exc:
-            print("Error while handling query", queries)
+            print("Error while handling query", *queries)
             raise
