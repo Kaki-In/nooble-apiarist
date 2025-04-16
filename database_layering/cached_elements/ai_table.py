@@ -23,7 +23,7 @@ class CachedAutoIncrementDatabaseTable(_database.DatabaseTable[int], _CachedElem
     
     def request_auto_increment(self) -> int:
         return int(
-            self.get_configuration().get_database().send_sql_query_for_result(  
+            self.get_configuration().get_database().send_sql_queries_for_result(  
                 _show_query(self.get_configuration().get_name())
             )[0]['Auto_Increment'][0]
         )
@@ -83,11 +83,13 @@ class CachedAutoIncrementDatabaseTable(_database.DatabaseTable[int], _CachedElem
         
         return found_child
     
-    def add_element(self, **properties: _database.SQLVariable) -> None:
+    def add_element(self, **properties: _database.SQLVariable) -> CachedDatabaseElement:
         element = CachedDatabaseElement(_database.ElementConfiguration(self._conf, self._auto_increment), self._columns)
         self._auto_increment += 1
         
         self._added_children.append(element)
+
+        return element
     
     def find_elements_with_clause(self, table_cols: _database.SQLTable | _database.SQLColumn = _database.SQLTable("*"), *clauses: _database.SQLClause) -> list[CachedDatabaseElement[int]]: # type:ignore
         elements = super().find_elements_with_clause(table_cols, *clauses)

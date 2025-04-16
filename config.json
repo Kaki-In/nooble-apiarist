@@ -1,0 +1,13 @@
+{
+    "database": {
+        "host": "localhost",
+        "port": 3306,
+        "password": "*********",
+        "user": "mysql",
+        "database_name": "nooble"
+    },
+    "registrations": {
+        "tokens_size": 256,
+        "duration": 900
+    }
+}

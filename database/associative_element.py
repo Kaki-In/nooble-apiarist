@@ -32,7 +32,7 @@ class DatabaseAssociativeElement(_T.Generic[_Id1Type, _Id2Type]):
             from_clause, where_clause
         )
 
-        result = database.send_sql_query_for_result(select_query)[0]
+        result = database.send_sql_queries_for_result(select_query)[0]
 
         return [result[name] for name in names]
     
@@ -52,7 +52,7 @@ class DatabaseAssociativeElement(_T.Generic[_Id1Type, _Id2Type]):
             ]
         )
 
-        database.send_sql_query(SQLUpdateQuery(SQLTable(table.get_name()), operator, where_clause))
+        database.send_sql_queries(SQLUpdateQuery(SQLTable(table.get_name()), operator, where_clause))
     
     def get_configuration(self) -> AssociativeElementConfiguration[_Id1Type, _Id2Type]:
         return self._conf
@@ -71,5 +71,5 @@ class DatabaseAssociativeElement(_T.Generic[_Id1Type, _Id2Type]):
             SQLOpEquality(SQLColumn(self._conf.get_table().get_second_id_column()), SQLString(str(self._conf.get_second_id()))),
         ))
 
-        return bool(database.send_sql_query_for_result(SQLSelectQuery(SQLTable("*"), from_clause, where_clause)))
+        return bool(database.send_sql_queries_for_result(SQLSelectQuery(SQLTable("*"), from_clause, where_clause)))
     

@@ -67,7 +67,7 @@ class CachedNonAutoIncrementDatabaseTable(_database.DatabaseTable[_IdType], _Cac
         
         return found_child
     
-    def add_element(self, **properties: _database.SQLVariable) -> None:
+    def add_element(self, **properties: _database.SQLVariable) -> CachedDatabaseElement:
         id_column = self.get_configuration().get_id_column()
 
         if not id_column in properties:
@@ -76,6 +76,8 @@ class CachedNonAutoIncrementDatabaseTable(_database.DatabaseTable[_IdType], _Cac
         element = CachedDatabaseElement(_database.ElementConfiguration(self._conf, properties[id_column]), self._columns)
 
         self._added_children.append(element)
+
+        return element
     
     def find_elements_with_clause(self, table_cols: _database.SQLTable | _database.SQLColumn = _database.SQLTable("*"), *clauses: _database.SQLClause) -> list[CachedDatabaseElement[_IdType]]: # type:ignore
         elements = super().find_elements_with_clause(table_cols, *clauses)

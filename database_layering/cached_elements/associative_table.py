@@ -72,7 +72,7 @@ class CachedAssociativeDatabaseTable(_database.DatabaseAssociativeTable[_Id1Type
         
         return found_child
     
-    def add_element(self, **properties: _database.SQLVariable) -> None:
+    def add_element(self, **properties: _database.SQLVariable) -> CachedDatabaseAssociativeElement:
         id_column_1 = self.get_configuration().get_first_id_column()
         id_column_2 = self.get_configuration().get_second_id_column()
 
@@ -85,6 +85,8 @@ class CachedAssociativeDatabaseTable(_database.DatabaseAssociativeTable[_Id1Type
         element = CachedDatabaseAssociativeElement(_database.AssociativeElementConfiguration(self._conf, properties[id_column_1], properties[id_column_2]), self._columns)
 
         self._added_children.append(element)
+
+        return element
     
     def find_elements_with_clause(self, table_cols: _database.SQLTable | _database.SQLColumn = _database.SQLTable("*"), *clauses: _database.SQLClause) -> list[CachedDatabaseAssociativeElement[_Id1Type, _Id2Type]]: # type:ignore
         elements = super().find_elements_with_clause(table_cols, *clauses)

@@ -18,7 +18,7 @@ class DatabaseElement(_T.Generic[_IdType]):
         from_clause = SQLClauseFrom(SQLTable(table.get_name()))
         where_clause = SQLClauseWhere(SQLOpEquality(SQLColumn(self._conf.get_table().get_id_column()), SQLString(str(self._conf.get_id()))))
 
-        result = database.send_sql_query_for_result(SQLSelectQuery(SQLTable(*[SQLColumn(name) for name in names]), from_clause, where_clause))[0]
+        result = database.send_sql_queries_for_result(SQLSelectQuery(SQLTable(*[SQLColumn(name) for name in names]), from_clause, where_clause))[0]
 
         return [result[name] for name in names]
     
@@ -35,7 +35,7 @@ class DatabaseElement(_T.Generic[_IdType]):
             ]
         )
 
-        database.send_sql_query(SQLUpdateQuery(SQLTable(table.get_name()), operator, where_clause))
+        database.send_sql_queries(SQLUpdateQuery(SQLTable(table.get_name()), operator, where_clause))
     
     def get_configuration(self) -> ElementConfiguration[_IdType]:
         return self._conf
@@ -50,5 +50,5 @@ class DatabaseElement(_T.Generic[_IdType]):
         from_clause = SQLClauseFrom(SQLTable(table.get_name()))
         where_clause = SQLClauseWhere(SQLOpEquality(SQLColumn(self._conf.get_table().get_id_column()), SQLString(str(self._conf.get_id()))))
 
-        return bool(database.send_sql_query_for_result(SQLSelectQuery(SQLTable("*"), from_clause, where_clause)))
+        return bool(database.send_sql_queries_for_result(SQLSelectQuery(SQLTable("*"), from_clause, where_clause)))
     

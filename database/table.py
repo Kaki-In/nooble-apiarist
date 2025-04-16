@@ -12,7 +12,7 @@ class DatabaseTable(_T.Generic[_IdType]):
     def get_element(self, id: _IdType) -> DatabaseElement[_IdType]:
         return DatabaseElement(ElementConfiguration(self._conf, id))
     
-    def add_element(self, **properties: SQLVariable) -> None:
+    def add_element(self, **properties: SQLVariable) -> DatabaseElement[_IdType]:
         columns = []
         values = []
         
@@ -20,12 +20,17 @@ class DatabaseTable(_T.Generic[_IdType]):
             columns.append(SQLColumn(property))
             values.append(properties[property])
             
-        self._conf.get_database().send_sql_query(SQLInsertIntoQuery(SQLTable(self._conf.get_name()), columns, SQLTable(*values)))
+        id = self._conf.get_database().send_sql_queries_for_result(
+            SQLInsertIntoQuery(SQLTable(self._conf.get_name()), columns, SQLTable(*values)),
+            SQLSelectQuery(SQLTable(SQLColumn(("id", SQLFunction("LAST_UPDATE_ID")))))
+        )[0]['id']
+
+        return self.get_element(id)
     
     def find_elements_with_clause(self, table_cols: SQLTable | SQLColumn = SQLTable("*"), *clauses: SQLClause) -> list[DatabaseElement[_IdType]]:
         from_clause = SQLClauseFrom(SQLTable(self._conf.get_name()))
 
-        result = self._conf.get_database().send_sql_query_for_result(SQLSelectQuery(table_cols, from_clause, *clauses))
+        result = self._conf.get_database().send_sql_queries_for_result(SQLSelectQuery(table_cols, from_clause, *clauses))
         
         r_list = []
         for element in result:
@@ -37,7 +42,7 @@ class DatabaseTable(_T.Generic[_IdType]):
         from_clause = SQLClauseFrom(SQLTable(self._conf.get_name()))
         where_clause = SQLClauseWhere(SQLOpEquality(SQLColumn(self.get_configuration().get_id_column()), SQLString(str(element.get_configuration().get_id()))))
         
-        self._conf.get_database().send_sql_query(SQLDeleteFromQuery(from_clause, where_clause))
+        self._conf.get_database().send_sql_queries(SQLDeleteFromQuery(from_clause, where_clause))
     
     def get_name(self) -> str:
         return self._conf.get_name()

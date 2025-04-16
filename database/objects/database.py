@@ -35,7 +35,7 @@ class DatabaseConfiguration():
     def set_name(self, name:str) -> None:
         self._host = name
     
-    def send_sql_query(self, query: SQLQueryRule) -> None:
+    def send_sql_queries(self, *queries: SQLQueryRule) -> None:
         connection = _pymysql.connect(
             host = self.get_host(),
             user = self.get_user(),
@@ -45,14 +45,15 @@ class DatabaseConfiguration():
         
         try:
             with connection.cursor() as cursor:
-                cursor.execute(str(query))
+                for query in queries:
+                    cursor.execute(str(query))
             
             connection.commit()
         except Exception as exc:
-            print("Error while handling query", query)
+            print("Error while handling query", queries)
             raise
     
-    def send_sql_query_for_result(self, query: SQLQueryRule) -> tuple[dict[str, _T.Any]]:
+    def send_sql_queries_for_result(self, *queries: SQLQueryRule) -> tuple[dict[str, _T.Any]]:
         connection = _pymysql.connect(
             host = self.get_host(),
             user = self.get_user(),
@@ -62,10 +63,11 @@ class DatabaseConfiguration():
         
         try:
             with connection.cursor() as cursor:
-                cursor.execute(str(query))
+                for query in queries:
+                    cursor.execute(str(query))
                 result = cursor.fetchall()
         
             return result # type: ignore
         except Exception as exc:
-            print("Error while handling query", query)
+            print("Error while handling query", queries)
             raise
