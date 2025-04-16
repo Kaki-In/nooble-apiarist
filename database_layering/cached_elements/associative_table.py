@@ -83,6 +83,7 @@ class CachedAssociativeDatabaseTable(_database.DatabaseAssociativeTable[_Id1Type
             raise ValueError("missing id " + id_column_2)
         
         element = CachedDatabaseAssociativeElement(_database.AssociativeElementConfiguration(self._conf, properties[id_column_1], properties[id_column_2]), self._columns)
+        element._modified_values = properties
 
         self._added_children.append(element)
 

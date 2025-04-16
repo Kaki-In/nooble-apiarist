@@ -43,6 +43,9 @@ class CachedDatabaseElement(_T.Generic[_IdType], _database.DatabaseElement[_IdTy
         
         super().set(**self._modified_values)
 
+        for cname in self._modified_values:
+            self._values[cname] = self._modified_values[cname].get_value()
+
         self._modified_values = {}
     
     def get(self, *columns: str) -> _T.Any:

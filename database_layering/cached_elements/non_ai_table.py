@@ -74,6 +74,7 @@ class CachedNonAutoIncrementDatabaseTable(_database.DatabaseTable[_IdType], _Cac
             raise ValueError("missing id")
         
         element = CachedDatabaseElement(_database.ElementConfiguration(self._conf, properties[id_column]), self._columns)
+        element._modified_values = properties
 
         self._added_children.append(element)
 

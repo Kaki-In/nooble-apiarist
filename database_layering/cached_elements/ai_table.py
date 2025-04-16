@@ -53,9 +53,11 @@ class CachedAutoIncrementDatabaseTable(_database.DatabaseTable[int], _CachedElem
 
             added_child.get_configuration().set_id(auto_increment + i)
 
-            super().add_element(
+            element = super().add_element(
                 **added_child._modified_values
             )
+
+            added_child._values['id'] = element.get_configuration().get_id()
 
             self._added_children.remove(added_child)
             self._children.append(added_child)
@@ -85,6 +87,8 @@ class CachedAutoIncrementDatabaseTable(_database.DatabaseTable[int], _CachedElem
     
     def add_element(self, **properties: _database.SQLVariable) -> CachedDatabaseElement:
         element = CachedDatabaseElement(_database.ElementConfiguration(self._conf, self._auto_increment), self._columns)
+        element._modified_values = properties
+        
         self._auto_increment += 1
         
         self._added_children.append(element)
