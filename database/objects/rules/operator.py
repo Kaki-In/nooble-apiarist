@@ -35,6 +35,9 @@ class SQLTable(SQLOperator):
     def __init__(self, *columns: SQLColumn | str):
         super().__init__(*columns)
     
+    def toSql(self) -> str:
+        return str(self)
+    
     def __str__(self):
         if len(self._variables) == 1 and self._variables[0] != "*":
             return "`" + str(self._variables[0]) + "`"
