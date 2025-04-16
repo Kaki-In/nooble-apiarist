@@ -29,10 +29,10 @@ class NoobleAccount(_database_layering_facades.DatabaseElementFacade[int]):
         return self.get_element().get("description")[0]
     
     def is_admin(self) -> bool:
-        return self.get_element().get("is-admin")[0] == '1'
+        return self.get_element().get("is_admin")[0] == '1'
     
     def is_verified(self) -> bool:
-        return self.get_element().get("is-verified")[0] == '1'
+        return self.get_element().get("verified")[0] == '1'
     
     def set_password(self, password:str) -> None:
         self.get_element().set(
@@ -52,6 +52,11 @@ class NoobleAccount(_database_layering_facades.DatabaseElementFacade[int]):
     def set_description(self, description:str) -> None:
         self.get_element().set(
             description = _database.SQLString(description)
+        )
+    
+    def set_verified(self, verified:bool) -> None:
+        self.get_element().set(
+            verified = _database.SQLBool(verified)
         )
     
         

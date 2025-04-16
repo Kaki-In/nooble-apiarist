@@ -16,7 +16,7 @@ class CachedNoobleDatabase(NoobleDatabase):
                     'image',
                     'mail',
                     'description',
-                    'is-admin',
+                    'is_admin',
                     'verified'
                 ]
             ),
