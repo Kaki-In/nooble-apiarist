@@ -22,12 +22,10 @@ class CachedAutoIncrementDatabaseTable(_database.DatabaseTable[int], _CachedElem
         self._auto_increment = self.request_auto_increment()
     
     def request_auto_increment(self) -> int:
-        data =             self.get_configuration().get_database().send_sql_queries_for_result(  
-                _show_query(self.get_configuration().get_name())
-            )[0]
-        print(data)
         return int(
-data['Auto_Increment'][0]
+            self.get_configuration().get_database().send_sql_queries_for_result(  
+                _show_query(self.get_configuration().get_name())
+            )[0]['Auto_increment'][0]
         )
     
     def download_updates(self) -> None:
