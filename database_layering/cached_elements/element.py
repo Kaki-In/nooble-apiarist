@@ -53,7 +53,7 @@ class CachedDatabaseElement(_T.Generic[_IdType], _database.DatabaseElement[_IdTy
 
         for column in columns:
             if column in self._modified_values:
-                value = self._modified_values[column]
+                value = self._modified_values[column].get_value()
 
             elif column in self._values:
                 value = self._values[column]
