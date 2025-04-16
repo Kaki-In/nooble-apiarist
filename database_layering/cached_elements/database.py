@@ -24,11 +24,11 @@ class CachedDatabase(_database.Database, _CachedElement):
             if table_info[0] == CachedTableType.ASSOCIATIVE_TABLE:
                 col1, col2 = table_info[1]
 
-                table = CachedAssociativeDatabaseTable(_database.AssociativeTableConfiguration(configuration, col1, col2), table_info[2])
+                table = CachedAssociativeDatabaseTable(_database.AssociativeTableConfiguration(configuration, table_name, col1, col2), table_info[2])
             
             elif table_info[0] in (CachedTableType.AUTO_INCREMENT_TABLE, CachedTableType.NON_AUTO_INCREMENT_TABLE):
 
-                table = CachedAutoIncrementDatabaseTable(_database.TableConfiguration(configuration, table_info[1]), table_info[2])
+                table = CachedAutoIncrementDatabaseTable(_database.TableConfiguration(configuration, table_name, table_info[1]), table_info[2])
             
             else:
                 raise ValueError("invalid table type")
