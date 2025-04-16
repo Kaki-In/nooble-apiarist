@@ -22,6 +22,8 @@ class CachedAutoIncrementDatabaseTable(_database.DatabaseTable[int], _CachedElem
         self._auto_increment = self.request_auto_increment()
     
     def request_auto_increment(self) -> int:
+        print(self.get_configuration().get_name())
+        
         return int(
             self.get_configuration().get_database().send_sql_queries_for_result(  
                 _show_query(self.get_configuration().get_name())
