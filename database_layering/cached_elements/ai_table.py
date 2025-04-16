@@ -25,6 +25,7 @@ class CachedAutoIncrementDatabaseTable(_database.DatabaseTable[int], _CachedElem
         data =             self.get_configuration().get_database().send_sql_queries_for_result(  
                 _show_query(self.get_configuration().get_name())
             )[0]
+        print(data)
         return int(
 data['Auto_Increment'][0]
         )
