@@ -1,4 +1,4 @@
-import server_endpoint as _server_endpoint
+import apiarist_server_endpoint as _server_endpoint
 
 import nooble_database as _nooble_database
 import nooble_server_registrations as _registrations

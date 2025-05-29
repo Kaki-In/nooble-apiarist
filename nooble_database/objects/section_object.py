@@ -20,8 +20,8 @@ class RichTextSectionObject(SectionObject[str]):
 # Container
 
 class ContainerSectionDataObject(_T.TypedDict):
-    is_horizontal: str
-    is_wrapping: str
+    is_horizontal: bool
+    is_wrapping: bool
     children: list[SectionObject]
 
 class ContainerSectionObject(SectionObject[ContainerSectionDataObject]):

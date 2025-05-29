@@ -23,5 +23,8 @@ class FileType(_enum.Enum):
     
     def __str__(self) -> RAW_FILE_TYPE:
         return self.value
+    
+    def to_string(self) -> RAW_FILE_TYPE:
+        return self.value
 
 

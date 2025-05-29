@@ -4,11 +4,9 @@ import datetime as _datetime
 from templates.nooble_collection import NoobleCollection
 
 from .nooble_file import NoobleFile, FileObject
+from .objects.file_types import FileType
 
-class NoobleFilesList(NoobleCollection):
-    def __init__(self, collection: _pymongo_collection.AsyncCollection) -> None:
-        super().__init__(collection)
-
+class NoobleFilesList(NoobleCollection[FileObject]):
     def get_file(self, id: int) -> NoobleFile:
         return NoobleFile(self.get_collection(), id)
     
@@ -22,14 +20,21 @@ class NoobleFilesList(NoobleCollection):
 
         return file_results
     
-    async def create_new_file(self, name:str, filename:str, sent_date:_datetime.datetime, sender_id: int) -> NoobleFile:
-        result = await self.get_collection().insert_one({
+    async def create_new_file(self, name:str, filename:str, sent_date:_datetime.datetime, sender_id: int, path: str, type: FileType, file_size: int) -> NoobleFile:
+        object: FileObject = {
+            "_id": -1,
             "name" : name,
             "filename" : filename,
-            "sent_date" : sent_date.timestamp(),
-            "sender" : sender_id
-        })
+            "sent_date" : int(sent_date.timestamp()),
+            "sender" : sender_id,
+            "filepath": path,
+            "filetype": type.to_string(),
+            "size": file_size
+        }
 
-        return self.get_file(result.inserted_id)
+        id = await self.insert_one(object)
+        object["_id"] = id
+
+        return NoobleFile(self.get_collection(), id, object)
     
 

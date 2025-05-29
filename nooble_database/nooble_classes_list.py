@@ -1,8 +1,10 @@
 from .templates.nooble_collection import NoobleCollection
 from .objects.class_object import ClassObject
 from .nooble_class import NoobleClass
+from .objects.section_object import SectionObject, ContainerSectionObject
 
 import re as _regex
+import datetime as _datetime
 
 class NoobleClassesList(NoobleCollection[ClassObject]):
     
@@ -55,6 +57,31 @@ class NoobleClassesList(NoobleCollection[ClassObject]):
                 }
             )
         ]
+    
+    async def create_class(self, name: str, description: str, creator: int) -> NoobleClass:
+        base_container: ContainerSectionObject = {
+            "type": "container",
+            "data": {
+                "children": [],
+                "is_horizontal": False,
+                "is_wrapping": False,
+            },
+            "uses_files": []
+        }
+        object: ClassObject = {
+            "_id": -1,
+            "accounts": [],
+            "content": base_container,
+            "description": description,
+            "last_modification": int(_datetime.datetime.now().timestamp()),
+            "last_modifier": creator,
+            "name": name
+        }
+
+        id = await self.insert_one(object)
+        object["_id"] = id
+
+        return NoobleClass(self.get_collection(), id, object)
     
     
 

@@ -1,4 +1,4 @@
-import server_endpoint as _server_endpoint
+import apiarist_server_endpoint as _server_endpoint
 
 from .actions import *
 from .configuration import *

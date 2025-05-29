@@ -1,19 +1,22 @@
 from .templates.nooble_collection import NoobleCollection
 
 from .nooble_decoration import NoobleDecoration
+from .objects.decoration_object import DecorationObject
 
-import local_utils.images as _local_utils_images
-
-class NoobleDecorationsList(NoobleCollection):
+class NoobleDecorationsList(NoobleCollection[DecorationObject]):
     def get_decoration(self, id: int) -> NoobleDecoration:
         return NoobleDecoration(self.get_collection(), id)
     
-    async def create_decoration(self, name:str, image:_local_utils_images.Image, price:int) -> NoobleDecoration:
-        result = await self.get_collection().insert_one({
+    async def create_decoration(self, name:str, image_id:int, price:int) -> NoobleDecoration:
+        object: DecorationObject = {
+            "_id": -1,
             "name":name,
-            "image":str(image),
+            "image":image_id,
             "price":price
-        })
+        }
 
-        return self.get_decoration(result.inserted_id)
+        id = await self.insert_one(object)
+        object["_id"] = id
+
+        return NoobleDecoration(self.get_collection(), id, object)
 
