@@ -3,6 +3,7 @@ import quart.wrappers as _quart_wrappers
 import nooble_database.database as _nooble_database
 import datetime as _datetime
 import json as _json
+import typing as _T
 
 from ..configuration.conf import NoobleEndpointConfiguration
 
