@@ -9,6 +9,9 @@ class NoobleObject(_T.Generic[_object_type]):
         self._coll = collection
         self._id = id
         self._last_object: _object_type | None = last_object
+    
+    async def ensure_object(self) -> _object_type:
+        return self._last_object or await self.get_object()
 
     def get_last_known_object(self) -> _object_type | None:
         return self._last_object

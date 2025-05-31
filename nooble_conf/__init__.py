@@ -1,7 +1,0 @@
-from .nooble_configuration import NoobleConfiguration
-from .nooble_database_rules import NoobleDatabaseRulesSettings
-from .nooble_database_configuration import NoobleDatabaseConfiguration
-from .nooble_database_tables_configuration import NoobleDatabaseTablesSettings
-
-
-MAIN_CONFIGURATION = NoobleConfiguration()

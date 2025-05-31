@@ -6,10 +6,10 @@ import asyncio as _asyncio
 import pyvips as _pyvips
 
 async def from_bytes(bytes: bytes) -> Image:
-    return await _asyncio.get_event_loop().run_in_executor(None, long_from_bytes, bytes) #type:ignore
+    return await _asyncio.get_event_loop().run_in_executor(None, long_from_bytes, bytes)
 
 async def from_string(data: str) -> Image:
-    return await _asyncio.get_event_loop().run_in_executor(None, long_from_string, data) #type:ignore
+    return await _asyncio.get_event_loop().run_in_executor(None, long_from_string, data)
 
 def long_from_bytes(bytes: bytes) -> Image:
     if DEFAULT_TRANSLATION_KEEPER.hasImageTranslation(bytes):

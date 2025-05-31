@@ -10,6 +10,9 @@ class NoobleSubObject(_T.Generic[_object_type, _data_type]):
         self._object = object
         self._last_object = last_object
 
+    async def ensure_object(self) -> _data_type:
+        return self._last_object or await self.get_object()
+
     def get_last_object(self) -> _data_type | None:
         return self._last_object
     

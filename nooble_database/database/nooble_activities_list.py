@@ -1,0 +1,47 @@
+from ..templates.nooble_collection import NoobleCollection
+from .nooble_activity import NoobleActivity
+from ..objects.activity_object import ActivityObject
+
+import datetime as _datetime
+
+class NoobleActivitiesList(NoobleCollection[ActivityObject]):
+
+    def get_activity(self, activity_id: int) -> NoobleActivity:
+        return NoobleActivity(self.get_collection(), activity_id)
+    
+    async def get_creator_activities(self, creator_id: int) -> list[NoobleActivity]:
+        activities = await self.find({
+            "creator": creator_id
+        })
+
+        activities_results: list[NoobleActivity] = []
+
+        for activity in activities:
+            activities_results.append(
+                NoobleActivity(
+                    self.get_collection(),
+                    activity['_id'],
+                    activity
+                )
+            )
+
+        return activities_results
+    
+    async def create_activity(self, title: str, content: str, creator: int, date: _datetime.datetime) -> NoobleActivity:
+        object: ActivityObject = {
+            "_id": -1,
+
+            "title": title,
+            "content": content,
+            "creator": creator,
+            "date": int(date.timestamp()),
+            "icon": "bonjour"
+        }
+
+        id = await self.insert_one(object)
+        object["_id"] = id
+    
+        return NoobleActivity(self.get_collection(), await self.insert_one(object), object)
+    
+
+
