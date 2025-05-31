@@ -47,7 +47,10 @@ class ForgotPassword(NoobleEndpointAction):
         
         _asyncio.create_task(configuration.get_mail_service().send_new_password_mail(await account.ensure_object(), new_password))
 
-        return await self.make_response("", configuration)
+        return await self.make_response({
+            "first_name": (await account.ensure_object())["profile"]["first_name"],
+            "last_name": (await account.ensure_object())["profile"]["last_name"],
+        }, configuration)
     
     def create_new_password(self) -> str:
         a = ""
