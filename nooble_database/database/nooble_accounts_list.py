@@ -50,7 +50,7 @@ class NoobleAccountsList(NoobleCollection[AccountObject]):
             )
         ]
     
-    async def create_new_account(self, mail: str, password: str, first_name: str, last_name: str, profile_image_id: int) -> NoobleAccount:
+    async def create_new_account(self, mail: str, password: str, first_name: str, last_name: str) -> NoobleAccount:
         object: AccountObject = {
             "_id": -1,
 
@@ -67,8 +67,8 @@ class NoobleAccountsList(NoobleCollection[AccountObject]):
                 },
                 "first_name": first_name,
                 "last_name": last_name,
-                "profile_image": profile_image_id
-            },
+                "profile_image": None
+          },
             "role": "student",
             "safe": {
                 "badges": [],

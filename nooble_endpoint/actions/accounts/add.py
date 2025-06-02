@@ -1,23 +1,27 @@
 import quart.wrappers as _quart_wrappers
-
+import hashlib as _hashlib
 import nooble_database.objects.roles as _nooble_database_roles
 
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
-class CreateClassAction(NoobleEndpointAction):
+class AddAccountAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)
 
-        if not ( 
-            "name" in args
-        and "description" in args
+        if not (
+            "mail" in args
+        and "first_name" in args
+        and "last_name" in args
+        and "password" in args
         ):
             return False
         
         if not (
-            type(args["name"]) is str
-        and type(args["description"]) is str
+            type(args["mail"]) is str
+        and type(args["first_name"]) is str
+        and type(args["last_name"]) is str
+        and type(args["password"]) is str
         ):
             return False
         
@@ -35,20 +39,15 @@ class CreateClassAction(NoobleEndpointAction):
         return True
 
     async def main(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request):
-        account = await self.get_account(request, configuration)
-
-        if account is None:
-            return await self.make_response(None, configuration, 500)
-
         args = await self.get_request_args(request)
 
-        name: str = args["name"]
-        description: str = args["description"]
+        mail: str = args["mail"]
+        first_name: str = args["first_name"]
+        last_name: str = args["last_name"]
+        password: str = args["password"]
 
-        new_class = await configuration.get_database().get_classes().create_class(name, description, account.get_id())
+        new_account = await configuration.get_database().get_accounts().create_new_account(mail, first_name, last_name, _hashlib.sha256(password.encode()).hexdigest())
 
         return await self.make_response({
-            "new_class": new_class.get_id()
+            "new_account": new_account.get_id()
         }, configuration)
-    
-
