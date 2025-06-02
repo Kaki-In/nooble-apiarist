@@ -1,6 +1,5 @@
 import quart.wrappers as _quart_wrappers
 import nooble_database.objects.file_types as _nooble_database_types
-import nooble_database.objects.roles as _nooble_database_roles
 
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
@@ -10,8 +9,7 @@ class UpdateProfileAction(NoobleEndpointAction):
         args = await self.get_request_args(request)
 
         if not (
-            "user_id" in args
-        and "first_name" in args 
+            "first_name" in args 
         and "last_name" in args
         and "active_badges" in args
         and "active_decoration" in args
@@ -21,8 +19,7 @@ class UpdateProfileAction(NoobleEndpointAction):
             return False
         
         if not (
-            type(args["user_id"]) is int
-        and type(args["first_name"]) is str
+            type(args["first_name"]) is str
         and type(args["last_name"]) is str
         and type(args["active_decoration"]) is int
         and type(args["profile_image"]) is int
@@ -31,16 +28,9 @@ class UpdateProfileAction(NoobleEndpointAction):
         ):
             return False
         
-        account = configuration.get_database().get_accounts().get_account(args["user_id"])
-
-        if not await account.exists():
-            return False
-
         for badge in args['active_badges']:
             if type(badge) is not int:
                 return False
-            
-            pass
             
         # TODO: ensure description sections are valid
 
@@ -60,16 +50,31 @@ class UpdateProfileAction(NoobleEndpointAction):
         if account is None:
             return False
         
-        if not await account.get_role() == _nooble_database_roles.Role.ADMIN:
+        args = await self.get_request_args(request)
+        
+        safe = await account.get_safe().get_object()
+
+        badges: list[int] = args["active_badges"]
+
+        for badge in badges:
+            if not badge in safe["badges"]:
+                return False
+        
+        decoration: int = args["active_decoration"]
+
+        if not decoration in safe["decorations"]:
+            return False
+        
+        file_image = configuration.get_database().get_files().get_file(args["profile_image"])
+
+        if account.get_id() != await file_image.get_sender_id():
             return False
         
         return True
 
-
     async def main(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request):
         args = await self.get_request_args(request)
 
-        user_id: int = args["user_id"]
         first_name: str = args["first_name"]
         last_name: str = args["last_name"]
         active_decoration:str = args["active_decoration"]
@@ -77,10 +82,7 @@ class UpdateProfileAction(NoobleEndpointAction):
         description: dict = args["description"]
         profile_image: int = args["profile_image"]
 
-        account = configuration.get_database().get_accounts().get_account(user_id)
-
-        if not await account.exists():
-            return False
+        account = await self.get_account(request, configuration)
 
         if account is None:
             return await self.make_response(None, configuration, 500) # should not be the case
