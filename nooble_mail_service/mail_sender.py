@@ -1,4 +1,4 @@
-from nooble_conf.files.nooble_mail_sender import NoobleMailSenderConfiguration
+from nooble_conf.files.nooble_mail_sender import NoobleMailSenderSettings
 from nooble_conf.directories.nooble_mail_templates import NoobleMailTemplatesConfiguration
 
 import nooble_database.objects.account_object as _nooble_accounts_object
@@ -11,11 +11,11 @@ import asyncio as _asyncio
 import ssl as _ssl
 
 class NoobleMailSender():
-    def __init__(self, conf: NoobleMailSenderConfiguration, templates: NoobleMailTemplatesConfiguration) -> None:
+    def __init__(self, conf: NoobleMailSenderSettings, templates: NoobleMailTemplatesConfiguration) -> None:
         self._conf = conf
         self._templates = templates
     
-    def get_configuration(self) -> NoobleMailSenderConfiguration:
+    def get_configuration(self) -> NoobleMailSenderSettings:
         return self._conf
     
     def get_templates(self) -> NoobleMailTemplatesConfiguration:

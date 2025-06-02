@@ -4,7 +4,7 @@ from .nooble_smtp_server import NoobleSmtpServerSettings
 from ..base_objects.file import NoobleSettingsFile
 from ..objects.mail_sender import MailSenderConfigurationObject
 
-class NoobleMailSenderConfiguration(NoobleSettingsFile[MailSenderConfigurationObject]):
+class NoobleMailSenderSettings(NoobleSettingsFile[MailSenderConfigurationObject]):
     def __init__(self, path: str) -> None:
         super().__init__(path, {
             "identity": {

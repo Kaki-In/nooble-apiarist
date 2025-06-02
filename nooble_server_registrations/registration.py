@@ -1,4 +1,4 @@
-import nooble_database as _nooble_database
+import nooble_database.database as _nooble_database
 import datetime as _datetime
 
 class NoobleRegistration():

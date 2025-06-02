@@ -14,13 +14,13 @@ class ServerEndpointAction(_T.Generic[_configuration_type]):
         if not await self.is_allowed(configuration, request):
             return "Forbidden", 401
 
-        if not await self.is_valid(request):
+        if not await self.is_valid(configuration, request):
             return "Bad Request", 403
 
         response = await self.main(configuration, request)
         return response
     
-    async def is_valid(self, request: _quart.Request) -> bool:
+    async def is_valid(self, configuration: _configuration_type, request: _quart.Request) -> bool:
         raise NotImplementedError("not implemented for " + repr(self))
     
     async def is_allowed(self, configuration: _configuration_type, request: _quart.Request) -> bool:

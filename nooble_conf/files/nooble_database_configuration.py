@@ -4,7 +4,7 @@ from .nooble_database_tables_configuration import NoobleDatabaseTablesSettings
 from ..base_objects.file import NoobleSettingsFile
 from ..objects.database import DatabaseConfigurationObject
 
-class NoobleDatabaseConfiguration(NoobleSettingsFile[DatabaseConfigurationObject]):
+class NoobleDatabaseSettings(NoobleSettingsFile[DatabaseConfigurationObject]):
     def __init__(self, path: str) -> None:
         super().__init__(path, {
             "host": "localhost",

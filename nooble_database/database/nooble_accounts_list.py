@@ -5,6 +5,7 @@ from ..objects.account_object import AccountObject
 
 import re as _regex
 import nooble_conf.files.nooble_database_rules as _nooble_conf
+import datetime as _datetime
 
 class NoobleAccountsList(NoobleCollection[AccountObject]):
     def __init__(self, collection: _pymongo_collection.AsyncCollection[AccountObject], rules: _nooble_conf.NoobleDatabaseRulesSettings) -> None:
@@ -73,7 +74,8 @@ class NoobleAccountsList(NoobleCollection[AccountObject]):
                 "badges": [],
                 "decorations": [0],
                 "quota": self._rules.get_new_users_nooblards_count()
-            }
+            },
+            "creation_date": int(_datetime.datetime.now().timestamp())
         }
 
         id = await self.insert_one(object)

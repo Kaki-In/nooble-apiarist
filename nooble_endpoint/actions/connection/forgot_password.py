@@ -7,8 +7,8 @@ import random as _random
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
-class ForgotPassword(NoobleEndpointAction):
-    async def is_valid(self, request: _quart_wrappers.Request) -> bool:
+class ForgotPasswordAction(NoobleEndpointAction):
+    async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)
         
         if not "username" in args:
@@ -20,7 +20,7 @@ class ForgotPassword(NoobleEndpointAction):
         return True
 
     async def is_allowed(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
-        return self.get_account(request, configuration) is None
+        return await self.get_account(request, configuration) is None
 
     async def main(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request):
         args = await self.get_request_args(request)
@@ -32,7 +32,7 @@ class ForgotPassword(NoobleEndpointAction):
         if account is None:
             return await self.make_response(
                 {
-                    "reason": 3
+                    "reason": "no such user"
                 },
                 configuration,
                 code=401

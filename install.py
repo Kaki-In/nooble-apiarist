@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python3.11
 
 from nooble_conf.main_configuration import MAIN_CONFIGURATION
 

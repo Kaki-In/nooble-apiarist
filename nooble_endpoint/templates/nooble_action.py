@@ -17,7 +17,7 @@ class NoobleEndpointAction(_apiarist.ServerEndpointAction[NoobleEndpointConfigur
         else:
             response.set_cookie("conn-token", token)
     
-    def get_account(self, request: _quart_wrappers.Request, configuration: NoobleEndpointConfiguration) -> _nooble_database.NoobleAccount | None:
+    async def get_account(self, request: _quart_wrappers.Request, configuration: NoobleEndpointConfiguration) -> _nooble_database.NoobleAccount | None:
         token = self.get_client_token(request)
 
         if token is None:
@@ -31,10 +31,16 @@ class NoobleEndpointAction(_apiarist.ServerEndpointAction[NoobleEndpointConfigur
         if registration.get_date_end() < _datetime.datetime.now():
             return None
         
-        return registration.get_account()
+        account = registration.get_account()
+
+        if not await account.exists():
+            configuration.get_registrations().remove_registration(token)
+            return None
+        
+        return account
     
     async def make_response(self, data: _T.Any, configuration: NoobleEndpointConfiguration, code: int = 202) -> _quart_wrappers.Response:
         return await configuration.get_quart().make_response((_json.encode(data), code)) # type:ignore
-
+    
 
 

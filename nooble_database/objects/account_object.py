@@ -14,5 +14,6 @@ class AccountObject(_T.TypedDict):
     safe: SafeObject
     role: RAW_ROLE
     activities: list[ActivityNotificationObject]
+    creation_date: int
     
 

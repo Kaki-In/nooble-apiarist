@@ -7,6 +7,8 @@ from .nooble_safe import NoobleSafe
 
 from .nooble_activity_notification import NoobleActivityNotification
 
+import datetime as _datetime
+
 class NoobleAccount(NoobleObject[AccountObject]):
     def get_profile(self) -> NoobleProfile:
         last_object = self.get_last_known_object()
@@ -39,6 +41,14 @@ class NoobleAccount(NoobleObject[AccountObject]):
         return [
             NoobleActivityNotification(self, activity['activity'], activity) for activity in data['activities']
         ]
+    
+    async def get_creation_date(self) -> _datetime.datetime:
+        data = await self.get_object()
+        return _datetime.datetime.fromtimestamp(data['creation_date'])
+    
+    async def get_password(self) -> str:
+        data = await self.get_object()
+        return data["password"]
     
     async def mark_activities_as_read(self) -> None:
         await self.update(

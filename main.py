@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python3.11
 
 from nooble_conf.main_configuration import MAIN_CONFIGURATION
 from nooble_database.database import NoobleDatabase
@@ -11,14 +11,8 @@ import asyncio
 
 import pip
 
-try:
-    import pymongo
-except ImportError:
-    pip.main(["import", "pymongo"])
-    import pymongo
-
 async def main(args):
-    mail_configuration = MAIN_CONFIGURATION.get_mail_configuration()
+    mail_configuration = MAIN_CONFIGURATION.get_mail_settings()
     mail_templates = MAIN_CONFIGURATION.get_templates().get_mail_templates()
 
     mail_sender = NoobleMailSender(mail_configuration, mail_templates)
@@ -45,7 +39,8 @@ async def main(args):
             "badges": [],
             "decorations": [],
             "quota": 12
-        }
+        },
+        "creation_date": 10
     }
 
     await mail_sender.send_new_password_mail(account, "azgrobul")

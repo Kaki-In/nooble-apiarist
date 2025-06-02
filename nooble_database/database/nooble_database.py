@@ -9,7 +9,7 @@ import pymongo as _pymongo
 import nooble_conf.files.nooble_database_configuration as _nooble_conf
 
 class NoobleDatabase():
-    def __init__(self, configuration: _nooble_conf.NoobleDatabaseConfiguration) -> None:
+    def __init__(self, configuration: _nooble_conf.NoobleDatabaseSettings) -> None:
         self._client = _pymongo.AsyncMongoClient(
             configuration.get_host(),
             configuration.get_port()
@@ -35,7 +35,7 @@ class NoobleDatabase():
         collection_name = self._configuration.get_tables().get_activities_name()
         return NoobleActivitiesList(self._database.get_collection(collection_name))
     
-    def decorations(self) -> NoobleDecorationsList:
+    def get_decorations(self) -> NoobleDecorationsList:
         collection_name = self._configuration.get_tables().get_decorations_name()
         return NoobleDecorationsList(self._database.get_collection(collection_name))
     
