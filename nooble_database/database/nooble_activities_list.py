@@ -6,10 +6,10 @@ import datetime as _datetime
 
 class NoobleActivitiesList(NoobleCollection[ActivityObject]):
 
-    def get_activity(self, activity_id: int) -> NoobleActivity:
+    def get_activity(self, activity_id: str) -> NoobleActivity:
         return NoobleActivity(self.get_collection(), activity_id)
     
-    async def get_creator_activities(self, creator_id: int) -> list[NoobleActivity]:
+    async def get_creator_activities(self, creator_id: str) -> list[NoobleActivity]:
         activities = await self.find({
             "creator": creator_id
         })
@@ -27,9 +27,9 @@ class NoobleActivitiesList(NoobleCollection[ActivityObject]):
 
         return activities_results
     
-    async def create_activity(self, title: str, content: str, creator: int, date: _datetime.datetime) -> NoobleActivity:
+    async def create_activity(self, title: str, content: str, creator: str, date: _datetime.datetime) -> NoobleActivity:
         object: ActivityObject = {
-            "_id": -1,
+            "_id": '',
 
             "title": title,
             "content": content,

@@ -1,4 +1,5 @@
 from .nooble_binding_configuration import NoobleBindingSettings
+from .nooble_registrations_configuration import NoobleRegistrationsSettings
 
 from ..base_objects.file import NoobleSettingsFile
 
@@ -10,8 +11,8 @@ class NoobleEndpointSettings(NoobleSettingsFile[EndpointConfigurationObject]):
             "binding": {
                 "host": "0.0.0.0",
                  "port": 8622,
-                 "public_key_file": None,
-                 "private_key_file": None,
+                 "cert_file": None,
+                 "key_file": None,
                  "use_ssl":  False
             },
             "registrations": {
@@ -22,5 +23,8 @@ class NoobleEndpointSettings(NoobleSettingsFile[EndpointConfigurationObject]):
 
     def get_binding_settings(self) -> NoobleBindingSettings:
         return NoobleBindingSettings(self)
+    
+    def get_registration_settings(self) -> NoobleRegistrationsSettings:
+        return NoobleRegistrationsSettings(self)
 
 

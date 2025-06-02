@@ -5,7 +5,7 @@ from ..templates.nooble_sub_object import NoobleSubObject
 from ..templates.nooble_object import NoobleObject
 
 class NoobleActivityNotification(NoobleSubObject[AccountObject, ActivityNotificationObject]):
-    def __init__(self, account: NoobleObject[AccountObject], activity_id: int, last_object: ActivityNotificationObject | None = None) -> None:
+    def __init__(self, account: NoobleObject[AccountObject], activity_id: str, last_object: ActivityNotificationObject | None = None) -> None:
         super().__init__(account, last_object)
 
         self._activity_id = activity_id

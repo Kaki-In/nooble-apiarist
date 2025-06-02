@@ -40,7 +40,7 @@ class NoobleEndpointAction(_apiarist.ServerEndpointAction[NoobleEndpointConfigur
         return account
     
     async def make_response(self, data: _T.Any, configuration: NoobleEndpointConfiguration, code: int = 202) -> _quart_wrappers.Response:
-        return await configuration.get_quart().make_response((_json.encode(data), code)) # type:ignore
+        return await configuration.get_quart().make_response((_json.dumps(data), code)) # type:ignore
     
 
 

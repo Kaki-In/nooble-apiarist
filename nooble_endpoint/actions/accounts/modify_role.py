@@ -15,7 +15,7 @@ class ModifyAccountRoleAction(NoobleEndpointAction):
             return False
         
         if not (
-            type(args["user_id"]) is int
+            type(args["user_id"]) is str
         and args["role"] in ["admin", 'teacher', "teacher_admin", "student"]
         ):
             return False
@@ -45,7 +45,7 @@ class ModifyAccountRoleAction(NoobleEndpointAction):
     async def main(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request):
         args = await self.get_request_args(request)
 
-        user_id: int = args["user_id"]
+        user_id: str = args["user_id"]
         role = _nooble_database_roles.Role.from_raw_role(args["role"])
         
         account = configuration.get_database().get_accounts().get_account(user_id)

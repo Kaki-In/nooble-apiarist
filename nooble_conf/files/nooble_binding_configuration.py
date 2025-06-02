@@ -15,10 +15,10 @@ class NoobleBindingSettings(NoobleSettingsSubFile[EndpointConfigurationObject, B
     def get_uses_ssl(self) -> bool:
         return self.get_data()['use_ssl']
     
-    def get_public_key_file(self) -> str | None:
-        return self.get_data()["public_key_file"]
+    def get_certificate_file(self) -> str | None:
+        return self.get_data()["cert_file"]
     
-    def get_private_key_file(self) -> str | None:
-        return self.get_data()["private_key_file"]
+    def get_key_file(self) -> str | None:
+        return self.get_data()["key_file"]
     
 

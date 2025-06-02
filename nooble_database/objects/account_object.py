@@ -6,7 +6,7 @@ from .activity_notification_object import ActivityNotificationObject
 import typing as _T
 
 class AccountObject(_T.TypedDict):
-    _id: int
+    _id: str
 
     mail: str
     password: str

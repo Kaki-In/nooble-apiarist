@@ -16,8 +16,8 @@ class AddClassAccountAction(NoobleEndpointAction):
             return False
         
         if not (
-            type(args["user_id"]) is int
-        and type(args["class_id"]) is int
+            type(args["user_id"]) is str
+        and type(args["class_id"]) is str
         ):
             return False
         
@@ -50,8 +50,8 @@ class AddClassAccountAction(NoobleEndpointAction):
     async def main(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request):
         args = await self.get_request_args(request)
 
-        user_id: int = args["user_id"]
-        class_id: int = args["class_id"]
+        user_id: str = args["user_id"]
+        class_id: str = args["class_id"]
 
         await configuration.get_database().get_classes().get_class(class_id).update({
             "$push": {

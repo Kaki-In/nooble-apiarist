@@ -15,7 +15,7 @@ class ModifyAccountMailAction(NoobleEndpointAction):
             return False
         
         if not (
-            type(args["user_id"]) is int
+            type(args["user_id"]) is str
         and type(args["mail"]) is str
         ):
             return False
@@ -42,7 +42,7 @@ class ModifyAccountMailAction(NoobleEndpointAction):
     async def main(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request):
         args = await self.get_request_args(request)
 
-        user_id: int = args["user_id"]
+        user_id: str = args["user_id"]
         mail: str = args["mail"]
         
         account = configuration.get_database().get_accounts().get_account(user_id)

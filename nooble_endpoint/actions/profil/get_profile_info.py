@@ -8,7 +8,7 @@ class GetProfileInfoAction(NoobleEndpointAction):
         args = await self.get_request_args(request)
 
         if "user_id" in args:
-            return type(args["user_id"]) is int
+            return type(args["user_id"]) is str
 
         return True
 
@@ -19,7 +19,7 @@ class GetProfileInfoAction(NoobleEndpointAction):
         args = await self.get_request_args(request)
 
         if "user_id" in args:
-            user_id: int = args["user_id"]
+            user_id: str = args["user_id"]
 
             account = configuration.get_database().get_accounts().get_account(user_id)
         else:

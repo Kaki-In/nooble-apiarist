@@ -1,11 +1,11 @@
 import typing as _T
 
 class ActivityObject(_T.TypedDict):
-    _id: int
+    _id: str
 
     icon: str
     title: str
     content: str
-    creator: int
+    creator: str
     date: int
 

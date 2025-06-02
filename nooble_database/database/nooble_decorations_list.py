@@ -4,12 +4,12 @@ from .nooble_decoration import NoobleDecoration
 from ..objects.decoration_object import DecorationObject
 
 class NoobleDecorationsList(NoobleCollection[DecorationObject]):
-    def get_decoration(self, id: int) -> NoobleDecoration:
+    def get_decoration(self, id: str) -> NoobleDecoration:
         return NoobleDecoration(self.get_collection(), id)
     
-    async def create_decoration(self, name:str, image_id:int, price:int) -> NoobleDecoration:
+    async def create_decoration(self, name:str, image_id:str, price:int) -> NoobleDecoration:
         object: DecorationObject = {
-            "_id": -1,
+            "_id": '',
             "name":name,
             "image":image_id,
             "price":price

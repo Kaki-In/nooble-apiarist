@@ -29,4 +29,21 @@ class NoobleEndpoint(_server_endpoint.ServerEndpoint[NoobleEndpointConfiguration
         self.add_action("/accounts/modify-mail", ModifyAccountMailAction(), "POST")
         self.add_action("/accounts/modify-role", ModifyAccountRoleAction(), "POST")
 
+    async def main(self) -> None:
+        configuration = self.get_configuration().get_configuration()
+
+        if configuration.get_uses_ssl():
+            certfile = configuration.get_certificate_file()
+            keyfile = configuration.get_key_file()
+
+            if certfile is None:
+                raise ValueError('certificate file not specified')
+
+            if keyfile is None:
+                raise ValueError('key file not specified')
+
+            return await self.run(certfile, keyfile)
+        
+        else:
+            return await self.run_locally()
 

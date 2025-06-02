@@ -14,7 +14,7 @@ class NoobleClass(NoobleObject[ClassObject]):
     async def get_last_modification_date(self) -> _datetime.datetime:
         return _datetime.datetime.fromtimestamp((await self.get_object())["last_modification"])
     
-    async def get_last_modification_author_id(self) -> int:
+    async def get_last_modification_author_id(self) -> str:
         return (await self.get_object())["last_modifier"]
     
     async def get_content(self) -> SectionObject:

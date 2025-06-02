@@ -12,7 +12,7 @@ class GetClassAccountsAction(NoobleEndpointAction):
         if not "class_id" in args:
             return False
         
-        if not type(args["class_id"]) is int:
+        if not type(args["class_id"]) is str:
             return False
         
         nooble_class = configuration.get_database().get_classes().get_class(args["class_id"])
@@ -43,7 +43,7 @@ class GetClassAccountsAction(NoobleEndpointAction):
 
     async def main(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request):
         args = await self.get_request_args(request)
-        class_id: int = args["class_id"]
+        class_id: str = args["class_id"]
 
         nooble_class = configuration.get_database().get_classes().get_class(class_id)
  

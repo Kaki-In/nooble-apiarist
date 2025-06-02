@@ -7,10 +7,10 @@ from .nooble_file import NoobleFile, FileObject
 from ..objects.file_types import FileType
 
 class NoobleFilesList(NoobleCollection[FileObject]):
-    def get_file(self, id: int) -> NoobleFile:
+    def get_file(self, id: str) -> NoobleFile:
         return NoobleFile(self.get_collection(), id)
     
-    async def get_sender_files(self, sender_id: int) -> list[NoobleFile]:
+    async def get_sender_files(self, sender_id: str) -> list[NoobleFile]:
         files = self.get_collection().find(sender = sender_id)
 
         file_results: list[NoobleFile] = []
@@ -20,9 +20,9 @@ class NoobleFilesList(NoobleCollection[FileObject]):
 
         return file_results
     
-    async def create_new_file(self, name:str, filename:str, sent_date:_datetime.datetime, sender_id: int, path: str, type: FileType, file_size: int) -> NoobleFile:
+    async def create_new_file(self, name:str, filename:str, sent_date:_datetime.datetime, sender_id: str, path: str, type: FileType, file_size: int) -> NoobleFile:
         object: FileObject = {
-            "_id": -1,
+            "_id": '',
             "name" : name,
             "filename" : filename,
             "sent_date" : int(sent_date.timestamp()),

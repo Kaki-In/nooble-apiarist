@@ -13,8 +13,8 @@ class NoobleAccountsList(NoobleCollection[AccountObject]):
 
         self._rules = rules
 
-    def get_account(self, _id: int) -> NoobleAccount:
-        return NoobleAccount(self.get_collection(), _id)
+    def get_account(self, account_id: str) -> NoobleAccount:
+        return NoobleAccount(self.get_collection(), account_id)
     
     async def get_existing_account_by_mail(self, mail:str) -> NoobleAccount:
         account = await self.get_account_by_mail(mail)
@@ -52,7 +52,7 @@ class NoobleAccountsList(NoobleCollection[AccountObject]):
     
     async def create_new_account(self, mail: str, password: str, first_name: str, last_name: str) -> NoobleAccount:
         object: AccountObject = {
-            "_id": -1,
+            "_id": '',
 
             "activities": [],
             "mail": mail,

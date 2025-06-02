@@ -21,11 +21,11 @@ class ModifyProfileAction(NoobleEndpointAction):
             return False
         
         if not (
-            type(args["user_id"]) is int
+            type(args["user_id"]) is str
         and type(args["first_name"]) is str
         and type(args["last_name"]) is str
-        and type(args["active_decoration"]) is int
-        and type(args["profile_image"]) is int
+        and type(args["active_decoration"]) is str
+        and type(args["profile_image"]) is str
         and type(args["active_badges"]) is list
         and type(args["description"]) is dict
         ):
@@ -37,7 +37,7 @@ class ModifyProfileAction(NoobleEndpointAction):
             return False
 
         for badge in args['active_badges']:
-            if type(badge) is not int:
+            if type(badge) is not str:
                 return False
             
             pass
@@ -69,13 +69,13 @@ class ModifyProfileAction(NoobleEndpointAction):
     async def main(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request):
         args = await self.get_request_args(request)
 
-        user_id: int = args["user_id"]
+        user_id: str = args["user_id"]
         first_name: str = args["first_name"]
         last_name: str = args["last_name"]
         active_decoration: str = args["active_decoration"]
-        active_badges: list[int] = args["active_badges"]
+        active_badges: list[str] = args["active_badges"]
         description: dict = args["description"]
-        profile_image: int = args["profile_image"]
+        profile_image: str = args["profile_image"]
 
         account = configuration.get_database().get_accounts().get_account(user_id)
 

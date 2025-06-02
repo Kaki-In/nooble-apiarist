@@ -8,7 +8,7 @@ import datetime as _datetime
 
 class NoobleClassesList(NoobleCollection[ClassObject]):
     
-    def get_class(self, id: int) -> NoobleClass:
+    def get_class(self, id: str) -> NoobleClass:
         return NoobleClass(self.get_collection(), id)
     
     async def get_class_containing_name(self, name: str) -> list[NoobleClass]:
@@ -39,7 +39,7 @@ class NoobleClassesList(NoobleCollection[ClassObject]):
             )
         ]
     
-    async def get_account_classes(self, account_id: int) -> list[NoobleClass]:
+    async def get_account_classes(self, account_id: str) -> list[NoobleClass]:
         return [
             NoobleClass(
                 self.get_collection(),
@@ -58,7 +58,7 @@ class NoobleClassesList(NoobleCollection[ClassObject]):
             )
         ]
     
-    async def create_class(self, name: str, description: str, creator: int) -> NoobleClass:
+    async def create_class(self, name: str, description: str, creator: str) -> NoobleClass:
         base_container: SectionObject = {
             "type": "container",
             "data": {
@@ -69,7 +69,7 @@ class NoobleClassesList(NoobleCollection[ClassObject]):
             "uses_files": []
         }
         object: ClassObject = {
-            "_id": -1,
+            "_id": '',
             "accounts": [],
             "content": base_container,
             "description": description,

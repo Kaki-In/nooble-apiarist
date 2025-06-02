@@ -21,8 +21,8 @@ class UpdateProfileAction(NoobleEndpointAction):
         if not (
             type(args["first_name"]) is str
         and type(args["last_name"]) is str
-        and type(args["active_decoration"]) is int
-        and type(args["profile_image"]) is int
+        and type(args["active_decoration"]) is str
+        and type(args["profile_image"]) is str
         and type(args["active_badges"]) is list
         and type(args["description"]) is dict
         ):
@@ -54,13 +54,13 @@ class UpdateProfileAction(NoobleEndpointAction):
         
         safe = await account.get_safe().get_object()
 
-        badges: list[int] = args["active_badges"]
+        badges: list[str] = args["active_badges"]
 
         for badge in badges:
-            if not badge in safe["badges"]:
+            if not badge in [i[0] for i in safe["badges"]]:
                 return False
         
-        decoration: int = args["active_decoration"]
+        decoration: str = args["active_decoration"]
 
         if not decoration in safe["decorations"]:
             return False
@@ -78,9 +78,9 @@ class UpdateProfileAction(NoobleEndpointAction):
         first_name: str = args["first_name"]
         last_name: str = args["last_name"]
         active_decoration:str = args["active_decoration"]
-        active_badges: list[int] = args["active_badges"]
+        active_badges: list[str] = args["active_badges"]
         description: dict = args["description"]
-        profile_image: int = args["profile_image"]
+        profile_image: str = args["profile_image"]
 
         account = await self.get_account(request, configuration)
 

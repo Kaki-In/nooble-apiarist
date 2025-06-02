@@ -11,7 +11,7 @@ class DeleteAccountAction(NoobleEndpointAction):
         if not "user_id" in args:
             return False
         
-        if not type(args["user_id"]) is int:
+        if not type(args["user_id"]) is str:
             return False
         
         account = configuration.get_database().get_accounts().get_account(args["user_id"])
@@ -39,7 +39,7 @@ class DeleteAccountAction(NoobleEndpointAction):
     async def main(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request):
         args = await self.get_request_args(request)
 
-        user_id: int = args["user_id"]
+        user_id: str = args["user_id"]
 
         account = configuration.get_database().get_accounts().get_account(user_id)
 

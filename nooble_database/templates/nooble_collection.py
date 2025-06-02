@@ -32,11 +32,11 @@ class NoobleCollection(_T.Generic[_data_type]):
     async def find_one(self, fields: _T.Mapping) -> _data_type | None:
         return await self._coll.find_one(fields)
     
-    async def insert_one(self, object: _data_type) -> int:
+    async def insert_one(self, object: _data_type) -> str:
         result = await self._coll.insert_one(object)
         return result.inserted_id
     
-    async def insert_many(self, *objects: _data_type) -> list[int]:
+    async def insert_many(self, *objects: _data_type) -> list[str]:
         result = await self._coll.insert_many(objects)
         return result.inserted_ids
     
