@@ -35,7 +35,10 @@ def require_dependencies(**packages):
             try:
                 exec("import " + package_name)
             except:
-                failed = []
+                failed.append(package_name)
+        except OSError as exc:
+            print("It seems that the", package_name, "package could not find its compiled libary in your system. This could lead to some latency, or to the api unusability. ")
+            print("Displayed message:", repr(exc))
     
     if failed:
         print("Some Python packages could not be installed: ")
