@@ -12,7 +12,7 @@ import typing as _T
 if _os.name == "posix":     # linux systems
     DEFAULT_CONF_DIR = _os.environ["HOME"] + _os.path.sep + ".nooble"
 elif _os.name == "nt":      # windows systems
-    DEFAULT_CONF_DIR = _os.environ["HOME_PATH"] + _os.path.sep + ".nooble"
+    DEFAULT_CONF_DIR = _os.environ["HOMEPATH"] + _os.path.sep + ".nooble"
 
 class NoobleConfiguration(NoobleSettingsDirectory):
     def __init__(self, dirname:_T.Optional[str] = None) -> None:
