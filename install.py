@@ -20,11 +20,9 @@ def require_dependencies(**packages):
     print("Installing dependencies...")
 
     if os.name == "posix":
-        if os.system(" ls /usr/lib/x86_64-linux-gnu/ | grep libvips") == 256:
+        if os.system("ls /usr/lib/x86_64-linux-gnu/ | grep libvips > /dev/null") == 256:
             print("The libvips42 utils seem missing. Trying to install it...")
             os.system("sudo apt install libvips42")
-    else:
-        pass
 
     failed = []
 
@@ -82,7 +80,7 @@ def configurate():
     try:
         from nooble_conf.main_configuration import MAIN_CONFIGURATION
 
-        print("Main configuration is available at", MAIN_CONFIGURATION.get_pathname())
+        print("Main configuration is available at " + MAIN_CONFIGURATION.get_pathname() + ". Please ensure that you have configured it correctly. ")
         return True
     
     except Exception as exc:
@@ -96,7 +94,8 @@ def main(args):
         lambda:require_dependencies(
             pyvips = "pyvips",
             quart = "quart",
-            pymongo = "pymongo"
+            pymongo = "pymongo",
+            PIL = "pillow"
         ),
         lambda: ensure_packages(
             "apiarist_server_endpoint",
