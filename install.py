@@ -24,7 +24,7 @@ def require_dependencies(**packages):
         try:
             exec("import " + package_name)
         except ImportError:
-            pip.main(["install", packages[package_name]])
+            pip.main(["install", packages[package_name], "--break-system-packages"])
 
             try:
                 exec("import " + package_name)
