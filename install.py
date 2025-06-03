@@ -24,6 +24,7 @@ def require_dependencies(**packages):
             print("The libvips42 utils seem missing. Trying to install it...")
             os.system("sudo apt install libvips42")
     else:
+        pass
 
     failed = []
 
