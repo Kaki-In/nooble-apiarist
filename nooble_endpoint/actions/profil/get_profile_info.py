@@ -1,4 +1,5 @@
 import quart.wrappers as _quart_wrappers
+import nooble_database.objects.roles as _nooble_database_roles
 
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
@@ -30,4 +31,9 @@ class GetProfileInfoAction(NoobleEndpointAction):
                 
             }, configuration, 500) 
         
-        return await self.make_response(await account.get_profile().get_object(), configuration, 200)
+        profile_info: dict = await account.get_profile().get_object() # type: ignore
+
+        if await account.get_role() != _nooble_database_roles.Role.ADMIN:
+            profile_info["classes"] = await configuration.get_database().get_classes().get_account_classes(account.get_id())
+        
+        return await self.make_response(profile_info, configuration, 200)

@@ -70,13 +70,16 @@ class NoobleMailSender():
         msg_root.attach(icon)
 
         # Envoi
-        smtp = await _asyncio.get_event_loop().run_in_executor(None, self.create_smtp_conn)
-        await _asyncio.get_event_loop().run_in_executor(
-            None, smtp.sendmail, sender_address, receiver_address, msg_root.as_string()
-        )
-        smtp.quit()
+        try:
+            smtp = await _asyncio.get_event_loop().run_in_executor(None, self.create_smtp_conn)
+            await _asyncio.get_event_loop().run_in_executor(
+                None, smtp.sendmail, sender_address, receiver_address, msg_root.as_string()
+            )
+            smtp.quit()
+        except Exception as exc:
+            print("[ MAIL_SENDER ] an error occured!", repr(exc))
 
     async def send_new_password_mail(self, account: _nooble_accounts_object.AccountObject, new_password: str) -> None:
         html_content = self._templates.get_send_password_mail_template(account, new_password)
-        await self.send_email(account, "Votre nouveau mot de passe", html_content)
+        _asyncio.create_task(self.send_email(account, "Votre nouveau mot de passe", html_content))
     
