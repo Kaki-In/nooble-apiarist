@@ -1,6 +1,7 @@
 #!/usr/bin/python3.11
 
 import sys
+import os
 import pip
 
 def check_version():
@@ -17,6 +18,12 @@ def check_version():
 
 def require_dependencies(**packages):
     print("Installing dependencies...")
+
+    if os.name == "posix":
+        if os.system(" ls /usr/lib/x86_64-linux-gnu/ | grep libvips") == 256:
+            print("The libvips42 utils seem missing. Trying to install it...")
+            os.system("sudo apt install libvips42")
+    else:
 
     failed = []
 
