@@ -20,7 +20,7 @@ class HereForLongBadge(NoobleBadge):
     """
 
     def __init__(self) -> None:
-        super().__init__("here_for_long", 6)
+        super().__init__("here_for_long", 5)
 
     async def get_price_to_level(self, level: int, account: NoobleAccount) -> int:
         return (HERE_FOR_LONG_BADGE_YEARS[level]) * 100
