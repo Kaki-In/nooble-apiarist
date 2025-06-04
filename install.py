@@ -92,7 +92,9 @@ def require_dependencies(**packages):
             print(" -", pack)
         
         print("Please ensure they are installed to let the program be running correctly")
-        return False
+
+        if failed:
+            return False
     
     return True
 
