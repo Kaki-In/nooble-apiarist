@@ -2,18 +2,32 @@
 
 import sys
 import os
-import pip
+import subprocess
 
 def check_version():
-    print("Checking Python version...")
+    print("Checking Python version...", end="")
 
     version = sys.version_info
 
     if (version.major == 3 and version.minor < 11) or version.major <= 2:
+        print()
         print(sys.version)
         print("This API needs python3.11 or higher to work. Please upgrade Python. ")
         return False
     
+    print("\b\rPython version is " + sys.version)
+
+    print("Checking pip version...", end="")
+    pip_version = [int(i) for i in subprocess.getoutput(sys.executable+" -m pip -V").split(" ")[1].split(".")]
+
+    if pip_version[0] < 23:
+        print("\nPip version " + '.'.join([str(i) for i in pip_version]) + " is not up to date. Installing...")
+
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", "pip"])
+    
+    pip_version = subprocess.getoutput(sys.executable+" -m pip -V").split(" ")[1]
+    print("\b\rPip version is " + pip_version)
+
     return True
 
 def require_dependencies(**packages):
@@ -30,8 +44,7 @@ def require_dependencies(**packages):
         try:
             exec("import " + package_name)
         except ImportError:
-            pip.main(["install", packages[package_name], "--break-system-packages"])
-
+            subprocess.check_call([sys.executable, "-m", "pip", "-V"])
             try:
                 exec("import " + package_name)
             except:
