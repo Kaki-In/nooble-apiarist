@@ -16,6 +16,14 @@ class NoobleActivityNotification(NoobleSubObject[AccountObject, ActivityNotifica
                 return notification
             
         raise ReferenceError("no such activity")
+    
+    async def exists(self) -> bool:
+        for notification in (await self.get_parent_object().ensure_object())['activities']:
+            if notification['activity'] == self._activity_id:
+                return True
+            
+        return False
+    
 
     async def mark_as_read(self, read=True) -> bool:
         return await self.get_parent_object().update(

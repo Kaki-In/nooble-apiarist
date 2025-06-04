@@ -11,11 +11,11 @@ class ServerEndpointAction(_T.Generic[_configuration_type]):
         return await self.execute(configuration, request)
     
     async def execute(self, configuration: _configuration_type, request: _quart.Request) -> _T.Any:
-        if not await self.is_allowed(configuration, request):
-            return "Forbidden", 401
-
         if not await self.is_valid(configuration, request):
             return "Bad Request", 400
+
+        if not await self.is_allowed(configuration, request):
+            return "Forbidden", 401
 
         response = await self.main(configuration, request)
         return response

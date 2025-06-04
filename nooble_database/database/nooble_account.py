@@ -42,6 +42,9 @@ class NoobleAccount(NoobleObject[AccountObject]):
             NoobleActivityNotification(self, activity['activity'], activity) for activity in data['activities']
         ]
     
+    async def get_activity(self, activity_id: str) -> NoobleActivityNotification:
+        return NoobleActivityNotification(self, activity_id)
+    
     async def get_creation_date(self) -> _datetime.datetime:
         data = await self.get_object()
         return _datetime.datetime.fromtimestamp(data['creation_date'])
@@ -49,13 +52,19 @@ class NoobleAccount(NoobleObject[AccountObject]):
     async def get_password(self) -> str:
         data = await self.get_object()
         return data["password"]
-    
-    async def mark_activities_as_read(self) -> None:
-        await self.update(
+
+    async def mark_activities_as_read(self, *activities: str, read=True) -> bool:
+        return await self.update(
             {
                 "$set": {
-                    'activities.$[].read': True
+                    'activities.$[element].read': read
                 }
-            }
+            },
+            array_filters=[
+                {
+                    'element.activity': {
+                        "$in": list(activities)
+                    }
+                }
+            ]
         )
-    

@@ -33,6 +33,9 @@ class NoobleEndpoint(_server_endpoint.ServerEndpoint[NoobleEndpointConfiguration
         self.add_action("/resources/upload", UploadFileAction(), "POST")
         self.add_action("/resources/download", DownloadFileAction(), "GET")
 
+        self.add_action("/thread/get", GetThreadAction(), "GET")
+        self.add_action("/thread/mark-as-read", MarkActivitiesAsReadAction(), "POST")
+
     async def main(self) -> None:
         configuration = self.get_configuration().get_configuration()
 

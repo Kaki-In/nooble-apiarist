@@ -3,4 +3,5 @@ from .profil import GetProfileInfoAction, ModifyProfileAction, UpdateProfileActi
 from .classes import AddClassAccountAction, CreateClassAction, DeleteClassAction, GetClassAccountsAction, GetClassDataAction, RemoveClassAccountAction
 from .accounts import AddAccountAction, DeleteAccountAction, ModifyAccountMailAction, ModifyAccountRoleAction
 from .resources import GetSelfFilesAction, UploadFileAction, DownloadFileAction
+from .thread import GetThreadAction, MarkActivitiesAsReadAction
 

@@ -27,7 +27,7 @@ class NoobleActivitiesList(NoobleCollection[ActivityObject]):
 
         return activities_results
     
-    async def create_activity(self, title: str, content: str, creator: str, date: _datetime.datetime) -> NoobleActivity:
+    async def create_activity(self, title: str, content: str, creator: str, date: _datetime.datetime, icon: str) -> NoobleActivity:
         object: ActivityObject = {
             "_id": '',
 
@@ -35,7 +35,7 @@ class NoobleActivitiesList(NoobleCollection[ActivityObject]):
             "content": content,
             "creator": creator,
             "date": int(date.timestamp()),
-            "icon": "bonjour"
+            "icon": icon
         }
 
         id = await self.insert_one(object)
