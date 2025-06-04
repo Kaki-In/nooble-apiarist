@@ -44,7 +44,8 @@ def require_dependencies(**packages):
         try:
             exec("import " + package_name)
         except ImportError:
-            subprocess.check_call([sys.executable, "-m", "pip", "-V"])
+            subprocess.check_call([sys.executable, "-m", "pip", "install", packages[package_name]])
+            
             try:
                 exec("import " + package_name)
             except:
