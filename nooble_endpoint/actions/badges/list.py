@@ -38,9 +38,21 @@ class ListBadgesAction(NoobleEndpointAction):
                 continue
 
             if await badge.is_elligible_to_level(badge_level + 1, account):
-                reached_badges.append([badge.get_name(), badge_level+1])
+                reached_badges.append({
+                    "name": badge.get_name(),
+                    "level": badge_level+1,
+                    "price": await badge.get_price_to_level(badge_level + 1, account),
+                    "title": badge.get_title(badge_level),
+                    "description": badge.get_description(badge_level)
+                })
             else:
-                unreached_badges.append([badge.get_name(), badge_level+1])
+                unreached_badges.append({
+                    "name": badge.get_name(),
+                    "level": badge_level+1,
+                    "price": await badge.get_price_to_level(badge_level + 1, account),
+                    "title": badge.get_title(badge_level),
+                    "description": badge.get_description(badge_level)
+                })
 
         return await self.make_response({
             "reached": reached_badges,

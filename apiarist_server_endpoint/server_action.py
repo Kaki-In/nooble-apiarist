@@ -38,13 +38,17 @@ class ServerEndpointAction(_T.Generic[_configuration_type]):
         except:
             args = {}
 
-        args.update(request.args)
 
-        for arg in args:
+        request_args = request.args.copy()
+
+        for arg in request_args:
             try:
-                args[arg] = _json.loads(args[arg])
+                request_args[arg] = _json.loads(request_args[arg])
             except:
                 pass
+
+
+        args.update(request_args)
 
         return args
     

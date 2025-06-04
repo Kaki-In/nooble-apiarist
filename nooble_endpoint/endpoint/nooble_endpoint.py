@@ -40,6 +40,13 @@ class NoobleEndpoint(_server_endpoint.ServerEndpoint[NoobleEndpointConfiguration
         self.add_action("/badges/get", GetBadgeInfosAction(), "GET")
         self.add_action("/badges/buy", BuyBadgeAction(), "POST")
 
+        self.add_action("/decorations/buy", BuyDecorationAction(), "POST")
+        self.add_action("/decorations/create", CreateDecorationAction(), "POST")
+        self.add_action("/decorations/delete", DeleteDecorationAction(), "POST")
+        self.add_action("/decoration/get_info", GetDecorationInfosAction(), "GET")
+        self.add_action("/decoration/list", ListDecorationsAction(), "GET")
+        self.add_action("/decorations/modify", ModifyDecorationAction(), "POST")
+
     async def main(self) -> None:
         configuration = self.get_configuration().get_configuration()
 

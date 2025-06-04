@@ -19,4 +19,12 @@ class NoobleDecorationsList(NoobleCollection[DecorationObject]):
         object["_id"] = id
 
         return NoobleDecoration(self.get_collection(), id, object)
+    
+    async def get_all_decorations(self) -> list[NoobleDecoration]:
+        decorations = await self.find({})
+
+        return [
+            NoobleDecoration(self.get_collection(), decoration["_id"], decoration)
+            for decoration in decorations
+        ]
 

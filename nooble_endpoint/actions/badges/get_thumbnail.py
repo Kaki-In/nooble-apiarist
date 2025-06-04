@@ -1,9 +1,10 @@
 import quart.wrappers as _quart_wrappers
+import quart as _quart
 
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
-class GetBadgeInfosAction(NoobleEndpointAction):
+class GetBadgeThumbnailAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)
 
@@ -33,23 +34,15 @@ class GetBadgeInfosAction(NoobleEndpointAction):
         return await self.get_account(request, configuration) is not None
 
     async def main(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request):
-        account = await self.get_account(request, configuration)
-
-        if account is None:
-            return await self.make_response(None, configuration, 500)
-
         args = await self.get_request_args(request)
 
         badge_name: str = args["name"]
         badge_level: int = args["level"]
 
         badge = configuration.get_badges().get_badge(badge_name)
+        badge_image = await badge.get_image(badge_level)
 
-        return await self.make_response({
-            "max-level": badge.get_max_level(),
-            "title": badge.get_title(badge_level),
-            "description": badge.get_description(badge_level),
-        }, configuration)
+        return _quart.send_file(bytes(badge_image), "image/png")
 
 
 

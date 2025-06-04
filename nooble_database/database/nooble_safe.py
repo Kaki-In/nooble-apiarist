@@ -12,7 +12,7 @@ class NoobleSafe(NoobleSubObject[AccountObject, SafeObject]):
     async def get_owned_badges(self) -> list[tuple[str, int]]:
         return (await self.get_object())['badges']
     
-    async def get_owned_decorations(self) -> list[int]:
+    async def get_owned_decorations(self) -> list[str]:
         return (await self.get_object())['decorations']
         
     async def increase(self, count: int) -> None:

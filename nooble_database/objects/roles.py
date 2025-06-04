@@ -27,6 +27,9 @@ class Role(_enum.Enum):
     
     def __str__(self) -> RAW_ROLE:
         return self.value
+    
+    def is_admin(self) -> bool:
+        return self in (Role.ADMIN, Role.ADMIN_TEACHER)
 
 
 

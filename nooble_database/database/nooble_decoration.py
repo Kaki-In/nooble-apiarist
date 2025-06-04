@@ -2,7 +2,7 @@ from ..templates.nooble_object import NoobleObject
 from ..objects.decoration_object import DecorationObject
 
 class NoobleDecoration(NoobleObject[DecorationObject]):
-    async def get_image_id(self) -> int:
+    async def get_image_id(self) -> str:
         object = await self.get_object()
         return object['image']
     
