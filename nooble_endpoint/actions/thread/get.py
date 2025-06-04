@@ -59,7 +59,7 @@ class GetThreadAction(NoobleEndpointAction):
             activities_objects.append({
                 "activity_id": notification["activity"],
                 "read": notification["read"],
-                
+
                 "activity_data": {
                     "title": activity_object["title"],
                     "content": activity_object["content"],
@@ -69,7 +69,7 @@ class GetThreadAction(NoobleEndpointAction):
                 }
             })
 
-        return await self.make_response(activities, configuration)
+        return await self.make_response(activities_objects, configuration)
 
 
 

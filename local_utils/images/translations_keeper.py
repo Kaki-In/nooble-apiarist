@@ -1,4 +1,4 @@
-from .images import _Image, PYVIPS_INSTALLED
+from .images import Image, PYVIPS_INSTALLED
 
 import typing as _T
 import base64 as _base64
@@ -43,10 +43,10 @@ class ImagesTranslationKeeper(_T.Generic[_image_types]):
     def decodeStr(self, data: str) -> bytes:
         return self._str_decodes[data]
 
-    def long_from_bytes(self, bytes: bytes) -> _Image[_image_types]:
+    def long_from_bytes(self, bytes: bytes) -> Image[_image_types]:
         raise NotImplementedError("not implemented for "+ repr(self))
 
-    def long_from_string(self, data: str) -> _Image[_image_types]:
+    def long_from_string(self, data: str) -> Image[_image_types]:
         raise NotImplementedError("not implemented for "+ repr(self))
 
 

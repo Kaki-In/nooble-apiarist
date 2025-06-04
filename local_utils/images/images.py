@@ -19,7 +19,7 @@ except Exception as exc:
     print("Warning: could not use the pyvips package because of the following error", exc)
     print("We will use the PIL library, that could be slow. Sorry for that issue. Please install the libvips module, and the libvips42 package. ")
 
-class _Image(_T.Generic[_image_types]):
+class Image(_T.Generic[_image_types]):
     def __init__(self, image: _image_types | None):
         self._image = image
 
@@ -38,16 +38,16 @@ class _Image(_T.Generic[_image_types]):
     def get_size(self) -> tuple[int, int]:
         return self.get_width(), self.get_height()
     
-    def resize(self, width:int, height:int) -> '_Image[_image_types]':
+    def resize(self, width:int, height:int) -> 'Image[_image_types]':
         raise NotImplementedError("not implemented for "+ repr(self))
     
-    def copy(self) -> '_Image[_image_types]':
+    def copy(self) -> 'Image[_image_types]':
         raise NotImplementedError("not implemented for "+ repr(self))
 
 if PYVIPS_INSTALLED:
     import pyvips as _pyvips
 
-    class _pyvipsImage(_Image[_pyvips.Image]): 
+    class _pyvipsImage(Image[_pyvips.Image]): 
         def __init__(self, image: _T.Optional[_pyvips.Image] = None):
             self._image = image or _pyvips.Image.black(10, 10)                  #type:ignore
 
@@ -90,7 +90,7 @@ if PYVIPS_INSTALLED:
             return _pyvipsImage(self._image.copy())                                           #type:ignore
 
 
-class _pillowImage(_Image[_pil_image.Image]):
+class _pillowImage(Image[_pil_image.Image]):
     def __init__(self, image: _T.Optional[_pil_image.Image] = None):
         self._image = image or _pil_image.new('RGB', (10, 10))
 
@@ -129,15 +129,5 @@ class _pillowImage(_Image[_pil_image.Image]):
     
     def copy(self) -> '_pillowImage':
         return _pillowImage(self._image.copy())
-
-def Image(image) -> _Image:
-    if PYVIPS_INSTALLED:
-        if image is None:
-            return _pyvipsImage()
-        
-        if type(image) is _pyvips.Image: #type:ignore
-            return _pyvipsImage(image)
-        
-    return _pillowImage(image)
 
 

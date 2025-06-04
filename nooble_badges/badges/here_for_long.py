@@ -20,18 +20,15 @@ class HereForLongBadge(NoobleBadge):
     """
 
     def __init__(self) -> None:
-        super().__init__("here_for_long")
+        super().__init__("here_for_long", 6)
 
     async def get_price_to_level(self, level: int, account: NoobleAccount) -> int:
         return (HERE_FOR_LONG_BADGE_YEARS[level]) * 100
     
-    async def get_max_level(self, account: NoobleAccount) -> int:
-        return 6
-    
     async def is_elligible_to_level(self, level: int, account: NoobleAccount) -> bool:
         return (_datetime.datetime.now() - await account.get_creation_date()) > _datetime.timedelta(days = HERE_FOR_LONG_BADGE_YEARS[level] * 365)
     
-    async def get_title(self, level: int) -> str:
+    def get_title(self, level: int) -> str:
         return [
             "Accustomed",
             "Integrated",
@@ -41,6 +38,7 @@ class HereForLongBadge(NoobleBadge):
             "Dean"
         ][level]
     
-    async def get_description(self, level: int) -> str:
-        return await super().get_description(level)
+    def get_description(self, level: int) -> str:
+        return f"You have been here for {HERE_FOR_LONG_BADGE_YEARS[level]} years"
+    
     

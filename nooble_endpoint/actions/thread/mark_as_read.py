@@ -45,9 +45,4 @@ class MarkActivitiesAsReadAction(NoobleEndpointAction):
 
         return await self.make_response(None, configuration)
 
-
-
-
-
-
     
