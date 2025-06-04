@@ -3,15 +3,15 @@ from .registration import NoobleRegistration
 import datetime as _datetime
 import nooble_database.database as _nooble_database
 import random as _random
-import nooble_conf.files.nooble_registrations_configuration as _nooble_conf_registrations
+import nooble_conf.files as _nooble_conf_files
 
 class NoobleRegistrationsList():
-    def __init__(self, configuration: _nooble_conf_registrations.NoobleRegistrationsSettings) -> None:
+    def __init__(self, configuration: _nooble_conf_files.NoobleRegistrationsSettings) -> None:
         self._configuration = configuration
 
         self._registrations: dict[str, NoobleRegistration] = {}
 
-    def get_configuration(self) -> _nooble_conf_registrations.NoobleRegistrationsSettings:
+    def get_configuration(self) -> _nooble_conf_files.NoobleRegistrationsSettings:
         return self._configuration
     
     def get_registration(self, token: str) -> NoobleRegistration:

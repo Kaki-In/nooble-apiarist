@@ -4,11 +4,11 @@ from .nooble_account import NoobleAccount
 from ..objects.account_object import AccountObject
 
 import re as _regex
-import nooble_conf.files.nooble_database_rules as _nooble_conf
+import nooble_conf.files as _nooble_conf_files
 import datetime as _datetime
 
 class NoobleAccountsList(NoobleCollection[AccountObject]):
-    def __init__(self, collection: _pymongo_collection.AsyncCollection[AccountObject], rules: _nooble_conf.NoobleDatabaseRulesSettings) -> None:
+    def __init__(self, collection: _pymongo_collection.AsyncCollection[AccountObject], rules: _nooble_conf_files.NoobleDatabaseRulesSettings) -> None:
         super().__init__(collection)
 
         self._rules = rules
@@ -59,7 +59,7 @@ class NoobleAccountsList(NoobleCollection[AccountObject]):
             "password": password,
             "profile": {
                 "active_badges": [],
-                "active_decoration": 0,
+                "active_decoration": None,
                 "description": {
                     "data": f"Neither more nore lass than {first_name} {last_name}",
                     "type": "raw text",
@@ -72,7 +72,7 @@ class NoobleAccountsList(NoobleCollection[AccountObject]):
             "role": "student",
             "safe": {
                 "badges": [],
-                "decorations": [0],
+                "decorations": [],
                 "quota": self._rules.get_new_users_nooblards_count()
             },
             "creation_date": int(_datetime.datetime.now().timestamp())

@@ -1,15 +1,15 @@
 from .file import NoobleFileResource
 
-import nooble_conf.files.nooble_resources_manager as _nooble_conf_resources_manager
+import nooble_conf.files as _nooble_conf_files
 import random as _random
 import os as _os
 import datetime as _datetime
 
 class NoobleResourcesManager():
-    def __init__(self, configuration: _nooble_conf_resources_manager.NoobleResourcesManagerSettings):
+    def __init__(self, configuration: _nooble_conf_files.NoobleResourcesManagerSettings):
         self._configuration = configuration
 
-    def get_configuration(self) -> _nooble_conf_resources_manager.NoobleResourcesManagerSettings:
+    def get_configuration(self) -> _nooble_conf_files.NoobleResourcesManagerSettings:
         return self._configuration
     
     def create_file(self, content: bytes) -> NoobleFileResource:

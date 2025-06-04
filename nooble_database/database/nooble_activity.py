@@ -17,7 +17,7 @@ class NoobleActivity(NoobleObject[ActivityObject]):
         object = await self.get_object()
         return object['content']
     
-    async def get_creator_id(self) -> int:
+    async def get_creator_id(self) -> str:
         object = await self.get_object()
         return object['creator']
     

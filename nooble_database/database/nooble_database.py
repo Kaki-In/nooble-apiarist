@@ -6,10 +6,10 @@ from .nooble_classes_list import NoobleClassesList
 
 import pymongo as _pymongo
 
-import nooble_conf.files.nooble_database_configuration as _nooble_conf
+import nooble_conf.files as _nooble_conf_files
 
 class NoobleDatabase():
-    def __init__(self, configuration: _nooble_conf.NoobleDatabaseSettings) -> None:
+    def __init__(self, configuration: _nooble_conf_files.NoobleDatabaseSettings) -> None:
         self._client = _pymongo.AsyncMongoClient(
             configuration.get_host(),
             configuration.get_port()

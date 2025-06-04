@@ -1,4 +1,4 @@
-from .directories.nooble_configuration import NoobleConfiguration
+from .directories import NoobleConfiguration
 
 MAIN_CONFIGURATION = NoobleConfiguration()
 
