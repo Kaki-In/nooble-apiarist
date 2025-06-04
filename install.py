@@ -37,12 +37,13 @@ def require_dependencies(**packages):
     print("Installing dependencies...")
 
     failed = []
+    low_failed = []
 
     for package_name in packages:
         print(package_name+"...", end="")
 
         try:
-            subprocess.check_call([sys.executable, "-c", "import " + packages[package_name]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            subprocess.check_call([sys.executable, "-c", "import " + packages[package_name][0]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         except Exception as exc:
             print("\b\r"+ package_name+" installing...", end="")
             subprocess.check_call([sys.executable, "-m", "pip", "install", package_name])
@@ -51,13 +52,13 @@ def require_dependencies(**packages):
 
         try:
             try:
-                subprocess.check_call([sys.executable, "-c", "import " + packages[package_name]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                subprocess.check_call([sys.executable, "-c", "import " + packages[package_name][0]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 print("\b\r"+ package_name+" imported succesfully")
             except Exception as exc:
                 print()
                 subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", package_name])
 
-                subprocess.check_call([sys.executable, "-c", "import " + packages[package_name]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                subprocess.check_call([sys.executable, "-c", "import " + packages[package_name][0]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 print("\b\r"+ package_name+" imported succesfully")
 
         except OSError as exc:
@@ -67,22 +68,27 @@ def require_dependencies(**packages):
 
         except Exception as exc:
             print("\b\r"+ package_name+" import failed")
-            failed.append(package_name)
-    
 
-    if not "pyvips" in failed:
+            if packages[package_name][1]:
+                failed.append(package_name)
+            else:
+                low_failed.append(package_name)
+
+    if not "pyvips" in low_failed:
         if os.name == "posix":
             try:
                 import pyvips
             except OSError:
                 print("The libvips42 utils seem missing. Trying to install it...")
                 os.system("sudo apt install libvips42")
+            except Exception as exc:
+                pass
 
 
-    if failed:
+    if failed + low_failed:
         print("Some Python packages could not be installed: ")
 
-        for pack in failed:
+        for pack in failed + low_failed:
             print(" -", pack)
         
         print("Please ensure they are installed to let the program be running correctly")
@@ -134,10 +140,10 @@ def main(args):
     for test in [
         check_version,
         lambda:require_dependencies(
-            pyvips = "pyvips",
-            quart = "quart",
-            pymongo = "pymongo",
-            Pillow = "PIL._imaging"
+            pyvips = ("pyvips", False),
+            quart = ("quart", True),
+            pymongo = ("pymongo", True),
+            Pillow = ("PIL._imaging", True)
         ),
         lambda: ensure_packages(
             "apiarist_server_endpoint",
