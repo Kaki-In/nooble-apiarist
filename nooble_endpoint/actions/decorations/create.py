@@ -1,5 +1,4 @@
 import quart.wrappers as _quart_wrappers
-import nooble_database.objects.roles as _nooble_database_roles
 
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
@@ -60,6 +59,12 @@ class CreateDecorationAction(NoobleEndpointAction):
             args["image_id"],
             args["price"]
         )
+
+        await account.update({
+            "$push": {
+                "safe.decorations": decoration.get_id()
+            }
+        })
 
         return await self.make_response({
             "new_decoration": decoration.get_id()

@@ -31,6 +31,7 @@ class NoobleEndpoint(_server_endpoint.ServerEndpoint[NoobleEndpointConfiguration
 
         self.add_action("/resources/get-self-files", GetSelfFilesAction(), "GET")
         self.add_action("/resources/upload", UploadFileAction(), "POST")
+        self.add_action("/resources/delete", DeleteFileAction(), "POST")
         self.add_action("/resources/download", DownloadFileAction(), "GET")
 
         self.add_action("/thread/get", GetThreadAction(), "GET")
@@ -46,6 +47,11 @@ class NoobleEndpoint(_server_endpoint.ServerEndpoint[NoobleEndpointConfiguration
         self.add_action("/decoration/get_info", GetDecorationInfosAction(), "GET")
         self.add_action("/decoration/list", ListDecorationsAction(), "GET")
         self.add_action("/decorations/modify", ModifyDecorationAction(), "POST")
+
+        self.add_action("/safe", GetSafeAction(), "GET")
+        self.add_action("/safe/bages", GetBadgesAction(), "GET")
+        self.add_action("/safe/decorations", GetDecorationsAction(), "GET")
+        self.add_action("/safe/quota", GetQuotaAction(), "GET")
 
     async def main(self) -> None:
         configuration = self.get_configuration().get_configuration()

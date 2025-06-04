@@ -27,4 +27,15 @@ class NoobleDecorationsList(NoobleCollection[DecorationObject]):
             NoobleDecoration(self.get_collection(), decoration["_id"], decoration)
             for decoration in decorations
         ]
+    
+    async def get_decoration_from_image(self, image_id: str) -> NoobleDecoration | None:
+        result = await self.find_one({
+            "image_id": image_id
+        })
+
+        if result is None:
+            return None
+        
+        else:
+            return NoobleDecoration(self.get_collection(), result["_id"], result)
 
