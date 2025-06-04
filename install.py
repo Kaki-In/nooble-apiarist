@@ -3,6 +3,7 @@
 import sys
 import os
 import subprocess
+import importlib.util
 
 def check_version():
     print("Checking Python version...", end="")
@@ -33,27 +34,49 @@ def check_version():
 def require_dependencies(**packages):
     print("Installing dependencies...")
 
-    if os.name == "posix":
-        if os.system("ls /usr/lib/x86_64-linux-gnu/ | grep libvips > /dev/null") == 256:
-            print("The libvips42 utils seem missing. Trying to install it...")
-            os.system("sudo apt install libvips42")
-
     failed = []
 
     for package_name in packages:
+        print(package_name+"...", end="")
+
         try:
-            exec("import " + package_name)
-        except ImportError:
-            subprocess.check_call([sys.executable, "-m", "pip", "install", packages[package_name]])
-            
+            subprocess.check_call([sys.executable, "-c", "import " + packages[package_name]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        except Exception as exc:
+            print("\b\r"+ package_name+" installing...", end="")
+            subprocess.check_call([sys.executable, "-m", "pip", "install", package_name])
+        else:
+            print("\b\r"+ package_name+" found", end="")
+
+        try:
             try:
-                exec("import " + package_name)
-            except:
-                failed.append(package_name)
+                subprocess.check_call([sys.executable, "-c", "import " + packages[package_name]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                print("\b\r"+ package_name+" imported succesfully")
+            except Exception as exc:
+                print()
+                subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", package_name])
+
+                subprocess.check_call([sys.executable, "-c", "import " + packages[package_name]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                print("\b\r"+ package_name+" imported succesfully")
+
         except OSError as exc:
+            print()
             print("It seems that the", package_name, "package could not find its compiled libary in your system. This could lead to some latency, or to the api unusability. ")
             print("Displayed message:", repr(exc))
+
+        except Exception as exc:
+            print("\b\r"+ package_name+" import failed")
+            failed.append(package_name)
     
+
+    if not "pyvips" in failed:
+        if os.name == "posix":
+            try:
+                import pyvips
+            except OSError:
+                print("The libvips42 utils seem missing. Trying to install it...")
+                os.system("sudo apt install libvips42")
+
+
     if failed:
         print("Some Python packages could not be installed: ")
 
@@ -112,7 +135,7 @@ def main(args):
             pyvips = "pyvips",
             quart = "quart",
             pymongo = "pymongo",
-            PIL = "pillow"
+            Pillow = "PIL._imaging"
         ),
         lambda: ensure_packages(
             "apiarist_server_endpoint",
