@@ -36,6 +36,10 @@ class NoobleEndpoint(_server_endpoint.ServerEndpoint[NoobleEndpointConfiguration
         self.add_action("/thread/get", GetThreadAction(), "GET")
         self.add_action("/thread/mark-as-read", MarkActivitiesAsReadAction(), "POST")
 
+        self.add_action("/badges/list", ListBadgesAction(), "GET")
+        self.add_action("/badges/get", GetBadgeInfosAction(), "GET")
+        self.add_action("/badges/buy", BuyBadgeAction(), "POST")
+
     async def main(self) -> None:
         configuration = self.get_configuration().get_configuration()
 
