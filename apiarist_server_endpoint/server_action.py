@@ -15,7 +15,7 @@ class ServerEndpointAction(_T.Generic[_configuration_type]):
             return "Forbidden", 401
 
         if not await self.is_valid(configuration, request):
-            return "Bad Request", 403
+            return "Bad Request", 400
 
         response = await self.main(configuration, request)
         return response

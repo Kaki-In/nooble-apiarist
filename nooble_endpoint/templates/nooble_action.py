@@ -4,6 +4,7 @@ import nooble_database.database as _nooble_database
 import datetime as _datetime
 import json as _json
 import typing as _T
+import werkzeug.datastructures as _werkzeug_datastructure
 
 from ..configuration.conf import NoobleEndpointConfiguration
 
@@ -41,6 +42,10 @@ class NoobleEndpointAction(_apiarist.ServerEndpointAction[NoobleEndpointConfigur
     
     async def make_response(self, data: _T.Any, configuration: NoobleEndpointConfiguration, code: int = 202) -> _quart_wrappers.Response:
         return await configuration.get_quart().make_response((_json.dumps(data), code)) # type:ignore
+    
+    async def get_files(self, request: _quart_wrappers.Request) -> dict[str, _werkzeug_datastructure.FileStorage]:
+        return (await request.files)
+
     
 
 

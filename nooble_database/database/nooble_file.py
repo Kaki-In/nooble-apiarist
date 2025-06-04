@@ -20,7 +20,7 @@ class NoobleFile(NoobleObject[FileObject]):
             object['sent_date']
         )
     
-    async def get_sender_id(self) -> int:
+    async def get_sender_id(self) -> str:
         object = await self.get_object()
         return object['sender']
     

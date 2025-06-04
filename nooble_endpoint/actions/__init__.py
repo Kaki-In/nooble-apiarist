@@ -2,4 +2,5 @@ from .connection import ForgotPasswordAction, LoginAction, GetLogInfoAction, Log
 from .profil import GetProfileInfoAction, ModifyProfileAction, UpdateProfileAction
 from .classes import AddClassAccountAction, CreateClassAction, DeleteClassAction, GetClassAccountsAction, GetClassDataAction, RemoveClassAccountAction
 from .accounts import AddAccountAction, DeleteAccountAction, ModifyAccountMailAction, ModifyAccountRoleAction
+from .resources import GetSelfFilesAction, UploadFileAction, DownloadFileAction
 

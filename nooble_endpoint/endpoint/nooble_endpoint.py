@@ -29,6 +29,10 @@ class NoobleEndpoint(_server_endpoint.ServerEndpoint[NoobleEndpointConfiguration
         self.add_action("/accounts/modify-mail", ModifyAccountMailAction(), "POST")
         self.add_action("/accounts/modify-role", ModifyAccountRoleAction(), "POST")
 
+        self.add_action("/resources/get-self-files", GetSelfFilesAction(), "GET")
+        self.add_action("/resources/upload", UploadFileAction(), "POST")
+        self.add_action("/resources/download", DownloadFileAction(), "GET")
+
     async def main(self) -> None:
         configuration = self.get_configuration().get_configuration()
 

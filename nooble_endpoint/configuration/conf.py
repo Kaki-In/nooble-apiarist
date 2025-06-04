@@ -6,6 +6,7 @@ import nooble_conf.directories.nooble_configuration as _nooble_configuration
 import nooble_conf.files.nooble_binding_configuration as _nooble_binding_configuration
 import nooble_mail_service as _nooble_mail_service
 import nooble_badges.default as _nooble_badges
+import nooble_resources_manager as _nooble_resources
 
 class NoobleEndpointConfiguration(_server_endpoint.ServerEndpointConfiguration):
     def __init__(self, configuration: _nooble_configuration.NoobleConfiguration):
@@ -17,6 +18,7 @@ class NoobleEndpointConfiguration(_server_endpoint.ServerEndpointConfiguration):
         self._database = _nooble_database.NoobleDatabase(configuration.get_database_settings())
         self._mails = _nooble_mail_service.NoobleMailSender(configuration.get_mail_settings(), configuration.get_templates().get_mail_templates())
         self._registrations = _registrations.NoobleRegistrationsList(endpoint_configuration.get_registration_settings())
+        self._resources = _nooble_resources.NoobleResourcesManager(configuration.get_resources_manager_settings())
 
         self._configuration = binding_settings
     
@@ -34,4 +36,7 @@ class NoobleEndpointConfiguration(_server_endpoint.ServerEndpointConfiguration):
     
     def get_configuration(self) -> _nooble_binding_configuration.NoobleBindingSettings:
         return self._configuration
+    
+    def get_resources(self) -> _nooble_resources.NoobleResourcesManager:
+        return self._resources
 
