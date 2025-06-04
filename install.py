@@ -19,14 +19,16 @@ def check_version():
     print("\b\rPython version is " + sys.version)
 
     print("Checking pip version...", end="")
-    pip_version = [int(i) for i in subprocess.getoutput(sys.executable+" -m pip -V").split(" ")[1].split(".")]
+    process = subprocess.run([sys.executable, "-m", "pip", "-V"], capture_output=True, text=True)
+    pip_version = [int(i) for i in process.stdout.split(" ")[1].split(".")]
 
     if pip_version[0] < 23:
         print("\nPip version " + '.'.join([str(i) for i in pip_version]) + " is not up to date. Installing...")
 
         subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", "pip"])
     
-    pip_version = subprocess.getoutput(sys.executable+" -m pip -V").split(" ")[1]
+    process = subprocess.run([sys.executable, "-m", "pip", "-V"], capture_output=True, text=True)
+    pip_version = process.stdout.split(" ")[1]
     print("\b\rPip version is " + pip_version)
 
     return True
