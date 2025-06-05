@@ -1,6 +1,6 @@
 import typing as _T
 
-from .section_object import SectionObject
+from .section_objects import SectionObject
 
 class ClassObject(_T.TypedDict):
     _id: str

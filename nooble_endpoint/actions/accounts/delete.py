@@ -43,6 +43,14 @@ class DeleteAccountAction(NoobleEndpointAction):
 
         account = configuration.get_database().get_accounts().get_account(user_id)
 
+        files = await configuration.get_database().get_files().get_sender_files(user_id)
+
+        for file in files:
+            file_object = await file.ensure_object()
+
+            if file_object["filetype"] == "profile icon":
+                await file.destroy()
+
         await account.destroy()
 
         return await self.make_response(None, configuration)

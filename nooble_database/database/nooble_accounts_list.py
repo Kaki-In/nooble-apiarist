@@ -32,6 +32,21 @@ class NoobleAccountsList(NoobleCollection[AccountObject]):
 
         return NoobleAccount(self.get_collection(), account["_id"], account)
     
+    async def get_decoration_owners(self, decoration_id: str) -> list[NoobleAccount]:
+        return [
+            NoobleAccount(
+                self.get_collection(),
+                account_data["_id"],
+                account_data
+            )
+
+            for account_data in await self.find(
+                {
+                    "safe.decorations": decoration_id
+                }
+            )
+        ]
+    
     async def get_accounts_containing_username(self, username:str) -> list[NoobleAccount]:
         return [
             NoobleAccount(
@@ -60,11 +75,7 @@ class NoobleAccountsList(NoobleCollection[AccountObject]):
             "profile": {
                 "active_badges": [],
                 "active_decoration": None,
-                "description": {
-                    "data": f"Neither more nore lass than {first_name} {last_name}",
-                    "type": "raw text",
-                    "uses_files": []
-                },
+                "description": "Neither more nor less than {first_name} {last_name}",
                 "first_name": first_name,
                 "last_name": last_name,
                 "profile_image": None

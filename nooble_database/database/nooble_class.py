@@ -1,6 +1,6 @@
 from ..templates.nooble_object import NoobleObject
 from ..objects.class_object import ClassObject
-from ..objects.section_object import SectionObject
+from ..objects.section_objects import SectionObject
 
 import datetime as _datetime
 

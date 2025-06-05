@@ -8,5 +8,5 @@ from .file_types import FileType
 from .profile_object import ProfileObject
 from .roles import Role
 from .safe_object import SafeObject
-from .section_object import SectionObject
+from .section_objects import SectionObject
 

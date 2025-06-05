@@ -7,6 +7,8 @@ import nooble_conf.files as _nooble_conf_files
 import nooble_mail_service as _nooble_mail_service
 import nooble_badges.default as _nooble_badges
 import nooble_resources_manager as _nooble_resources
+import nooble_activities.default as _nooble_activities
+import nooble_sections.default as _nooble_sections
 
 class NoobleEndpointConfiguration(_server_endpoint.ServerEndpointConfiguration):
     def __init__(self, configuration: _nooble_conf_directories.NoobleConfiguration):
@@ -19,6 +21,9 @@ class NoobleEndpointConfiguration(_server_endpoint.ServerEndpointConfiguration):
         self._mails = _nooble_mail_service.NoobleMailSender(configuration.get_mail_settings(), configuration.get_templates().get_mail_templates())
         self._registrations = _registrations.NoobleRegistrationsList(endpoint_configuration.get_registration_settings())
         self._resources = _nooble_resources.NoobleResourcesManager(configuration.get_resources_manager_settings())
+
+        self._activities_manager = _nooble_activities.get_default_activity_manager(self._resources)
+        self._sections_map = _nooble_sections.get_default_sections_map(self._activities_manager)
 
         self._configuration = binding_settings
     
@@ -39,4 +44,10 @@ class NoobleEndpointConfiguration(_server_endpoint.ServerEndpointConfiguration):
     
     def get_resources(self) -> _nooble_resources.NoobleResourcesManager:
         return self._resources
+    
+    def get_activities(self) -> _nooble_activities.NoobleActivitiesManager:
+        return self._activities_manager
+    
+    def get_sections(self) -> _nooble_sections.NoobleSectionsMap:
+        return self._sections_map
 

@@ -30,6 +30,9 @@ class Role(_enum.Enum):
     
     def is_admin(self) -> bool:
         return self in (Role.ADMIN, Role.ADMIN_TEACHER)
+    
+    def is_teacher(self) -> bool:
+        return self in (Role.ADMIN_TEACHER, Role.TEACHER)
 
 
 

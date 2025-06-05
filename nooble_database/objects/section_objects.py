@@ -5,7 +5,6 @@ _data_type = _T.TypeVar("_data_type")
 class SectionObject(_T.TypedDict, _T.Generic[_data_type]):
     type:str
     data: _data_type
-    uses_files: list[int]
 
 # Raw Text
 
@@ -56,7 +55,7 @@ class IntegrationSectionObject(SectionObject[IntegrationSectionDataObject]):
 # Activity
 
 class ActivitySectionDataObject(_T.TypedDict):
-    id: int
+    file_id: str
 
 class ActivitySectionObject(SectionObject[ActivitySectionDataObject]):
     pass

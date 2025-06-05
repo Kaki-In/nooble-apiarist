@@ -23,6 +23,7 @@ class NoobleEndpoint(_server_endpoint.ServerEndpoint[NoobleEndpointConfiguration
         self.add_action("/classes/get-accounts", GetClassAccountsAction(), "POST")
         self.add_action("/classes/data", GetClassDataAction(), "POST", "GET")
         self.add_action("/classes/remove-account", RemoveClassAccountAction(), "POST")
+        self.add_action("/classes/edit", EditClassAction(), "POST")
     
         self.add_action("/accounts/add", AddAccountAction(), "POST")
         self.add_action("/accounts/delete", DeleteAccountAction(), "POST")

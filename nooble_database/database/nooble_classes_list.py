@@ -1,7 +1,7 @@
 from ..templates.nooble_collection import NoobleCollection
 from ..objects.class_object import ClassObject
 from .nooble_class import NoobleClass
-from ..objects.section_object import SectionObject
+from ..objects.section_objects import SectionObject
 
 import re as _regex
 import datetime as _datetime
@@ -65,8 +65,7 @@ class NoobleClassesList(NoobleCollection[ClassObject]):
                 "children": [],
                 "is_horizontal": False,
                 "is_wrapping": False,
-            },
-            "uses_files": []
+            }
         }
         object: ClassObject = {
             "_id": '',

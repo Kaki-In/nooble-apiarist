@@ -2,7 +2,7 @@ from ..templates.nooble_sub_object import NoobleSubObject
 
 from ..objects.profile_object import ProfileObject
 from ..objects.account_object import AccountObject
-from ..objects.section_object import SectionObject
+from ..objects.section_objects import SectionObject
 
 class NoobleProfile(NoobleSubObject[AccountObject, ProfileObject]):
     async def _get_sub_object_from(self, object: AccountObject) -> ProfileObject:
@@ -23,6 +23,6 @@ class NoobleProfile(NoobleSubObject[AccountObject, ProfileObject]):
     async def get_active_badges_ids(self) -> list[str]:
         return (await self.get_object())['active_badges']
     
-    async def get_description(self) -> SectionObject:
+    async def get_description(self) -> str:
         return (await self.get_object())['description']
     

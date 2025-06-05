@@ -93,5 +93,9 @@ class UploadFileAction(NoobleEndpointAction):
                 return image.get_width() == image.get_height()
             except:
                 return False
-        else:
-            return True
+        elif filetype == _nooble_database_file_types.FileType.SECTION_FILE:
+            # Section files must be created directly using an API
+            return False
+        
+        return False
+
