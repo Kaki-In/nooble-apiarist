@@ -39,6 +39,9 @@ class GetSelfFilesAction(NoobleEndpointAction):
 
         for file in files:
             file_object = await file.ensure_object()
+
+            if file_object["filetype"] == "section file":
+                continue
             
             files_result.append(
                 {

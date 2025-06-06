@@ -20,7 +20,7 @@ class NoobleClass(NoobleObject[ClassObject]):
     async def get_content(self) -> SectionObject:
         return (await self.get_object())["content"]
     
-    async def get_accounts_ids(self) -> list[int]:
+    async def get_accounts_ids(self) -> list[str]:
         return (await self.get_object())["accounts"]
 
 

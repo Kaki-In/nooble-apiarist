@@ -40,6 +40,11 @@ class ModifyAccountMailAction(NoobleEndpointAction):
         return True
 
     async def main(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request):
+        self_account = await self.get_account(request, configuration)
+
+        if self_account is None:
+            return await self.make_response(None, configuration, 500)
+
         args = await self.get_request_args(request)
 
         user_id: str = args["user_id"]
@@ -47,11 +52,15 @@ class ModifyAccountMailAction(NoobleEndpointAction):
         
         account = configuration.get_database().get_accounts().get_account(user_id)
 
+        await configuration.get_mail_service().send_edited_address_mail(await account.get_object(), mail, await self_account.get_object())
+
         await account.update({
             "$set": {
                 "mail": mail
             }
         })
+
+        await configuration.get_mail_service().send_edited_address_mail(await account.get_object(), mail, await self_account.get_object())
 
         return await self.make_response(None, configuration)
 

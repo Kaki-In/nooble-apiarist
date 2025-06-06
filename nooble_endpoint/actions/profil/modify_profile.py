@@ -27,7 +27,7 @@ class ModifyProfileAction(NoobleEndpointAction):
         and type(args["active_decoration"]) is str
         and type(args["profile_image"]) is str
         and type(args["active_badges"]) is list
-        and type(args["description"]) is dict
+        and type(args["description"]) is str
         ):
             return False
         
@@ -42,8 +42,6 @@ class ModifyProfileAction(NoobleEndpointAction):
             
             pass
             
-        # TODO: ensure description sections are valid
-
         file_image = configuration.get_database().get_files().get_file(args["profile_image"])
         
         if not await file_image.exists():
@@ -63,10 +61,20 @@ class ModifyProfileAction(NoobleEndpointAction):
         if not await account.get_role() in [_nooble_database_roles.Role.ADMIN, _nooble_database_roles.Role.ADMIN_TEACHER]:
             return False
         
+        args = await self.get_request_args(request)
+
+        if account.get_id() == args["user_id"]:
+            return False
+        
         return True
 
 
     async def main(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request):
+        self_account = await self.get_account(request, configuration)
+
+        if self_account is None:
+            return await self.make_response(None, configuration, 500)
+
         args = await self.get_request_args(request)
 
         user_id: str = args["user_id"]
@@ -74,7 +82,7 @@ class ModifyProfileAction(NoobleEndpointAction):
         last_name: str = args["last_name"]
         active_decoration: str = args["active_decoration"]
         active_badges: list[str] = args["active_badges"]
-        description: dict = args["description"]
+        description: str = args["description"]
         profile_image: str = args["profile_image"]
 
         account = configuration.get_database().get_accounts().get_account(user_id)
@@ -97,5 +105,7 @@ class ModifyProfileAction(NoobleEndpointAction):
                 }
             }
         })
+
+        await configuration.get_mail_service().send_edited_profile_mail(await account.ensure_object(), await self_account.ensure_object())
 
         return await self.make_response(None, configuration)

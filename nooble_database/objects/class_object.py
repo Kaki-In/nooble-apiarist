@@ -10,7 +10,7 @@ class ClassObject(_T.TypedDict):
     last_modification: int
     last_modifier: str
     content: SectionObject
-    accounts: list[int]
+    accounts: list[str]
     
 
 

@@ -84,7 +84,7 @@ class EditClassAction(NoobleEndpointAction):
         for file_id in actual_used_files:
             if not file_id in new_used_files:
                 file = configuration.get_database().get_files().get_file(file_id)
-                
+
                 configuration.get_resources().get_file(await file.get_filepath()).destroy()
                 await file.destroy()
 
@@ -99,6 +99,18 @@ class EditClassAction(NoobleEndpointAction):
                 }
             }
         )
+
+        class_accounts = await nooble_class.get_accounts_ids()
+
+        if not account.get_id() in class_accounts:
+            for teacher_id in class_accounts:
+                teacher_object = await configuration.get_database().get_accounts().get_account(teacher_id).get_object()
+
+                if teacher_object["role"] in "student":
+                    continue
+
+                await configuration.get_mail_service().send_edited_class_mail(teacher_object, await nooble_class.ensure_object(), await account.get_object())
+
 
         return await self.make_response(None, configuration)
 

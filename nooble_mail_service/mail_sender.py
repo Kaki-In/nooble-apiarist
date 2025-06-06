@@ -1,7 +1,7 @@
 from nooble_conf.files.nooble_mail_sender import NoobleMailSenderSettings
 from nooble_conf.directories.nooble_mail_templates import NoobleMailTemplatesConfiguration
 
-import nooble_database.objects.account_object as _nooble_accounts_object
+import nooble_database.objects as _nooble_database_objects
 import smtplib as _smtplib
 import email.mime.multipart as _email_multipart
 import email.mime.text as _email_text
@@ -38,7 +38,7 @@ class NoobleMailSender():
 
         return smtp
     
-    async def send_email(self, account: _nooble_accounts_object.AccountObject, subject:str, content: str) -> None:
+    async def send_email(self, account: _nooble_database_objects.AccountObject, subject:str, content: str) -> None:
         sender_address = "{} <{}>".format(
             self._conf.get_identity_configuration().get_name(),
             self._conf.get_identity_configuration().get_address()
@@ -79,7 +79,24 @@ class NoobleMailSender():
         except Exception as exc:
             print("[ MAIL_SENDER ] an error occured!", repr(exc))
 
-    async def send_new_password_mail(self, account: _nooble_accounts_object.AccountObject, new_password: str) -> None:
+    async def send_new_password_mail(self, account: _nooble_database_objects.AccountObject, new_password: str) -> None:
         html_content = self._templates.get_send_password_mail_template(account, new_password)
         _asyncio.create_task(self.send_email(account, "Votre nouveau mot de passe", html_content))
+
+    async def send_edited_address_mail(self, account: _nooble_database_objects.AccountObject, new_mail: str, admin: _nooble_database_objects.AccountObject) -> None:
+        html_content = self._templates.get_edited_address_mail_template(account, admin, new_mail)
+        _asyncio.create_task(self.send_email(account, "Votre adresse mail a été modifiée", html_content))
+
+    async def send_edited_role_mail(self, account: _nooble_database_objects.AccountObject, admin: _nooble_database_objects.AccountObject) -> None:
+        html_content = self._templates.get_edited_role_mail_template(account, admin)
+        _asyncio.create_task(self.send_email(account, "Votre rôle a été modifié", html_content))
+
+    async def send_edited_profile_mail(self, account: _nooble_database_objects.AccountObject, admin: _nooble_database_objects.AccountObject) -> None:
+        html_content = self._templates.get_edited_profile_mail_template(account, admin)
+        _asyncio.create_task(self.send_email(account, "Votre profil a été modifié", html_content))
+
+    async def send_edited_class_mail(self, account: _nooble_database_objects.AccountObject, nooble_class: _nooble_database_objects.ClassObject, admin: _nooble_database_objects.AccountObject) -> None:
+        html_content = self._templates.get_edited_class_mail_template(account, nooble_class, admin)
+        _asyncio.create_task(self.send_email(account, "Votre cours a été modifié", html_content))
+
     

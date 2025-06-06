@@ -28,7 +28,7 @@ class DeleteAccountAction(NoobleEndpointAction):
         if account is None:
             return False
 
-        if not await account.get_role() in [_nooble_database_roles.Role.ADMIN, _nooble_database_roles.Role.ADMIN_TEACHER]:
+        if not (await account.get_role()).is_admin():
             return False
         
         if account.get_id() == args["user_id"]:
@@ -44,6 +44,15 @@ class DeleteAccountAction(NoobleEndpointAction):
         account = configuration.get_database().get_accounts().get_account(user_id)
 
         files = await configuration.get_database().get_files().get_sender_files(user_id)
+
+        await configuration.get_database().get_classes().update(
+            {},
+            {
+                "$pull": {
+                    "accounts": user_id
+                }
+            }
+        )
 
         for file in files:
             file_object = await file.ensure_object()

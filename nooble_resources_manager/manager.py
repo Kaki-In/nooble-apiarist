@@ -9,7 +9,8 @@ class NoobleResourcesManager():
     def __init__(self, configuration: _nooble_conf_files.NoobleResourcesManagerSettings):
         self._configuration = configuration
 
-        _os.makedirs(self._configuration.get_base_directory())
+        if not _os.path.exists(self._configuration.get_base_directory()):
+            _os.makedirs(self._configuration.get_base_directory())
 
     def get_configuration(self) -> _nooble_conf_files.NoobleResourcesManagerSettings:
         return self._configuration

@@ -38,6 +38,21 @@ class DeleteDecorationAction(NoobleEndpointAction):
 
         file = configuration.get_database().get_files().get_file(await decoration.get_image_id())
 
+        await configuration.get_database().get_accounts().update(
+            {
+                "safe.decorations": decoration.get_id(),
+                "profile.active_decoration": None
+            },
+            {
+                "$pull": {
+                    "safe.decorations": decoration.get_id()
+                },
+                "$inc": {
+                    "safe.quota": await decoration.get_price()
+                }
+            }
+        )
+
         await file.destroy()
         await decoration.destroy()
 

@@ -24,7 +24,7 @@ class UpdateProfileAction(NoobleEndpointAction):
         and type(args["active_decoration"]) is str
         and type(args["profile_image"]) is str
         and type(args["active_badges"]) is list
-        and type(args["description"]) is dict
+        and type(args["description"]) is str
         ):
             return False
         
@@ -32,8 +32,6 @@ class UpdateProfileAction(NoobleEndpointAction):
             if type(badge) is not int:
                 return False
             
-        # TODO: ensure description sections are valid
-
         file_image = configuration.get_database().get_files().get_file(args["profile_image"])
         
         if not await file_image.exists():
@@ -79,7 +77,7 @@ class UpdateProfileAction(NoobleEndpointAction):
         last_name: str = args["last_name"]
         active_decoration:str = args["active_decoration"]
         active_badges: list[str] = args["active_badges"]
-        description: dict = args["description"]
+        description: str = args["description"]
         profile_image: str = args["profile_image"]
 
         account = await self.get_account(request, configuration)

@@ -1,6 +1,8 @@
 import quart.wrappers as _quart_wrappers
 import hashlib as _hashlib
 import nooble_database.objects.roles as _nooble_database_roles
+import asyncio as _asyncio
+import random as _random
 
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
@@ -13,7 +15,6 @@ class AddAccountAction(NoobleEndpointAction):
             "mail" in args
         and "first_name" in args
         and "last_name" in args
-        and "password" in args
         ):
             return False
         
@@ -21,7 +22,6 @@ class AddAccountAction(NoobleEndpointAction):
             type(args["mail"]) is str
         and type(args["first_name"]) is str
         and type(args["last_name"]) is str
-        and type(args["password"]) is str
         ):
             return False
         
@@ -44,10 +44,22 @@ class AddAccountAction(NoobleEndpointAction):
         mail: str = args["mail"]
         first_name: str = args["first_name"]
         last_name: str = args["last_name"]
-        password: str = args["password"]
 
-        new_account = await configuration.get_database().get_accounts().create_new_account(mail, first_name, last_name, _hashlib.sha256(password.encode()).hexdigest())
+        new_password = self.create_new_password()
+        new_account = await configuration.get_database().get_accounts().create_new_account(mail, first_name, last_name, _hashlib.sha256(new_password.encode()).hexdigest())
+        
+        _asyncio.create_task(configuration.get_mail_service().send_new_password_mail(await new_account.ensure_object(), new_password))
 
         return await self.make_response({
             "new_account": new_account.get_id()
         }, configuration)
+    
+    def create_new_password(self) -> str:
+        a = ""
+
+        for i in range(8):
+            a += _random.choice("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123465789")
+
+        return a
+
+
