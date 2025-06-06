@@ -7,4 +7,4 @@ from .thread import GetThreadAction, MarkActivitiesAsReadAction
 from .badges import BuyBadgeAction, GetBadgeInfosAction, ListBadgesAction, GetBadgeThumbnailAction
 from .decorations import BuyDecorationAction, CreateDecorationAction, DeleteDecorationAction, GetDecorationInfosAction, ListDecorationsAction, ModifyDecorationAction
 from .safe import GetSafeAction, GetBadgesAction, GetDecorationsAction, GetQuotaAction
-
+from .activities import GetActivitiesListAction, NoobleHomeworkActivityPack

@@ -33,7 +33,7 @@ class HomeworkActivity(NoobleActivity):
 <h2> Rendre un devoir </h2>
 <div id="homework-giveback">
     <span>Devoir rendu</span>
-    <a href='/resources/download?id={student_homework['id']}&type=section file' target='_blank'>
+    <a href='{self.get_file_url(student_homework["file_id"])}' target='_blank'>
         {given_file['filename']}
     </a>
     <button id="delete-button">Supprimer le devoir</button>
@@ -69,7 +69,7 @@ class HomeworkActivity(NoobleActivity):
         <span class='homework_student'>
             {sender_name}
         </span>
-        <a href='/resources/download?id={homework['id']}&type=section file' target='_blank'>
+        <a href='{self.get_file_url(homework["file_id"])}&type=section file' target='_blank'>
             {student_file['filename']}
         </a>
     </li>

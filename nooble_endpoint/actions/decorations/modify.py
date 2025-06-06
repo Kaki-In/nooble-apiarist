@@ -38,15 +38,6 @@ class ModifyDecorationAction(NoobleEndpointAction):
         if not (await account.get_role()).is_admin():
             return False
         
-        args = await self.get_request_args(request)
-
-        decoration = configuration.get_database().get_decorations().get_decoration(args["decoration_id"])
-
-        file = configuration.get_database().get_files().get_file(await decoration.get_image_id())
-
-        if not await file.get_sender_id() != account.get_id():
-            return False
-        
         return True
     
     async def main(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request):

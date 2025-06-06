@@ -70,11 +70,23 @@ class EditClassAction(NoobleEndpointAction):
         args = await self.get_request_args(request)
 
         nooble_class = configuration.get_database().get_classes().get_class(args["id"])
+
+        previous_class_content = configuration.get_sections().export(await nooble_class.get_content())
+        actual_used_files = await previous_class_content.get_recursive_used_files(configuration.get_database())
+
         title:str = args["title"]
         description:str = args["description"]
         content:_nooble_database_objects.SectionObject = args["content"]
 
-        ensured_content = await configuration.get_sections().export(content).export_to_database_json_data(configuration.get_database())
+        ensured_content = configuration.get_sections().export(content)
+        new_used_files = await ensured_content.get_recursive_used_files(configuration.get_database())
+
+        for file_id in actual_used_files:
+            if not file_id in new_used_files:
+                file = configuration.get_database().get_files().get_file(file_id)
+                
+                configuration.get_resources().get_file(await file.get_filepath()).destroy()
+                await file.destroy()
 
         await nooble_class.update(
             {
@@ -83,7 +95,7 @@ class EditClassAction(NoobleEndpointAction):
                     "description": description,
                     "last_modification": _datetime.datetime.now().timestamp(),
                     "last_modifier": account.get_id(),
-                    "content": ensured_content
+                    "content": await ensured_content.export_to_database_json_data(configuration.get_database())
                 }
             }
         )

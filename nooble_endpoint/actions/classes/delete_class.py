@@ -38,6 +38,15 @@ class DeleteClassAction(NoobleEndpointAction):
         class_id: str = args["class_id"]
 
         nooble_class = configuration.get_database().get_classes().get_class(class_id)
+
+        section_content = configuration.get_sections().export(await nooble_class.get_content())
+
+        for file_id in await section_content.get_recursive_used_files(configuration.get_database()):
+            file = configuration.get_database().get_files().get_file(file_id)
+
+            configuration.get_resources().get_file(await file.get_filepath()).destroy()
+            await file.destroy()
+
         await nooble_class.destroy()
  
         return await self.make_response(None, configuration)

@@ -1,4 +1,5 @@
 import nooble_database.database as _nooble_database
+import nooble_database.objects as _nooble_database_objects
 
 import typing as _T
 
@@ -11,6 +12,12 @@ class NoobleActivity():
     
     def create_empty_file(self) -> bytes:
         raise NotImplementedError("not implemented for " + repr(self))
+    
+    def get_resource_url(self, name:str) -> str:
+        return "/activities/resource/" + self._name + "/" + name
+    
+    def get_file_url(self, file_id: str) -> str:
+        return f"/resources/download?id={file_id}&type=section file"
     
     async def get_html(self, file:bytes, database: _nooble_database.NoobleDatabase, account:_nooble_database.NoobleAccount) -> str:
         raise NotImplementedError("not implemented for " + repr(self))

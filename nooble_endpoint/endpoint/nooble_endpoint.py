@@ -3,6 +3,7 @@ from nooble_endpoint.configuration.conf import NoobleEndpointConfiguration
 
 from ..actions import *
 from ..configuration import *
+from ..templates.nooble_activity_pack import NoobleActivityActionsPack
 
 class NoobleEndpoint(_server_endpoint.ServerEndpoint[NoobleEndpointConfiguration]):
     def __init__(self, configuration: NoobleEndpointConfiguration):
@@ -53,6 +54,14 @@ class NoobleEndpoint(_server_endpoint.ServerEndpoint[NoobleEndpointConfiguration
         self.add_action("/safe/bages", GetBadgesAction(), "GET")
         self.add_action("/safe/decorations", GetDecorationsAction(), "GET")
         self.add_action("/safe/quota", GetQuotaAction(), "GET")
+
+        self.add_action("/activities/list", GetActivitiesListAction(), "GET")
+
+        self.add_activity_resources(NoobleHomeworkActivityPack())
+    
+    def add_activity_resources(self, resource: NoobleActivityActionsPack) -> None:
+        for action_name in resource.get_actions():
+            self.add_action("/activities/resources/" + resource.get_name() + "/" + action_name, resource.get_action(action_name), *resource.get_methods(action_name))
 
     async def main(self) -> None:
         configuration = self.get_configuration().get_configuration()

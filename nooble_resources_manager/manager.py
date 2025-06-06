@@ -9,6 +9,8 @@ class NoobleResourcesManager():
     def __init__(self, configuration: _nooble_conf_files.NoobleResourcesManagerSettings):
         self._configuration = configuration
 
+        _os.makedirs(self._configuration.get_base_directory())
+
     def get_configuration(self) -> _nooble_conf_files.NoobleResourcesManagerSettings:
         return self._configuration
     
@@ -32,7 +34,7 @@ class NoobleResourcesManager():
             for _ in range(self._configuration.get_random_filenames_length()):
                 a += _random.choice("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 
-        return dirpath + "/" + a
+        return dirpath + _os.path.sep + a
 
     def get_actual_dirpath(self) -> str:
         actual_date = _datetime.datetime.now()

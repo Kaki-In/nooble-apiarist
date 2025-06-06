@@ -70,6 +70,7 @@ class DeleteFileAction(NoobleEndpointAction):
                 "reason": "this file is linked with a section"
             }, configuration, 400)
         
+        configuration.get_resources().get_file(await file.get_filepath()).destroy()
         await file.destroy()
 
         return await self.make_response(None, configuration)

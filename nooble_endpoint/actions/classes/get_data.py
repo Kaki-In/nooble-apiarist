@@ -23,12 +23,12 @@ class GetClassDataAction(NoobleEndpointAction):
         return True
 
     async def is_allowed(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
-        args = await self.get_request_args(request)
-
         account = await self.get_account(request, configuration)
 
         if account is None:
             return False
+
+        args = await self.get_request_args(request)
 
         if not (
             await account.get_role() in [
@@ -42,16 +42,25 @@ class GetClassDataAction(NoobleEndpointAction):
         return True
 
     async def main(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request):
+        account = await self.get_account(request, configuration)
+
+        if account is None:
+            return False
+
         args = await self.get_request_args(request)
         class_id: str = args["class_id"]
 
         nooble_class = configuration.get_database().get_classes().get_class(class_id)
 
         class_data = await nooble_class.ensure_object()
+        
+        content = class_data["content"]
+
+        client_content = await configuration.get_sections().export(content).export_to_client_json(configuration.get_database(), account)
 
         return await self.make_response(
             {
-                "content": class_data["content"],
+                "content": client_content,
                 "description": class_data["description"],
                 "last_modification": class_data["last_modification"],
                 "last_modifier": class_data["last_modifier"],
