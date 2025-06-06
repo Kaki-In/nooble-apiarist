@@ -25,7 +25,7 @@ def check_version():
     if pip_version[0] < 23:
         print("\nPip version " + '.'.join([str(i) for i in pip_version]) + " is not up to date. Installing...")
 
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", "pip"])
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", "pip", "--break-system-packages"])
     
     process = subprocess.run([sys.executable, "-m", "pip", "-V"], capture_output=True, text=True)
     pip_version = process.stdout.split(" ")[1]
@@ -46,7 +46,7 @@ def require_dependencies(**packages):
             subprocess.check_call([sys.executable, "-c", "import " + packages[package_name][0]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         except Exception as exc:
             print("\b\r"+ package_name+" installing...", end="")
-            subprocess.check_call([sys.executable, "-m", "pip", "install", package_name])
+            subprocess.check_call([sys.executable, "-m", "pip", "install", package_name, "--break-system-packages"])
         else:
             print("\b\r"+ package_name+" found", end="")
 
@@ -56,7 +56,7 @@ def require_dependencies(**packages):
                 print("\b\r"+ package_name+" imported succesfully")
             except Exception as exc:
                 print()
-                subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", package_name])
+                subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", package_name, "--break-system-packages"])
 
                 subprocess.check_call([sys.executable, "-c", "import " + packages[package_name][0]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 print("\b\r"+ package_name+" imported succesfully")
