@@ -9,7 +9,7 @@ class NoobleHomeworkActivityPack(NoobleActivityActionsPack):
         super().__init__("homework")
 
         self.add_action("upload", UploadHomeworkFileActivityAction("homework"))
-        self.add_action("download", DeleteHomeworkFileActivityAction("homework"))
+        self.add_action("remove", DeleteHomeworkFileActivityAction("homework"))
 
     
 
