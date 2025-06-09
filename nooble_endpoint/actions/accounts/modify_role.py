@@ -73,6 +73,8 @@ class ModifyAccountRoleAction(NoobleEndpointAction):
 
         await configuration.get_mail_service().send_edited_role_mail(await account.get_object(), await self_account.get_object())
 
+        await configuration.get_notifier().notify_role_changed(role, account, self_account)
+
         return await self.make_response(None, configuration)
 
 

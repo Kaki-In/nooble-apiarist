@@ -110,8 +110,9 @@ class EditClassAction(NoobleEndpointAction):
                     continue
 
                 await configuration.get_mail_service().send_edited_class_mail(teacher_object, await nooble_class.ensure_object(), await account.get_object())
-
-
+            
+            await configuration.get_notifier().notify_class_edit(nooble_class, account)
+        
         return await self.make_response(None, configuration)
 
 

@@ -9,6 +9,7 @@ import nooble_badges.default as _nooble_badges
 import nooble_resources_manager as _nooble_resources
 import nooble_activities.default as _nooble_activities
 import nooble_sections.default as _nooble_sections
+import nooble_notifications as _nooble_notifications
 
 class NoobleEndpointConfiguration(_server_endpoint.ServerEndpointConfiguration):
     def __init__(self, configuration: _nooble_conf_directories.NoobleConfiguration):
@@ -24,6 +25,8 @@ class NoobleEndpointConfiguration(_server_endpoint.ServerEndpointConfiguration):
 
         self._activities_manager = _nooble_activities.get_default_activity_manager(self._resources)
         self._sections_map = _nooble_sections.get_default_sections_map(self._activities_manager)
+
+        self._notifications = _nooble_notifications.NoobleAccountsNotifier(self._database)
 
         self._configuration = binding_settings
     
@@ -50,4 +53,8 @@ class NoobleEndpointConfiguration(_server_endpoint.ServerEndpointConfiguration):
     
     def get_sections(self) -> _nooble_sections.NoobleSectionsMap:
         return self._sections_map
+    
+    def get_notifier(self) -> _nooble_notifications.NoobleAccountsNotifier:
+        return self._notifications
+    
 

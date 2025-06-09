@@ -108,4 +108,6 @@ class ModifyProfileAction(NoobleEndpointAction):
 
         await configuration.get_mail_service().send_edited_profile_mail(await account.ensure_object(), await self_account.ensure_object())
 
+        await configuration.get_notifier().notify_profile_edit(account, self_account)
+
         return await self.make_response(None, configuration)

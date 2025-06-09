@@ -52,6 +52,8 @@ class ModifyAccountMailAction(NoobleEndpointAction):
         
         account = configuration.get_database().get_accounts().get_account(user_id)
 
+        await configuration.get_notifier().notify_mail_address_changed(await account.get_mail(), mail, account, self_account)
+
         await configuration.get_mail_service().send_edited_address_mail(await account.get_object(), mail, await self_account.get_object())
 
         await account.update({
