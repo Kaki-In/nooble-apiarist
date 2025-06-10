@@ -89,7 +89,6 @@ class NoobleAccountsList(NoobleCollection[AccountObject]):
 
         id = await self.insert_one(object)
         object["_id"] = id
-        print(id)
 
         return NoobleAccount(self.get_collection(), id, object)
     
