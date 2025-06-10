@@ -68,14 +68,13 @@ class NoobleClassesList(NoobleCollection[ClassObject]):
             }
         }
         object: ClassObject = {
-            "_id": '',
             "accounts": [],
             "content": base_container,
             "description": description,
             "last_modification": int(_datetime.datetime.now().timestamp()),
             "last_modifier": creator,
             "name": name
-        }
+        } #type:ignore
 
         id = await self.insert_one(object)
         object["_id"] = id

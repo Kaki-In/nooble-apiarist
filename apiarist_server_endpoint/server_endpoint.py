@@ -21,7 +21,7 @@ class ServerEndpoint(_T.Generic[_configuration_type]):
 
     def add_action(self, name: str, action: ServerEndpointAction[_configuration_type] | _NoobleEndpointDescriptedObject, *methods: str) -> None:
         async def action_launcher():
-            return await action(self._configuration, _quart.request) #type:ignore
+            return await action(self._configuration, _quart.request)
         
         action_launcher.__name__ = str(self._id)
         self._id += 1

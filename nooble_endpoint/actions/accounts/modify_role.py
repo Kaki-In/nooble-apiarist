@@ -4,6 +4,29 @@ import nooble_database.objects.roles as _nooble_database_roles
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Modifier le rôle d'un compte")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    user_id = "identifiant du compte utilisateur",
+    role = "role à appliquer au compte"
+)
+@_apiarist.NoobleEndpointDecorations.validity(
+    "le rôle est bien un rôle connu (admin, teacher, teacher_admin ou student)",
+    "un compte utilisateur est bien décrit par l'identifiant"
+)
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté",
+    "l'utilisateur est un administrateur",
+    "l'administrateur ne tente pas de modifier son propre rôle"
+)
+@_apiarist.NoobleEndpointDecorations.returns()
+@_apiarist.NoobleEndpointDecorations.example(
+    {
+        "user_id": "de62c209a",
+        "role": "teacher_admin"
+    },
+    None
+)
 class ModifyAccountRoleAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)
@@ -34,7 +57,7 @@ class ModifyAccountRoleAction(NoobleEndpointAction):
         if account is None:
             return False
 
-        if not await account.get_role() in [_nooble_database_roles.Role.ADMIN, _nooble_database_roles.Role.ADMIN_TEACHER]:
+        if not (await account.get_role()).is_admin():
             return False
         
         if account.get_id() == args["user_id"]:

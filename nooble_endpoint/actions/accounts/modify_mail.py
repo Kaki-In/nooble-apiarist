@@ -1,9 +1,30 @@
 import quart.wrappers as _quart_wrappers
 import nooble_database.objects.roles as _nooble_database_roles
+import apiarist_server_endpoint as _apiarist
 
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+@_apiarist.NoobleEndpointDecorations.description("Modifier l'adresse courriel d'un compte utilisateur")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    user_id = "identifiant du compte utilisateur",
+    mail = "nouvelle adresse mail à appliquer au compte"
+)
+@_apiarist.NoobleEndpointDecorations.validity(
+    "un compte utilisateur est bien décrit par l'identifiant"
+)
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté",
+    "l'utilisateur est un administrateur",
+)
+@_apiarist.NoobleEndpointDecorations.returns()
+@_apiarist.NoobleEndpointDecorations.example(
+    {
+        "user_id": "de62c209a",
+        "mail": "foo.bar@utbm.fr"
+    },
+    None
+)
 class ModifyAccountMailAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)
@@ -29,12 +50,11 @@ class ModifyAccountMailAction(NoobleEndpointAction):
 
     async def is_allowed(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         account = await self.get_account(request, configuration)
-        args = await self.get_request_args(request)
 
         if account is None:
             return False
 
-        if not await account.get_role() in [_nooble_database_roles.Role.ADMIN, _nooble_database_roles.Role.ADMIN_TEACHER]:
+        if not (await account.get_role()).is_admin():
             return False
         
         return True

@@ -3,6 +3,35 @@ import quart.wrappers as _quart_wrappers
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Obtenir des informations sur un badge")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    name = "nom du badge",
+    level = "niveau du badge"
+)
+@_apiarist.NoobleEndpointDecorations.validity(
+    "le nom de badge désigne un badge existant",
+    "le badge est capable de s'étendre à ce niveau"
+)
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté"
+)
+@_apiarist.NoobleEndpointDecorations.returns(
+    max_level = "le niveau maximum du badge",
+    title = "le titre de ce badge",
+    description = "la description de ce badge"
+)
+@_apiarist.NoobleEndpointDecorations.example(
+    {
+        "name": "here_for_long",
+        "level": 4
+    },
+    {
+        "max_level": 5,
+        "title": "Citizen",
+        "description": 'You have been here for 10 years'
+    }
+)
 class GetBadgeInfosAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)
@@ -46,7 +75,7 @@ class GetBadgeInfosAction(NoobleEndpointAction):
         badge = configuration.get_badges().get_badge(badge_name)
 
         return await self.make_response({
-            "max-level": badge.get_max_level(),
+            "max_level": badge.get_max_level(),
             "title": badge.get_title(badge_level),
             "description": badge.get_description(badge_level),
         }, configuration)

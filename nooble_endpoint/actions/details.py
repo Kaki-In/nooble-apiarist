@@ -29,15 +29,17 @@ class ApiDetailsAction(NoobleEndpointAction):
         "<style>" \
         "" \
         "pre{position: relative;display: inline;}" \
-        "pre.code{display: block;box-sizing:border-box;padding:30px;background:#bebebe;overflow-x:auto;border-radius:3px}" \
+        "pre.code{display: block;box-sizing:border-box;padding:30px;background:#d5d5d5;overflow-x:auto;border-radius:3px}" \
         "pre.argument-name{color:#d35b22}" \
         "pre.returns-name{color:#5c23fb}" \
         "body{position: relative;display:flex;flex-direction:row;margin:0px;}" \
         "body > *{height: 100%;box-sizing: border-box;flex-shrink:0;}" \
-        "main{position:relative;flex-grow:1;overflow-y:auto;padding:40px;}" \
-        "section#contents{position:sticky;top:0px;overflow-y:auto;background:#d3ff2c;padding:20px;border-right:5px solid grey}" \
+        "main{position:relative;flex-grow:1;overflow-y:auto;padding:0px 40px;padding-bottom:20px;}" \
+        "section#contents{position:sticky;top:0px;overflow-y:auto;background:#d3ff2c;padding:20px;border-right:5px solid grey;}" \
         "a{color:black}" \
-        "main h1 {margin-top:0px}" \
+        "h3.action-title{position:sticky;top:0px;width:100%;background:white;z-index:100;margin:0px;padding-top: 15px;padding-bottom:5px;border-bottom:2px solid grey;} " \
+        "div.action-description-content{max-height:0px;box-sizing:border-box;overflow:hidden;transition:all 1s ease-out;}" \
+        "div.action-description.expanded div.action-description-content{max-height:200%;transition:all 1s ease-in;}" \
         "" \
         "</style>" \
         "</head>" \
@@ -56,13 +58,8 @@ class ApiDetailsAction(NoobleEndpointAction):
             i=0
             while i<min((len(last_names), len(names))) and last_names[i] == names[i]:
                 i += 1
-            
-            description = self.get_action_content("description", action)
 
-            if description is None:
-                data += "<li><a href='#" + action_name.replace("/", "_") + "'>" + action_name + "</a></li>"
-            else:
-                data += "<li><a href='#" + action_name.replace("/", "_") + "'>" + action_name + "</a>: " + description + "</li>"
+            data += "<li><a href='#" + action_name.replace("/", "_") + "'>" + action_name + "</a></li>"
             
             last_names = names
 
@@ -72,12 +69,8 @@ class ApiDetailsAction(NoobleEndpointAction):
         for action_name in actions_names:
             action, methods = self._endpoint.get_action(action_name)
 
-            data += "<hr><h3 id='" + self.convert_to_html_entities(action_name.replace("/", "_")) + "'>" + "/".join(methods) + " <pre>" + self.convert_to_html_entities(action_name) + "</pre></h3><div class='action-description'>"
+            data += "<div class='action-description'><h3 class='action-title' id='" + self.convert_to_html_entities(action_name.replace("/", "_")) + "'>" + "/".join(methods) + " <pre>" + self.convert_to_html_entities(action_name) + "</pre><button class='expand-button' onclick='this.parentNode.parentNode.classList.toggle(\"expanded\")'>Étendre</button></h3><div class='action-description-content'>"
 
-            if not isinstance(action, _apiarist.decorations._NoobleEndpointDescriptedObject):
-                data += "<small>Aucune information disponible pour cette action</small>"
-                continue
-            
             description:_T.Optional[None] = self.get_action_content("description", action)
 
             if description is not None:
@@ -120,12 +113,16 @@ class ApiDetailsAction(NoobleEndpointAction):
 
             if returns is not None:
                 data += "<h4>Retours</h4>"
-                data += "<ul class='returns-list'>"
+                if returns:
+                    data += "<ul class='returns-list'>"
 
-                for arg_name in returns:
-                    data += "<li><pre class='returns-name'>" + self.convert_to_html_entities(arg_name) + "</pre> : " + self.convert_to_html_entities(returns[arg_name]) + "</li>"
-            
-                data += "</ul>"
+                    for arg_name in returns:
+                        data += "<li><pre class='returns-name'>" + self.convert_to_html_entities(arg_name) + "</pre> : " + self.convert_to_html_entities(returns[arg_name]) + "</li>"
+                    
+                    data += "</ul>"
+                
+                else:
+                    data += "<p>Aucun retour pour cette action</p>"
 
             examples: _T.Optional[tuple[str, str]] = self.get_action_content("example", action)
 
@@ -138,12 +135,11 @@ class ApiDetailsAction(NoobleEndpointAction):
                 data += "<p>Réponse:</p>"
                 data += "<pre class='code'>" + self.convert_to_html_entities(example_out) + "</pre>"
 
-            data += "</div>"
-
             if description is None and args is None and validity is None and allows is None and returns is None and examples is None:
                 data += "<small>Aucune information disponible pour cette action</small>"
-                continue
             
+            data += "</div></div>"
+
         
         return data + "</main></body></html>"
     

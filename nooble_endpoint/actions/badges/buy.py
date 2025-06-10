@@ -3,6 +3,31 @@ import quart.wrappers as _quart_wrappers
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Acheter un badge")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    name = "nom du badge"
+)
+@_apiarist.NoobleEndpointDecorations.validity(
+    "le nom de badge désigne un badge existant",
+    "il est possible d'obtenir un nouveau niveau de ce badge"
+)
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté"
+)
+@_apiarist.NoobleEndpointDecorations.returns(
+    new_quota = "le nombre de nooblards présents dans le porte monnaie après achat",
+    new_level = "le nouveau niveau correspondant au badge acheté (0 pour le premier niveau)"
+)
+@_apiarist.NoobleEndpointDecorations.example(
+    {
+        "name": "here_for_long"
+    },
+    {
+        "new_quota": 32,
+        "new_level": 2
+    }
+)
 class BuyBadgeAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)
@@ -88,7 +113,8 @@ class BuyBadgeAction(NoobleEndpointAction):
         
         return await self.make_response(
             {
-                "new_quota": quota
+                "new_quota": quota,
+                "new_level": actual_badge_level+1
             }, configuration
         )
         

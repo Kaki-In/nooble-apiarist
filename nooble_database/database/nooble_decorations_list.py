@@ -9,11 +9,10 @@ class NoobleDecorationsList(NoobleCollection[DecorationObject]):
     
     async def create_decoration(self, name:str, image_id:str, price:int) -> NoobleDecoration:
         object: DecorationObject = {
-            "_id": '',
             "name":name,
             "image":image_id,
             "price":price
-        }
+        } #type:ignore
 
         id = await self.insert_one(object)
         object["_id"] = id

@@ -67,8 +67,6 @@ class NoobleAccountsList(NoobleCollection[AccountObject]):
     
     async def create_new_account(self, mail: str, password: str, first_name: str, last_name: str) -> NoobleAccount:
         object: AccountObject = {
-            "_id": '',
-
             "activities": [],
             "mail": mail,
             "password": password,
@@ -87,10 +85,11 @@ class NoobleAccountsList(NoobleCollection[AccountObject]):
                 "quota": self._rules.get_new_users_nooblards_count()
             },
             "creation_date": int(_datetime.datetime.now().timestamp())
-        }
+        } #type:ignore
 
         id = await self.insert_one(object)
         object["_id"] = id
+        print(id)
 
         return NoobleAccount(self.get_collection(), id, object)
     

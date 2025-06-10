@@ -49,6 +49,11 @@ class AddAccountAction(NoobleEndpointAction):
         ):
             return False
         
+        account = await configuration.get_database().get_accounts().get_account_by_mail(args['mail'])
+
+        if account is not None:
+            return False
+        
         return True
 
     async def is_allowed(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
@@ -70,7 +75,7 @@ class AddAccountAction(NoobleEndpointAction):
         last_name: str = args["last_name"]
 
         new_password = self.create_new_password()
-        new_account = await configuration.get_database().get_accounts().create_new_account(mail, first_name, last_name, _hashlib.sha256(new_password.encode()).hexdigest())
+        new_account = await configuration.get_database().get_accounts().create_new_account(mail, _hashlib.sha256(new_password.encode()).hexdigest(), first_name, last_name)
         
         _asyncio.create_task(configuration.get_mail_service().send_new_password_mail(await new_account.ensure_object(), new_password))
 

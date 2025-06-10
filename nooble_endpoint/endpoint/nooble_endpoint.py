@@ -42,7 +42,8 @@ class NoobleEndpoint(_server_endpoint.ServerEndpoint[NoobleEndpointConfiguration
         self.add_action("/thread/mark-as-read", MarkActivitiesAsReadAction(), "POST")
 
         self.add_action("/badges/list", ListBadgesAction(), "GET")
-        self.add_action("/badges/get", GetBadgeInfosAction(), "GET")
+        self.add_action("/badges/get-infos", GetBadgeInfosAction(), "GET")
+        self.add_action("/badges/get-thumbnail", GetBadgeThumbnailAction(), "GET")
         self.add_action("/badges/buy", BuyBadgeAction(), "POST")
 
         self.add_action("/decorations/buy", BuyDecorationAction(), "POST")

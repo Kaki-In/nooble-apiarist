@@ -1,11 +1,15 @@
 html {
     background: #e5b800;
+
+    overflow: auto;
 }
 
 body {
     position: absolute;
     width: 50vw;
-    top: 10px;
+
+    margin-top: 10px;
+    margin-bottom: 10px;
 
     left: 25vw;
 

@@ -4,6 +4,19 @@ import quart as _quart
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Obtenir la vignette d'un badge")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    name = "nom du badge",
+    level = "niveau du badge"
+)
+@_apiarist.NoobleEndpointDecorations.validity(
+    "le nom de badge désigne un badge existant",
+    "le badge est capable de s'étendre à ce niveau"
+)
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté"
+)
 class GetBadgeThumbnailAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)

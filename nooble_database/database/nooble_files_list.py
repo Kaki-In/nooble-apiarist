@@ -30,7 +30,6 @@ class NoobleFilesList(NoobleCollection[FileObject]):
     
     async def create_new_file(self, name:str, filename:str, sent_date:_datetime.datetime, sender_id: str, path: str, type: FileType, file_size: int) -> NoobleFile:
         object: FileObject = {
-            "_id": '',
             "name" : name,
             "filename" : filename,
             "sent_date" : int(sent_date.timestamp()),
@@ -38,7 +37,7 @@ class NoobleFilesList(NoobleCollection[FileObject]):
             "filepath": path,
             "filetype": type.to_string(),
             "size": file_size
-        }
+        } #type:ignore
 
         id = await self.insert_one(object)
         object["_id"] = id

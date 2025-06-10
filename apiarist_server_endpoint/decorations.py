@@ -67,8 +67,11 @@ class _NoobleEndpointDescriptedObject(_T.Generic[_description_type, _object]):
         else:
             return None
     
-    def __call__(self, *args, **kwargs) -> _object | '_NoobleEndpointDescriptedObject':
+    def __call__(self, *args, **kwargs) -> _T.Any:
         data = self._obj(*args, **kwargs)
+
+        if hasattr(data, '__await__'):
+            return data
 
         if type(data) is self._obj or isinstance(self._obj, _NoobleEndpointDescriptedObject):
             return _NoobleEndpointDescriptedObject(self._name, self._content, data)

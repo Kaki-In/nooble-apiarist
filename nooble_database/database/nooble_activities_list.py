@@ -29,14 +29,12 @@ class NoobleActivitiesList(NoobleCollection[ActivityObject]):
     
     async def create_activity(self, title: str, content: str, creator: str, date: _datetime.datetime, icon: str) -> NoobleActivity:
         object: ActivityObject = {
-            "_id": '',
-
             "title": title,
             "content": content,
             "creator": creator,
             "date": int(date.timestamp()),
             "icon": icon
-        }
+        } #type:ignore
 
         id = await self.insert_one(object)
         object["_id"] = id

@@ -4,8 +4,24 @@ import apiarist_server_endpoint as _apiarist
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+@_apiarist.NoobleEndpointDecorations.description("Supprimer un compte")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    user_id = "identifiant du compte utilisateur"
+)
 @_apiarist.NoobleEndpointDecorations.validity(
     "un compte utilisateur est bien décrit par l'identifiant"
+)
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté",
+    "l'utilisateur est un administrateur",
+    "l'administrateur ne tente pas de se supprimer lui-même"
+)
+@_apiarist.NoobleEndpointDecorations.returns()
+@_apiarist.NoobleEndpointDecorations.example(
+    {
+        "user_id": "de62c209a"
+    },
+    None
 )
 class DeleteAccountAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:

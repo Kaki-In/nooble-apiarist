@@ -3,6 +3,30 @@ import quart.wrappers as _quart_wrappers
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Lister les badges disponibles")
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté"
+)
+@_apiarist.NoobleEndpointDecorations.returns(
+    reached = "la liste des badges atteints",
+    unreached = "la liste des badges qui ne peuvent pas encore être achetés"
+)
+@_apiarist.NoobleEndpointDecorations.example(
+    None,
+    {
+        "reached": [
+            {
+                "name": "here_for_long",
+                "level": 3,
+                "price": 30,
+                "title": "Resident",
+                "description": "You have been here for 3 years"
+            }
+        ],
+        "unreached": []
+    }
+)
 class ListBadgesAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         return True

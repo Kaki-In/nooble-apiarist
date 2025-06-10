@@ -5,6 +5,32 @@ import nooble_database.objects.roles as _nooble_database_roles
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Lier un compte à une classe")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    user_id = "identifiant du compte",
+    class_id = "identifiant de la classe"
+)
+@_apiarist.NoobleEndpointDecorations.validity(
+    "l'identifiant du compte désigne bien un compte existant",
+    "l'identifiant de la classe désigne bien une classe existante"
+)
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté"
+)
+@_apiarist.NoobleEndpointDecorations.returns(
+    new_quota = "le nombre de nooblards présents dans le porte monnaie après achat",
+    new_level = "le nouveau niveau correspondant au badge acheté (0 pour le premier niveau)"
+)
+@_apiarist.NoobleEndpointDecorations.example(
+    {
+        "name": "here_for_long"
+    },
+    {
+        "new_quota": 32,
+        "new_level": 2
+    }
+)
 class AddClassAccountAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)
