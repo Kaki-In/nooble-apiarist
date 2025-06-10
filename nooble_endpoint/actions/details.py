@@ -37,11 +37,16 @@ class ApiDetailsAction(NoobleEndpointAction):
         "main{position:relative;flex-grow:1;overflow-y:auto;padding:0px 40px;padding-bottom:20px;}" \
         "section#contents{position:sticky;top:0px;overflow-y:auto;background:#d3ff2c;padding:20px;border-right:5px solid grey;flex-shrink:0}" \
         "a{color:black}" \
-        "h3.action-title{position:sticky;top:0px;width:100%;background:white;z-index:100;margin:0px;padding-top: 15px;padding-bottom:5px;border-bottom:2px solid grey;} " \
+        "button.action-title-bar{outline:none;padding-top:15px;position:sticky;top:0px;width:100%;background:white;border:none;border-bottom:2px solid grey;font-family:inherit;text-align:left;align-items:left;display:flex;flex-direction:row;cursor:pointer;z-index:20;align-items:center} " \
+        "h3.action-title{flex-grow:1;margin:0px;} " \
         "h4{margin-bottom:0.2em;}" \
         "ul{margin-top:0.2em;}" \
-        "div.action-description-content{max-height:0px;box-sizing:border-box;overflow:hidden;transition:all 1s ease-out;}" \
-        "div.action-description.expanded div.action-description-content{max-height:200%;transition:all 1s ease-in;}" \
+        "div.action-description-content{display:block;padding:0px 20px;max-height:0px;box-sizing:border-box;overflow:hidden;transition:all 0.5s ease-out;background:#e9e9e9;border-radius:0px 0px 6px 6px;}" \
+        "div.action-description.expanded div.action-description-content{padding:20px 20px;max-height:200%;transition:all 0.5s ease-in;}" \
+        "ul.tags-list {display:flex;flex-direction:row;gap:20px;}" \
+        "li.tag {padding:7px 10px;box-sizing:border-box;list-style-type:none;border-radius:3px;}" \
+        "li.tag-method-post {background:#fc9a2b;}" \
+        "li.tag-method-get {background:#3f8eed;}" \
         "" \
         "</style>" \
         "</head>" \
@@ -71,7 +76,17 @@ class ApiDetailsAction(NoobleEndpointAction):
         for action_name in actions_names:
             action, methods = self._endpoint.get_action(action_name)
 
-            data += "<div class='action-description'><h3 class='action-title' id='" + self.convert_to_html_entities(action_name.replace("/", "_")) + "'>" + "/".join(methods) + " <pre>" + self.convert_to_html_entities(action_name) + "</pre><button class='expand-button' onclick='this.parentNode.parentNode.classList.toggle(\"expanded\")'>Étendre</button></h3><div class='action-description-content'>"
+            description = self.get_action_content("description", action)
+
+            if description is None:
+                data += "<div class='action-description'><button class='action-title-bar' onclick='this.parentNode.classList.toggle(\"expanded\")'><h3 class='action-title' id='" + self.convert_to_html_entities(action_name.replace("/", "_")) + "'>" + " <pre>" + self.convert_to_html_entities(action_name) + "</pre></h3><ul class='tags-list'>"
+            else:
+                data += "<div class='action-description'><button class='action-title-bar' onclick='this.parentNode.classList.toggle(\"expanded\")'><h3 class='action-title' id='" + self.convert_to_html_entities(action_name.replace("/", "_")) + "'>" + " <pre>" + self.convert_to_html_entities(action_name) + "</pre> - " + self.convert_to_html_entities(description) + "</h3><ul class='tags-list'>"
+
+            for tag in methods:
+                data += "<li class='tag tag-method-" + tag + "'>" + tag + "</li>"
+
+            data += "</ul></button><div class='action-description-content'>"
 
             description:_T.Optional[None] = self.get_action_content("description", action)
 
