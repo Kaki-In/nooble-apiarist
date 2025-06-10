@@ -76,19 +76,17 @@ class ApiDetailsAction(NoobleEndpointAction):
         for action_name in actions_names:
             action, methods = self._endpoint.get_action(action_name)
 
-            description = self.get_action_content("description", action)
+            description:_T.Optional[str] = self.get_action_content("description", action)
 
             if description is None:
                 data += "<div class='action-description'><button class='action-title-bar' onclick='this.parentNode.classList.toggle(\"expanded\")'><h3 class='action-title' id='" + self.convert_to_html_entities(action_name.replace("/", "_")) + "'>" + " <pre>" + self.convert_to_html_entities(action_name) + "</pre></h3><ul class='tags-list'>"
             else:
-                data += "<div class='action-description'><button class='action-title-bar' onclick='this.parentNode.classList.toggle(\"expanded\")'><h3 class='action-title' id='" + self.convert_to_html_entities(action_name.replace("/", "_")) + "'>" + " <pre>" + self.convert_to_html_entities(action_name) + "</pre> - " + self.convert_to_html_entities(description) + "</h3><ul class='tags-list'>"
+                data += "<div class='action-description'><button class='action-title-bar' onclick='this.parentNode.classList.toggle(\"expanded\")'><h3 class='action-title' id='" + self.convert_to_html_entities(action_name.replace("/", "_")) + "'>" + " <pre>" + self.convert_to_html_entities(action_name) + "</pre> - " + self.convert_to_html_entities(description.split(". ")[0]) + "</h3><ul class='tags-list'>"
 
             for tag in methods:
                 data += "<li class='tag tag-method-" + tag + "'>" + tag + "</li>"
 
             data += "</ul></button><div class='action-description-content'>"
-
-            description:_T.Optional[None] = self.get_action_content("description", action)
 
             if description is not None:
                 data += "<p>" + self.convert_to_html_entities(description) + "</p>"
