@@ -3,10 +3,34 @@ import hashlib as _hashlib
 import nooble_database.objects.roles as _nooble_database_roles
 import asyncio as _asyncio
 import random as _random
+import apiarist_server_endpoint as _apiarist
 
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+@_apiarist.NoobleEndpointDecorations.description("Ajouter un compte")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    mail = "l'adresse mail du nouveau compte",
+    first_name = "le prénom du profil de l'utilisateur",
+    last_name = "le nom de famille du profil de l'utilisateur"
+)
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté",
+    "l'utilisateur est un administrateur"
+)
+@_apiarist.NoobleEndpointDecorations.returns(
+    new_account = "l'identifiant du nouvel utilisateur"
+)
+@_apiarist.NoobleEndpointDecorations.example(
+    {
+        "mail": "john.doe@gmail.com",
+        "first_name": "John",
+        "last_name": "Doe"
+    },
+    {
+        "new_account": 'df94d92e40'
+    }
+)
 class AddAccountAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)

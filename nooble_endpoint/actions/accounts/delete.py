@@ -1,9 +1,12 @@
 import quart.wrappers as _quart_wrappers
-import nooble_database.objects.roles as _nooble_database_roles
+import apiarist_server_endpoint as _apiarist
 
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+@_apiarist.NoobleEndpointDecorations.validity(
+    "un compte utilisateur est bien décrit par l'identifiant"
+)
 class DeleteAccountAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)

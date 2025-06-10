@@ -9,6 +9,8 @@ class NoobleEndpoint(_server_endpoint.ServerEndpoint[NoobleEndpointConfiguration
     def __init__(self, configuration: NoobleEndpointConfiguration):
         super().__init__(configuration)
 
+        self.add_action("/", ApiDetailsAction(self), "GET")
+
         self.add_action("/connection/forgot-password", ForgotPasswordAction(), "POST")
         self.add_action("/connection/login", LoginAction(), "POST")
         self.add_action("/connection/log-info", GetLogInfoAction(), "POST", "GET")
