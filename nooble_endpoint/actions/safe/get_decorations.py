@@ -3,6 +3,18 @@ import quart.wrappers as _quart_wrappers
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Obtenir les décorations présentes dans le coffre-fort")
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté"
+)
+@_apiarist.NoobleEndpointDecorations.example(
+    None,
+    [
+        "abcd6484fdbc",
+        "9ab238dc638d"
+    ]
+)
 class GetDecorationsAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         return True

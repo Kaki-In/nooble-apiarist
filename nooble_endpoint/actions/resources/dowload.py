@@ -7,6 +7,26 @@ import datetime as _datetime
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Télécharger un fichier")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    id = "l'identifiant du fichier",
+    type = "le type de fichier à télécharger"
+)
+@_apiarist.NoobleEndpointDecorations.validity(
+    "l'identifiant de fichier désigne bien un fichier existant",
+    "le type de fichier correspond parfaitement à celui indiqué en argument"
+)
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté"
+)
+@_apiarist.NoobleEndpointDecorations.example(
+    {
+        "id": "cb294387dc",
+        "type": "profile image"
+    },
+    None
+)
 class DownloadFileAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)

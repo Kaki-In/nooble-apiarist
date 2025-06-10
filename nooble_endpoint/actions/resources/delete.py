@@ -4,6 +4,27 @@ import nooble_database.objects.file_types as _nooble_database_file_types
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Supprimer un fichier")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    id = "l'identifiant du fichier"
+)
+@_apiarist.NoobleEndpointDecorations.validity(
+    "l'identifiant de fichier désigne bien un fichier existant",
+    "s'il s'agit d'une image de décoration, aucune décoration n'est liée à cette image",
+    "il ne s'agit pas d'un fichier géré par une section"
+)
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté",
+    "l'utilisateur est propriétaire du fichier"
+)
+@_apiarist.NoobleEndpointDecorations.returns()
+@_apiarist.NoobleEndpointDecorations.example(
+    {
+        "id": "cb294387dc"
+    },
+    None
+)
 class DeleteFileAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)
@@ -17,6 +38,17 @@ class DeleteFileAction(NoobleEndpointAction):
         file = configuration.get_database().get_files().get_file(args['id'])
 
         if not await file.exists():
+            return False
+
+        file_type = await file.get_filetype()
+
+        if file_type == _nooble_database_file_types.FileType.DECORATION_BANNER:
+            decoration = await configuration.get_database().get_decorations().get_decoration_from_image(file.get_id())
+
+            if decoration is not None:
+                return False
+            
+        elif file_type == _nooble_database_file_types.FileType.SECTION_FILE:
             return False
                 
         return True
@@ -45,18 +77,8 @@ class DeleteFileAction(NoobleEndpointAction):
         args = await self.get_request_args(request)
 
         file = configuration.get_database().get_files().get_file(args['id'])
-
-        file_type = await file.get_filetype()
-
-        if file_type == _nooble_database_file_types.FileType.DECORATION_BANNER:
-            decoration = await configuration.get_database().get_decorations().get_decoration_from_image(file.get_id())
-
-            if decoration is not None:
-                return await self.make_response({
-                    "reason": "there is already a decoration attached with this image"
-                }, configuration, 400)
-            
-        elif file_type == _nooble_database_file_types.FileType.PROFILE_ICON:
+        
+        if file.get_id() == await account.get_profile().get_profile_image_id():
             await account.update(
                 {
                     "$set": {
@@ -65,11 +87,6 @@ class DeleteFileAction(NoobleEndpointAction):
                 }
             )
 
-        elif file_type == _nooble_database_file_types.FileType.SECTION_FILE:
-            return await self.make_response({
-                "reason": "this file is linked with a section"
-            }, configuration, 400)
-        
         configuration.get_resources().get_file(await file.get_filepath()).destroy()
         await file.destroy()
 

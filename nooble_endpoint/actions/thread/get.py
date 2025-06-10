@@ -3,19 +3,58 @@ import quart.wrappers as _quart_wrappers
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Obtenir son flux d'activités")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    notreadonly = "vrai s'il faut uniquement retourner les activités non lues",
+    count = "le nombre d'activités à retourner",
+    offset = "le nombre d'activités à sauter"
+)
+@_apiarist.NoobleEndpointDecorations.validity(
+    "le compte est supérieur à 0",
+    "l'offset n'est pas négatif"
+)
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté"
+)
+@_apiarist.NoobleEndpointDecorations.returns(
+    activity_id = "l'identifiant de l'activité",
+    read = "vrai lorsque l'activité a été lue",
+    activity_data = "les données de l'activité"
+)
+@_apiarist.NoobleEndpointDecorations.example(
+    {
+        "notreadonly": 4,
+        "count": 20,
+        "offset": 40
+    },
+    [
+        {
+            "activity_id": "8cdc823bd",
+            "read": False,
+            "activity_data": {
+                "title": "Nouvelle notification",
+                "content": "Il s'est passé quelque chose à ce moment là",
+                "creator": "dcb823dcb85",
+                "date": 6540479450,
+                "icon": "account"
+            }
+        }
+    ]
+)
 class GetThreadAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)
 
         if not (
-            "readonly" in args
+            "notreadonly" in args
         and "offset" in args
         and "count" in args
         ):
             return False
         
         if not (
-            type(args["readonly"]) is bool
+            type(args["notreadonly"]) is bool
         and type(args["count"]) is int
         and type(args["offset"]) is int
         ):
@@ -40,14 +79,14 @@ class GetThreadAction(NoobleEndpointAction):
         
         args = await self.get_request_args(request)
 
-        readonly: bool = args["readonly"]
+        notreadonly: bool = args["notreadonly"]
         count: int = args["count"]
         offset: int = args["offset"]
 
         activities = [
             await activity.ensure_object()
             for activity in await account.get_activities()
-            if (await activity.ensure_object())["read"] or not readonly
+            if not ((await activity.ensure_object())["read"] and notreadonly)
         ][offset:offset+count]
 
         activities_objects = []

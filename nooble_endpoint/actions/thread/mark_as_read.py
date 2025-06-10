@@ -3,11 +3,33 @@ import quart.wrappers as _quart_wrappers
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Marquer des activités comme lues")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    activites = "les activités à marquer comme lues"
+)
+@_apiarist.NoobleEndpointDecorations.validity(
+    "le compte a bien été notifié de cette activité"
+)
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté"
+)
+@_apiarist.NoobleEndpointDecorations.returns()
+@_apiarist.NoobleEndpointDecorations.example(
+    {
+        "activities":  [
+            "bc3948bcd",
+            "cbafc9834",
+            "2938c985b3"
+        ]
+    },
+    None
+)
 class MarkActivitiesAsReadAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)
 
-        if not "activites" in args:
+        if not "activities" in args:
             return False
         
         if not type(args["activities"]) is list:
