@@ -4,6 +4,28 @@ import hashlib as _hashlib
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Se connecter")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    username = "l'adresse mail du compte",
+    password = "le mot de passe"
+)
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur n'est pas connecté",
+)
+@_apiarist.NoobleEndpointDecorations.returns(
+    first_name = "le prénom du compte",
+    last_name = "le nom de famille du compte"
+)
+@_apiarist.NoobleEndpointDecorations.example(
+    {
+        "username": "john.doe@utbm.fr"
+    },
+    {
+        "first_name": "John",
+        "last_name": "Doe",
+    }
+)
 class LoginAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)

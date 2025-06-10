@@ -5,6 +5,25 @@ import nooble_database.objects.roles as _nooble_database_roles
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Supprimer un ancien cours")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    class_id = "l'identifiant du cours"
+)
+@_apiarist.NoobleEndpointDecorations.validity(
+    "l'identifiant désigne bien un cours existant"
+)
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté",
+    "l'utilisateur est un administrateur"
+)
+@_apiarist.NoobleEndpointDecorations.returns()
+@_apiarist.NoobleEndpointDecorations.example(
+    {
+        "class_id": "fdcb23b428"
+    },
+    None
+)
 class DeleteClassAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)

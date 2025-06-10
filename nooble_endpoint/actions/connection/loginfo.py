@@ -3,6 +3,44 @@ import quart.wrappers as _quart_wrappers
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Obtenir des informations de connection")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    username = "l'adresse mail du compte",
+    password = "le mot de passe"
+)
+@_apiarist.NoobleEndpointDecorations.returns(
+    connected = "vrai lorsque l'utilisateur est connecté",
+    account = "si connecté, les informations de compte"
+)
+@_apiarist.NoobleEndpointDecorations.example(
+    None,
+    {
+        "connected": True,
+        "account": {
+            "id": "8482f9209deb",
+            "profile": 
+            {
+                "first_name": "John",
+                "last_name": "Doe",
+                "active_decoration": '3bd8527cf',
+                "active_badges": [
+                    ["here_for_long", 3]
+                ]
+            },
+            "safe": 
+            {
+                "quota": 30,
+                "decorations": [
+                    '3bd8527cf', 
+                    '8cab2940c3d'
+                ]
+            },
+            "role": "admin_teacher",
+            "mail": "john.doe@utbm.fr"
+        }
+    }
+)
 class GetLogInfoAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         return True

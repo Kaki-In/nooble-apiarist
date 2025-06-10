@@ -4,6 +4,38 @@ import nooble_database.objects.file_types as _nooble_database_types
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Mettre à jour son propre profil")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    first_name = "le prénom de l'utilisateur",
+    last_name = "le nom de famille de l'utilisateur",
+    profile_image = "l'identifiant de l'image de profil de l'utilisateur",
+    active_decoration = "la décoration présente sur le profil de l'utilisateur",
+    active_badges = "les badges présents sur le profil de l'utilisateur",
+    description = "la description de l'utilisateur"
+)
+@_apiarist.NoobleEndpointDecorations.validity(
+    "l'identifiant d'image de profil désigne bel et un bien une image de profil existante",
+    "l'identifiant de décoration désigne bel et bien une décoration déjà existante"
+)
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté",
+    "les badges sont bel et bien possédés par cet utiilsateur",
+    "la décoration est bel et bien possédée par cet utiilsateur",
+    "l'utilisateur est propriétaire de l'image de profil"
+)
+@_apiarist.NoobleEndpointDecorations.returns()
+@_apiarist.NoobleEndpointDecorations.example(
+    {
+        "first_name": "John",
+        "last_name": "Doe",
+        "profile_image": "bd349283c",
+        "active_decoration": "8bcd3a40182",
+        "active_badges": ["here_for_long"],
+        "description": "Foobar"
+    },
+    None
+)
 class UpdateProfileAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)
@@ -28,6 +60,11 @@ class UpdateProfileAction(NoobleEndpointAction):
         ):
             return False
         
+        account = await self.get_account(request, configuration)
+
+        if account is None:
+            return True # non-allowed request
+        
         for badge in args['active_badges']:
             if type(badge) is not int:
                 return False
@@ -38,6 +75,10 @@ class UpdateProfileAction(NoobleEndpointAction):
             return False
         
         if not await file_image.get_filetype() != _nooble_database_types.FileType.PROFILE_ICON:
+            return False
+        
+        decoration  = configuration.get_database().get_decorations().get_decoration(args["active_decoration"])
+        if not await decoration.exists():
             return False
 
         return True
@@ -57,15 +98,15 @@ class UpdateProfileAction(NoobleEndpointAction):
         for badge in badges:
             if not badge in [i[0] for i in safe["badges"]]:
                 return False
-        
+            
         decoration: str = args["active_decoration"]
 
         if not decoration in safe["decorations"]:
             return False
         
-        file_image = configuration.get_database().get_files().get_file(args["profile_image"])
+        profile_image = configuration.get_database().get_files().get_file(args["profile_image"])
 
-        if account.get_id() != await file_image.get_sender_id():
+        if account.get_id() != await profile_image.get_sender_id():
             return False
         
         return True

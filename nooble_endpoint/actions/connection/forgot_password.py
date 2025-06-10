@@ -7,6 +7,35 @@ import random as _random
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description(
+    "Restaurer son mot de passe et envoyer le nouveau mot de passe par mail. " \
+    "Cette URL permet de définir un nouveau mot de passe pour le compte et de l'envoyer par mail à l'utilisateur. " \
+    "Cette option est une faille de sécurité car elle ne vérifie pas l'identité de l'utilisateur avant de modifier son mot de passe. " \
+    "L'idéal aurait été d'envoyer un lien de modification par mail au preálable, " \
+    "mais le temps a été cours et cette option n'est pas nécessaire à petite échelle.")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    username = "l'adresse mail du compte"
+)
+@_apiarist.NoobleEndpointDecorations.validity(
+    "il existe bien un compte possédant cette adresse mail"
+)
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur n'est pas connecté",
+)
+@_apiarist.NoobleEndpointDecorations.returns(
+    first_name = "le prénom du compte",
+    last_name = "le nom de famille du compte"
+)
+@_apiarist.NoobleEndpointDecorations.example(
+    {
+        "username": "john.doe@utbm.fr"
+    },
+    {
+        "first_name": "John",
+        "last_name": "Doe",
+    }
+)
 class ForgotPasswordAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)
@@ -15,6 +44,11 @@ class ForgotPasswordAction(NoobleEndpointAction):
             return False
         
         if type(args["username"]) is not str:
+            return False
+        
+        account = await configuration.get_database().get_accounts().get_account_by_mail(args["username"])
+
+        if account is None:
             return False
         
         return True
@@ -27,17 +61,8 @@ class ForgotPasswordAction(NoobleEndpointAction):
 
         mail_address: str = args["username"]
 
-        account = await configuration.get_database().get_accounts().get_account_by_mail(mail_address)
+        account = await configuration.get_database().get_accounts().get_existing_account_by_mail(mail_address)
 
-        if account is None:
-            return await self.make_response(
-                {
-                    "reason": "no such user"
-                },
-                configuration,
-                code=401
-            )
-        
         new_password = self.create_new_password()
         await account.update({
             "$set": {

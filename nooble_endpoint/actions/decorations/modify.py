@@ -3,6 +3,31 @@ import quart.wrappers as _quart_wrappers
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Modifier une décoration")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    decoration_id = "l'identifiant de la décoration",
+    name = "le nom de la décoration (optionnel)",
+    price = "le prix de la décoration (optionel)",
+    image = "l'identifiant de l'image de la décoration (optionel)"
+)
+@_apiarist.NoobleEndpointDecorations.validity(
+    "l'identifiant de décoration désigne bien une décoration existante",
+    "au moins le nouveau nom, prix ou la nouvelle image a été renseigné",
+    "l'identifiant de l'image désigne bien une image de décoration existante, si présente"
+)
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté",
+    "l'utilisateur est un administrateur"
+)
+@_apiarist.NoobleEndpointDecorations.returns()
+@_apiarist.NoobleEndpointDecorations.example(
+    {
+        "decoration_id": "8bcd3a40182",
+        "name": "Clair de soleil"
+    },
+    None
+)
 class ModifyDecorationAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)
@@ -20,6 +45,12 @@ class ModifyDecorationAction(NoobleEndpointAction):
             
         if "price" in args:
             if type(args["price"]) is not int:
+                return False
+
+            argument_provided = True
+
+        if "image" in args:
+            if type(args["image"]) is not str:
                 return False
 
             argument_provided = True
@@ -45,19 +76,22 @@ class ModifyDecorationAction(NoobleEndpointAction):
 
         decoration = configuration.get_database().get_decorations().get_decoration(args["decoration_id"])
 
+        updated_attributes = {}
+
         if "name" in args:
-            await decoration.update({
-                "$set": {
-                    "name": args["name"]
-                }
-            })
+            updated_attributes["name"] = args["name"]
 
         if "price" in args:
-            await decoration.update({
-                "$set": {
-                    "price": args["price"]
-                }
-            })
+            updated_attributes["price"] = args["price"]
+        
+        if "image" in args:
+            updated_attributes["image"] = args["image"]
+
+        await decoration.update(
+            {
+                "$set": updated_attributes
+            }
+        )
         
         return await self.make_response(None, configuration)
 

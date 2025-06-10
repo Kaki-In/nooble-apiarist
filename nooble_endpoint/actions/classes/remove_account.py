@@ -5,6 +5,28 @@ import nooble_database.objects.roles as _nooble_database_roles
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Dissocier un compte d'un cours")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    class_id = "l'identifiant du cours",
+    user_id = "l'identifiant de l'utilisateur"
+)
+@_apiarist.NoobleEndpointDecorations.validity(
+    "l'identifiant désigne bien un cours existant"
+)
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté",
+    "l'utilisateur est un administrateur ou",
+    "l'utilisateur a accès à ce cours"
+)
+@_apiarist.NoobleEndpointDecorations.returns()
+@_apiarist.NoobleEndpointDecorations.example(
+    {
+        "user_id": "cc2b3492",
+        "class_id": "c273df84f"
+    },
+    None
+)
 class RemoveClassAccountAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)
@@ -42,7 +64,7 @@ class RemoveClassAccountAction(NoobleEndpointAction):
         if account is None:
             return False
 
-        if not await account.get_role() in [_nooble_database_roles.Role.ADMIN, _nooble_database_roles.Role.ADMIN_TEACHER]:
+        if not (await account.get_role()).is_admin():
             return False
         
         return True

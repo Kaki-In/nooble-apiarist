@@ -3,6 +3,25 @@ import quart.wrappers as _quart_wrappers
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Supprimer une décoration")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    decoration_id = "l'identifiant de la décoration"
+)
+@_apiarist.NoobleEndpointDecorations.validity(
+    "l'identifiant de décoration désigne bien une décoration existante"
+)
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté",
+    "l'utilisateur est un administrateur"
+)
+@_apiarist.NoobleEndpointDecorations.returns()
+@_apiarist.NoobleEndpointDecorations.example(
+    {
+        "decoration_id": "8bcd3a40182"
+    },
+    None
+)
 class DeleteDecorationAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)

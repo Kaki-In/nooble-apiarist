@@ -1,8 +1,38 @@
 import quart.wrappers as _quart_wrappers
+import nooble_database.objects as _nooble_database_objects
 
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Créer une nouvelle décoration")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    name = "le nom de la décoration",
+    price = "le prix de la décoration",
+    image_id = "l'identifiant de l'image de la décoration"
+)
+@_apiarist.NoobleEndpointDecorations.validity(
+    "l'image de décoration existe",
+    "l'image est bien une image de décoration"
+)
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté",
+    "l'utilisateur est un administrateur",
+    "l'utilisateur est le propriétaire de l'image"
+)
+@_apiarist.NoobleEndpointDecorations.returns(
+    new_decoration = "l'identifiant de la nouvelle décoration"
+)
+@_apiarist.NoobleEndpointDecorations.example(
+    {
+        "name": "Clair de lune",
+        "price": 200,
+        "image_id": "2834fa0b28"
+    },
+    {
+        "new_decoration": "8bcd3a40182"
+    }
+)
 class CreateDecorationAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)
@@ -24,6 +54,9 @@ class CreateDecorationAction(NoobleEndpointAction):
         file = configuration.get_database().get_files().get_file(args["image_id"])
 
         if not await file.exists():
+            return False
+        
+        if await file.get_filetype() != _nooble_database_objects.FileType.DECORATION_BANNER:
             return False
         
         return True

@@ -6,30 +6,27 @@ from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
 import apiarist_server_endpoint as _apiarist
-@_apiarist.NoobleEndpointDecorations.description("Lier un compte à une classe")
+@_apiarist.NoobleEndpointDecorations.description("Lier un compte à un cours")
 @_apiarist.NoobleEndpointDecorations.arguments(
     user_id = "identifiant du compte",
-    class_id = "identifiant de la classe"
+    class_id = "identifiant du cours"
 )
 @_apiarist.NoobleEndpointDecorations.validity(
     "l'identifiant du compte désigne bien un compte existant",
-    "l'identifiant de la classe désigne bien une classe existante"
+    "l'identifiant de la classe désigne bien un cours existante",
+    "l'utilisateur n'a pas encore accès à ce cours"
 )
 @_apiarist.NoobleEndpointDecorations.allow_only_when(
-    "l'utilisateur est connecté"
+    "l'utilisateur est connecté",
+    "l'utilisateur est un administrateur"
 )
-@_apiarist.NoobleEndpointDecorations.returns(
-    new_quota = "le nombre de nooblards présents dans le porte monnaie après achat",
-    new_level = "le nouveau niveau correspondant au badge acheté (0 pour le premier niveau)"
-)
+@_apiarist.NoobleEndpointDecorations.returns()
 @_apiarist.NoobleEndpointDecorations.example(
     {
-        "name": "here_for_long"
+        "user_id": "cc2b3492",
+        "class_id": "c273df84f"
     },
-    {
-        "new_quota": 32,
-        "new_level": 2
-    }
+    None
 )
 class AddClassAccountAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
@@ -68,7 +65,7 @@ class AddClassAccountAction(NoobleEndpointAction):
         if account is None:
             return False
 
-        if not await account.get_role() in [_nooble_database_roles.Role.ADMIN, _nooble_database_roles.Role.ADMIN_TEACHER]:
+        if not (await account.get_role()).is_admin():
             return False
         
         return True

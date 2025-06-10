@@ -5,6 +5,27 @@ import nooble_database.objects.roles as _nooble_database_roles
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Obtenir la liste des comptes associés à une classe")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    class_id = "l'identifiant du cours"
+)
+@_apiarist.NoobleEndpointDecorations.validity(
+    "l'identifiant désigne bien un cours existant"
+)
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté",
+    "l'utilisateur est un administrateur ou",
+    "l'utilisateur a accès à ce cours"
+)
+@_apiarist.NoobleEndpointDecorations.example(
+    {
+        "class_id": "fdcb23b428"
+    },
+    [
+        "3948f829e", "b23bc5783", "..."
+    ]
+)
 class GetClassAccountsAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)
@@ -31,10 +52,7 @@ class GetClassAccountsAction(NoobleEndpointAction):
             return False
 
         if not (
-            await account.get_role() in [
-                _nooble_database_roles.Role.ADMIN,
-                _nooble_database_roles.Role.ADMIN_TEACHER
-            ]
+            (await account.get_role()).is_admin()
             or account.get_id() in await configuration.get_database().get_classes().get_class(args["class_id"]).get_accounts_ids()
         ):
             return False

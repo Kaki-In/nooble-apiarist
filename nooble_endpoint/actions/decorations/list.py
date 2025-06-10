@@ -3,6 +3,28 @@ import quart.wrappers as _quart_wrappers
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Obtenir la liste des décorations")
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté"
+)
+@_apiarist.NoobleEndpointDecorations.returns(
+    id = "l'identifiant de la décoration",
+    name = "le nom de la décoration",
+    price = "le prix de la décoration",
+    image = "l'identifiant de l'image de la décoration"
+)
+@_apiarist.NoobleEndpointDecorations.example(
+    None,
+    [
+        {
+            "id": "8bcd3a40182",
+            "price": 200,
+            "name": "Clair de lune",
+            "image": "2834fa0b28",
+        }
+    ]
+)
 class ListDecorationsAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         return True

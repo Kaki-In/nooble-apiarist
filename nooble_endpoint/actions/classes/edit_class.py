@@ -6,6 +6,42 @@ import datetime as _datetime
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Modifier les informations d'un cours")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    id = "l'identifiant du cours",
+    title = "le titre du cours",
+    description = "la description du cours",
+    content = "le contenu du cours"
+)
+@_apiarist.NoobleEndpointDecorations.validity(
+    "le contenu est défini correctement",
+    "l'identifiant désigne bien un cours existant"
+)
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté",
+    "l'utilisateur est un administrateur ou alors",
+    "l'utilisateur est un enseignant ayant accès à ce cours"
+)
+@_apiarist.NoobleEndpointDecorations.returns()
+@_apiarist.NoobleEndpointDecorations.example(
+    {
+        "id": "fdcb23b428",
+        "title": "WE4B",
+        "description": "Angular Tah les fou",
+        "content": {
+            "type": "container",
+            "data": {
+                "is_horizontal": False,
+                "is_wrapping": False,
+                "children": [
+                    "..."
+                ]
+            }
+        }
+    },
+    None
+)
 class EditClassAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)

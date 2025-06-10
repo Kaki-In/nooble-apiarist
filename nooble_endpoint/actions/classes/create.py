@@ -5,6 +5,28 @@ import nooble_database.objects.roles as _nooble_database_roles
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Créer un nouveau cours")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    name = "le nom du nouveau cours",
+    description = "une description brève du contenu du cours"
+)
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté",
+    "l'utilisateur est un administrateur"
+)
+@_apiarist.NoobleEndpointDecorations.returns(
+    new_class = "l'identifiant du nouveau cours"
+)
+@_apiarist.NoobleEndpointDecorations.example(
+    {
+        "name": "WE4B",
+        "description": "Angular Tah les fous"
+    },
+    {
+        "new_class": "cb264b9c2ef"
+    }
+)
 class CreateClassAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)
@@ -29,7 +51,7 @@ class CreateClassAction(NoobleEndpointAction):
         if account is None:
             return False
 
-        if not await account.get_role() in [_nooble_database_roles.Role.ADMIN, _nooble_database_roles.Role.ADMIN_TEACHER]:
+        if not (await account.get_role()).is_admin():
             return False
         
         return True

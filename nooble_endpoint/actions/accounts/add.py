@@ -14,6 +14,9 @@ from ...templates.nooble_action import NoobleEndpointAction
     first_name = "le prénom du profil de l'utilisateur",
     last_name = "le nom de famille du profil de l'utilisateur"
 )
+@_apiarist.NoobleEndpointDecorations.validity(
+    "aucun compte utilisateur ne contient cette adresse mail"
+)
 @_apiarist.NoobleEndpointDecorations.allow_only_when(
     "l'utilisateur est connecté",
     "l'utilisateur est un administrateur"

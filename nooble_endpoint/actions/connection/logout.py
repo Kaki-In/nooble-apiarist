@@ -3,6 +3,12 @@ import quart.wrappers as _quart_wrappers
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Se déconnecter")
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté",
+)
+@_apiarist.NoobleEndpointDecorations.returns()
 class LogoutAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         return True
@@ -18,6 +24,6 @@ class LogoutAction(NoobleEndpointAction):
         
         configuration.get_registrations().remove_registration(token)
 
-        return await self.make_response("", configuration)
+        return await self.make_response(None, configuration)
 
 

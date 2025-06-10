@@ -33,11 +33,13 @@ class ApiDetailsAction(NoobleEndpointAction):
         "pre.argument-name{color:#d35b22}" \
         "pre.returns-name{color:#5c23fb}" \
         "body{position: relative;display:flex;flex-direction:row;margin:0px;}" \
-        "body > *{height: 100%;box-sizing: border-box;flex-shrink:0;}" \
+        "body > *{height: 100%;box-sizing: border-box;}" \
         "main{position:relative;flex-grow:1;overflow-y:auto;padding:0px 40px;padding-bottom:20px;}" \
-        "section#contents{position:sticky;top:0px;overflow-y:auto;background:#d3ff2c;padding:20px;border-right:5px solid grey;}" \
+        "section#contents{position:sticky;top:0px;overflow-y:auto;background:#d3ff2c;padding:20px;border-right:5px solid grey;flex-shrink:0}" \
         "a{color:black}" \
         "h3.action-title{position:sticky;top:0px;width:100%;background:white;z-index:100;margin:0px;padding-top: 15px;padding-bottom:5px;border-bottom:2px solid grey;} " \
+        "h4{margin-bottom:0.2em;}" \
+        "ul{margin-top:0.2em;}" \
         "div.action-description-content{max-height:0px;box-sizing:border-box;overflow:hidden;transition:all 1s ease-out;}" \
         "div.action-description.expanded div.action-description-content{max-height:200%;transition:all 1s ease-in;}" \
         "" \
@@ -101,7 +103,7 @@ class ApiDetailsAction(NoobleEndpointAction):
             allows:_T.Optional[list[str]] = self.get_action_content("allows", action)
 
             if allows is not None:
-                data += "<h4>Permis à condition que</h4>"
+                data += "<h4>Permis lorsque</h4>"
                 data += "<ul class='allowed-list'>"
 
                 for allowed_criterion in allows:

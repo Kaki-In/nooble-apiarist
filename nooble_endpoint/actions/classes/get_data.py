@@ -5,6 +5,41 @@ import nooble_database.objects.roles as _nooble_database_roles
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
+import apiarist_server_endpoint as _apiarist
+@_apiarist.NoobleEndpointDecorations.description("Obtenir les informations d'un cours")
+@_apiarist.NoobleEndpointDecorations.arguments(
+    class_id = "l'identifiant du cours"
+)
+@_apiarist.NoobleEndpointDecorations.validity(
+    "l'identifiant désigne bien un cours existant"
+)
+@_apiarist.NoobleEndpointDecorations.allow_only_when(
+    "l'utilisateur est connecté",
+    "l'utilisateur est un administrateur ou",
+    "l'utilisateur a accès à ce cours"
+)
+@_apiarist.NoobleEndpointDecorations.returns(
+    content = "le contenu du cours",
+    description = "la description du cours",
+    last_modification = "l'heure de dernière modification",
+    last_modifier = "l'identifiant du dernier compte ayant modifié le cours",
+    name = "le nom du cours"
+)
+@_apiarist.NoobleEndpointDecorations.example(
+    {
+        "class_id": "fdcb23b428"
+    },
+    {
+        "content": {
+            "type": "section",
+            "data": "..."
+        },
+        "description": "Angular",
+        "last_modification": 2948759329234,
+        "last_modifier": "dbfc327493",
+        "name": "WE4B"
+    }
+)
 class GetClassDataAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)
@@ -31,10 +66,7 @@ class GetClassDataAction(NoobleEndpointAction):
         args = await self.get_request_args(request)
 
         if not (
-            await account.get_role() in [
-                _nooble_database_roles.Role.ADMIN,
-                _nooble_database_roles.Role.ADMIN_TEACHER
-            ]
+            (await account.get_role()).is_admin()
             or account.get_id() in await configuration.get_database().get_classes().get_class(args["class_id"]).get_accounts_ids()
         ):
             return False
