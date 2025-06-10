@@ -79,7 +79,7 @@ class ApiDetailsAction(NoobleEndpointAction):
             description:_T.Optional[str] = self.get_action_content("description", action)
 
             if description is None:
-                data += "<div class='action-description'><button class='action-title-bar' onclick='this.parentNode.classList.toggle(\"expanded\")'><h3 class='action-title' id='" + self.convert_to_html_entities(action_name.replace("/", "_")) + "'>" + " <pre>" + self.convert_to_html_entities(action_name) + "</pre></h3><ul class='tags-list'>"
+                data += "<div class='action-description' id='" + self.convert_to_html_entities(action_name.replace("/", "_")) + "'><button class='action-title-bar' onclick='this.parentNode.classList.toggle(\"expanded\")'><h3 class='action-title'>" + " <pre>" + self.convert_to_html_entities(action_name) + "</pre></h3><ul class='tags-list'>"
             else:
                 data += "<div class='action-description'><button class='action-title-bar' onclick='this.parentNode.classList.toggle(\"expanded\")'><h3 class='action-title' id='" + self.convert_to_html_entities(action_name.replace("/", "_")) + "'>" + " <pre>" + self.convert_to_html_entities(action_name) + "</pre> - " + self.convert_to_html_entities(description.split(". ")[0]) + "</h3><ul class='tags-list'>"
 
