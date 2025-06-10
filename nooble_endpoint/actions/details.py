@@ -35,13 +35,13 @@ class ApiDetailsAction(NoobleEndpointAction):
         "body{position: relative;display:flex;flex-direction:row;margin:0px;}" \
         "body > *{height: 100%;box-sizing: border-box;}" \
         "main{position:relative;flex-grow:1;overflow-y:auto;padding:0px 40px;padding-bottom:20px;}" \
-        "section#contents{position:sticky;top:0px;overflow-y:auto;background:#d3ff2c;padding:20px;border-right:5px solid grey;flex-shrink:0}" \
+        "section#contents{position:sticky;top:0px;overflow-y:auto;background:#E5B800;padding:20px;border-right:5px solid grey;flex-shrink:0}" \
         "a{color:black}" \
         "button.action-title-bar{outline:none;padding-top:15px;position:sticky;top:0px;width:100%;background:white;border:none;border-bottom:2px solid grey;font-family:inherit;text-align:left;align-items:left;display:flex;flex-direction:row;cursor:pointer;z-index:20;align-items:center} " \
         "h3.action-title{flex-grow:1;margin:0px;} " \
         "h4{margin-bottom:0.2em;}" \
         "ul{margin-top:0.2em;}" \
-        "div.action-description-content{display:block;padding:0px 20px;max-height:0px;box-sizing:border-box;overflow:hidden;transition:all 0.5s ease-out;background:#e9e9e9;border-radius:0px 0px 6px 6px;}" \
+        "div.action-description-content{display:block;padding:0px 20px;max-height:0px;box-sizing:border-box;overflow:hidden;transition:all 0.5s ease-out;background:hsl(138, 15%, 86%);border-radius:0px 0px 6px 6px;}" \
         "div.action-description.expanded div.action-description-content{padding:20px 20px;max-height:200%;transition:all 0.5s ease-in;}" \
         "ul.tags-list {display:flex;flex-direction:row;gap:20px;}" \
         "li.tag {padding:7px 10px;box-sizing:border-box;list-style-type:none;border-radius:3px;}" \
