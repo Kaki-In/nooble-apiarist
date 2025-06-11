@@ -34,15 +34,17 @@ class ApiDetailsAction(NoobleEndpointAction):
         "pre.returns-name{color:#5c23fb}" \
         "body{position: relative;display:flex;flex-direction:row;margin:0px;}" \
         "body > *{height: 100%;box-sizing: border-box;}" \
-        "main{position:relative;flex-grow:1;overflow-y:auto;padding:0px 40px;padding-bottom:20px;}" \
+        "main{position:relative;flex-grow:1;overflow-y:auto;padding:0px 40px;padding-bottom:20px;scroll-behavior:smooth;}" \
         "section#contents{position:sticky;top:0px;overflow-y:auto;background:#E5B800;padding:20px;border-right:5px solid grey;flex-shrink:0}" \
         "a{color:black}" \
         "button.action-title-bar{outline:none;padding-top:15px;position:sticky;top:0px;width:100%;background:white;border:none;border-bottom:2px solid grey;font-family:inherit;text-align:left;align-items:left;display:flex;flex-direction:row;cursor:pointer;z-index:20;align-items:center} " \
         "h3.action-title{flex-grow:1;margin:0px;} " \
         "h4{margin-bottom:0.2em;}" \
         "ul{margin-top:0.2em;}" \
-        "div.action-description-content{display:block;padding:0px 20px;max-height:0px;box-sizing:border-box;overflow:hidden;transition:all 0.5s ease-out;background:#e6f1f1;border-radius:0px 0px 12px 12px;}" \
-        "div.action-description.expanded div.action-description-content{padding:20px 20px;max-height:200%;transition:all 0.5s ease-in;}" \
+        "div.action-content-expand-parent{display:grid;grid-template-rows:0fr;transition:all 0.6s ease-in-out;}" \
+        "div.action-description-content{overflow:hidden;padding:0px 20px;box-sizing:border-box;background:#e6f1f1;border-radius:0px 0px 12px 12px;transition:all 0.6s ease-in-out;}" \
+        "div.action-description.expanded div.action-content-expand-parent{grid-template-rows:1fr;transition:all 0.6s ease-in-out;}" \
+        "div.action-description.expanded div.action-description-content{padding: 20px 20px;transition:all 0.6s ease-in-out;}" \
         "ul.tags-list {display:flex;flex-direction:row;gap:20px;}" \
         "li.tag {padding:7px 10px;box-sizing:border-box;list-style-type:none;border-radius:3px;}" \
         "li.tag-method-post {background:#fc9a2b;}" \
@@ -79,14 +81,14 @@ class ApiDetailsAction(NoobleEndpointAction):
             description:_T.Optional[str] = self.get_action_content("description", action)
 
             if description is None:
-                data += "<div class='action-description' id='" + self.convert_to_html_entities(action_name.replace("/", "_")) + "'><button class='action-title-bar' onclick='this.parentNode.classList.toggle(\"expanded\")'><h3 class='action-title'>" + " <pre>" + self.convert_to_html_entities(action_name) + "</pre></h3><ul class='tags-list'>"
+                data += "<div class='action-description' id='" + self.convert_to_html_entities(action_name.replace("/", "_")) + "'><button class='action-title-bar' onclick='this.parentNode.classList.toggle(\"expanded\");document.location.href=\"#" + self.convert_to_html_entities(action_name.replace("/", "_")) + "\"'><h3 class='action-title'>" + " <pre>" + self.convert_to_html_entities(action_name) + "</pre></h3><ul class='tags-list'>"
             else:
-                data += "<div class='action-description' id='" + self.convert_to_html_entities(action_name.replace("/", "_")) + "'><button class='action-title-bar' onclick='this.parentNode.classList.toggle(\"expanded\")'><h3 class='action-title'>" + " <pre>" + self.convert_to_html_entities(action_name) + "</pre> - " + self.convert_to_html_entities(description.split(". ")[0]) + "</h3><ul class='tags-list'>"
+                data += "<div class='action-description' id='" + self.convert_to_html_entities(action_name.replace("/", "_")) + "'><button class='action-title-bar' onclick='this.parentNode.classList.toggle(\"expanded\");document.location.href=\"#" + self.convert_to_html_entities(action_name.replace("/", "_")) + "\"'><h3 class='action-title'>" + " <pre>" + self.convert_to_html_entities(action_name) + "</pre> - " + self.convert_to_html_entities(description.split(". ")[0]) + "</h3><ul class='tags-list'>"
 
             for tag in methods:
                 data += "<li class='tag tag-method-" + tag + "'>" + tag + "</li>"
 
-            data += "</ul></button><div class='action-description-content'>"
+            data += "</ul></button><div class='action-content-expand-parent'><div class='action-description-content'>"
 
             if description is not None:
                 data += "<p>" + self.convert_to_html_entities(description) + "</p>"
@@ -153,7 +155,7 @@ class ApiDetailsAction(NoobleEndpointAction):
             if description is None and args is None and validity is None and allows is None and returns is None and examples is None:
                 data += "<small>Aucune information disponible pour cette action</small>"
             
-            data += "</div></div>"
+            data += "</div></div></div>"
 
         
         return data + "</main></body></html>"
