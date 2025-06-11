@@ -41,7 +41,7 @@ class ApiDetailsAction(NoobleEndpointAction):
         "h3.action-title{flex-grow:1;margin:0px;} " \
         "h4{margin-bottom:0.2em;}" \
         "ul{margin-top:0.2em;}" \
-        "div.action-description-content{display:block;padding:0px 20px;max-height:0px;box-sizing:border-box;overflow:hidden;transition:all 0.5s ease-out;background:hsl(138, 15%, 86%);border-radius:0px 0px 6px 6px;}" \
+        "div.action-description-content{display:block;padding:0px 20px;max-height:0px;box-sizing:border-box;overflow:hidden;transition:all 0.5s ease-out;background:#e6f1f1;border-radius:0px 0px 12px 12px;}" \
         "div.action-description.expanded div.action-description-content{padding:20px 20px;max-height:200%;transition:all 0.5s ease-in;}" \
         "ul.tags-list {display:flex;flex-direction:row;gap:20px;}" \
         "li.tag {padding:7px 10px;box-sizing:border-box;list-style-type:none;border-radius:3px;}" \
