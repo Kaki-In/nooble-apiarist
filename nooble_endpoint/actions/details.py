@@ -81,9 +81,9 @@ class ApiDetailsAction(NoobleEndpointAction):
             description:_T.Optional[str] = self.get_action_content("description", action)
 
             if description is None:
-                data += "<div class='action-description' id='" + self.convert_to_html_entities(action_name.replace("/", "_")) + "'><button class='action-title-bar' onclick='this.parentNode.classList.toggle(\"expanded\");document.location.href=\"#" + self.convert_to_html_entities(action_name.replace("/", "_")) + "\"'><h3 class='action-title'>" + " <pre>" + self.convert_to_html_entities(action_name) + "</pre></h3><ul class='tags-list'>"
+                data += "<div class='action-description' id='" + self.convert_to_html_entities(action_name.replace("/", "_")) + "'><button class='action-title-bar' onclick='this.parentNode.classList.toggle(\"expanded\");document.location.href=this.parentNode.classList.contains(\"expanded\")?\"#" + self.convert_to_html_entities(action_name.replace("/", "_")) + "\":\"#\"'><h3 class='action-title'>" + " <pre>" + self.convert_to_html_entities(action_name) + "</pre></h3><ul class='tags-list'>"
             else:
-                data += "<div class='action-description' id='" + self.convert_to_html_entities(action_name.replace("/", "_")) + "'><button class='action-title-bar' onclick='this.parentNode.classList.toggle(\"expanded\");document.location.href=\"#" + self.convert_to_html_entities(action_name.replace("/", "_")) + "\"'><h3 class='action-title'>" + " <pre>" + self.convert_to_html_entities(action_name) + "</pre> - " + self.convert_to_html_entities(description.split(". ")[0]) + "</h3><ul class='tags-list'>"
+                data += "<div class='action-description' id='" + self.convert_to_html_entities(action_name.replace("/", "_")) + "'><button class='action-title-bar' onclick='this.parentNode.classList.toggle(\"expanded\");document.location.href=this.parentNode.classList.contains(\"expanded\")?\"#" + self.convert_to_html_entities(action_name.replace("/", "_")) + "\":\"#\"'><h3 class='action-title'>" + " <pre>" + self.convert_to_html_entities(action_name) + "</pre> - " + self.convert_to_html_entities(description.split(". ")[0]) + "</h3><ul class='tags-list'>"
 
             for tag in methods:
                 data += "<li class='tag tag-method-" + tag + "'>" + tag + "</li>"
