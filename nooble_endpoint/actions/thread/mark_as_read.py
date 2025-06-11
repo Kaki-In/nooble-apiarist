@@ -6,7 +6,7 @@ from ...templates.nooble_action import NoobleEndpointAction
 import apiarist_server_endpoint as _apiarist
 @_apiarist.NoobleEndpointDecorations.description("Marquer des activités comme lues")
 @_apiarist.NoobleEndpointDecorations.arguments(
-    activites = "les activités à marquer comme lues"
+    activities = "les activités à marquer comme lues"
 )
 @_apiarist.NoobleEndpointDecorations.validity(
     "le compte a bien été notifié de cette activité"

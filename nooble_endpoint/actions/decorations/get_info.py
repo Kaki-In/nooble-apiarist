@@ -29,7 +29,7 @@ import apiarist_server_endpoint as _apiarist
         "image": "2834fa0b28"
     }
 )
-class GetDecorationInfosAction(NoobleEndpointAction):
+class GetDecorationInfoAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)
 

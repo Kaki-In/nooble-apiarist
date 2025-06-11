@@ -1,4 +1,5 @@
 import quart.wrappers as _quart_wrappers
+import nooble_database.objects as _nooble_database_objects
 
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
@@ -26,6 +27,11 @@ import apiarist_server_endpoint as _apiarist
                 "active_decoration": '3bd8527cf',
                 "active_badges": [
                     ["here_for_long", 3]
+                ],
+                "classes": [
+                    "abc2934",
+                    "cb293cdb23f",
+                    "..."
                 ]
             },
             "safe": 
@@ -34,6 +40,11 @@ import apiarist_server_endpoint as _apiarist
                 "decorations": [
                     '3bd8527cf', 
                     '8cab2940c3d'
+                ],
+                "badges": [
+                    ["here_for_long", 30],
+                    ["...", 394],
+                    "..."
                 ]
             },
             "role": "admin_teacher",
@@ -59,21 +70,29 @@ class GetLogInfoAction(NoobleEndpointAction):
                 configuration
             )
         
-        else :
-            account_object = await account.get_object()
+        profile_info: dict = await account.get_profile().get_object() # type: ignore
 
-            return await self.make_response(
-                {
-                    "connected": True,
-                    "account": {
-                        "id": account_object["_id"],
-                        "profile": account_object["profile"],
-                        "safe": account_object["safe"],
-                        "role": account_object["role"],
-                        "mail": account_object["mail"]
-                    }
-                }, 
-                configuration
-            )
+        if await account.get_role() != _nooble_database_objects.Role.ADMIN:
+            profile_info["classes"] = [(await nooble_class.ensure_object())["_id"] for nooble_class in await configuration.get_database().get_classes().get_account_classes(account.get_id())]
+        
+        owned_badges = await account.get_safe().get_owned_badges()
+
+        profile_info["badges"] = [badge for badge in owned_badges if badge[0] in profile_info["badges"]]
+        
+        account_object = await account.get_object()
+
+        return await self.make_response(
+            {
+                "connected": True,
+                "account": {
+                    "id": account_object["_id"],
+                    "profile": profile_info,
+                    "safe": account_object["safe"],
+                    "role": account_object["role"],
+                    "mail": account_object["mail"]
+                }
+            }, 
+            configuration
+        )
 
 

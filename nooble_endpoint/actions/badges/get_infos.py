@@ -32,7 +32,7 @@ import apiarist_server_endpoint as _apiarist
         "description": 'You have been here for 10 years'
     }
 )
-class GetBadgeInfosAction(NoobleEndpointAction):
+class GetBadgeInfoAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)
 

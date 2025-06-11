@@ -16,7 +16,7 @@ import apiarist_server_endpoint as _apiarist
 )
 @_apiarist.NoobleEndpointDecorations.arguments(
     name = "le nom personnalisé du fichier",
-    type = "le type de fichier à appliquer au filtre (optionel)",
+    type = "le type de fichier",
     file = "en tant que fichier, le fichier à inclure (comprenant un nom de fichier)"
 )
 @_apiarist.NoobleEndpointDecorations.validity(

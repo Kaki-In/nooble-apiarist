@@ -23,7 +23,7 @@ class NoobleEndpoint(_server_endpoint.ServerEndpoint[NoobleEndpointConfiguration
         self.add_action("/classes/add-account", AddClassAccountAction(), "POST")
         self.add_action("/classes/create", CreateClassAction(), "POST")
         self.add_action("/classes/delete", DeleteClassAction(), "POST")
-        self.add_action("/classes/get-accounts", GetClassAccountsAction(), "POST")
+        self.add_action("/classes/get-accounts", GetClassAccountsAction(), "GET")
         self.add_action("/classes/data", GetClassDataAction(), "POST", "GET")
         self.add_action("/classes/remove-account", RemoveClassAccountAction(), "POST")
         self.add_action("/classes/edit", EditClassAction(), "POST")
@@ -42,15 +42,15 @@ class NoobleEndpoint(_server_endpoint.ServerEndpoint[NoobleEndpointConfiguration
         self.add_action("/thread/mark-as-read", MarkActivitiesAsReadAction(), "POST")
 
         self.add_action("/badges/list", ListBadgesAction(), "GET")
-        self.add_action("/badges/get-infos", GetBadgeInfosAction(), "GET")
+        self.add_action("/badges/get-info", GetBadgeInfoAction(), "GET")
         self.add_action("/badges/get-thumbnail", GetBadgeThumbnailAction(), "GET")
         self.add_action("/badges/buy", BuyBadgeAction(), "POST")
 
         self.add_action("/decorations/buy", BuyDecorationAction(), "POST")
         self.add_action("/decorations/create", CreateDecorationAction(), "POST")
         self.add_action("/decorations/delete", DeleteDecorationAction(), "POST")
-        self.add_action("/decoration/get_info", GetDecorationInfosAction(), "GET")
-        self.add_action("/decoration/list", ListDecorationsAction(), "GET")
+        self.add_action("/decorations/get-info", GetDecorationInfoAction(), "GET")
+        self.add_action("/decorations/list", ListDecorationsAction(), "GET")
         self.add_action("/decorations/modify", ModifyDecorationAction(), "POST")
 
         self.add_action("/safe", GetSafeAction(), "GET")
