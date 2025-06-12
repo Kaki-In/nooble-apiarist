@@ -51,6 +51,65 @@ class ApiDetailsAction(NoobleEndpointAction):
         "li.tag-method-get {background:#3f8eed;}" \
         "" \
         "</style>" \
+        "<script>" \
+        """
+
+async function launchRequest(url, values, methods)
+{
+    let data = {};
+
+    for (let value of Object.keys(values))
+    {
+        try 
+        {
+            data[value] = JSON.parse(values[value]);
+        } catch (e) {
+            return {
+                request: "ERROR",
+                response: ""
+            }
+        }
+    }
+
+    let result;
+
+    try {
+        let link = location.protocol + "//" + location.host + "/" + (url[0] == "/"?url.substring(1):url);
+
+        if (methods.includes("POST")) 
+        {
+            let request_result = await fetch (link, 
+                {
+                    method: "POST",
+                    body: JSON.stringify(data)
+                }
+            );
+
+            result = JSON.stringify(await request_result.json(), null, 2);
+        } else {
+            let url = new URL(link);
+
+            for (let key of Object.keys(data))
+            {
+                url.searchParams.set(key, data[key]);
+            }
+
+            let request_result = await fetch (url.toString());
+
+            result = JSON.stringify(await request_result.json(), null, 2);
+        }
+    } catch (e) {
+        return {
+            request: JSON.stringify(data),
+            response: e.message
+        }
+    }
+
+    return {request: JSON.stringify(data), response: result};
+}
+
+        """ \
+        "</script>" \
         "</head>" \
         "<body>" \
         "<section id='contents'>" \
@@ -155,8 +214,23 @@ class ApiDetailsAction(NoobleEndpointAction):
             if description is None and args is None and validity is None and allows is None and returns is None and examples is None:
                 data += "<small>Aucune information disponible pour cette action</small>"
             
-            data += "</div></div></div>"
+            if methods:
+                data += "<div class='request-div'><h4>Appeler la requête</h4>"
 
+                if args is not None:
+                    data += "<div class='requests-args'>"
+
+                    for arg in args:
+                        data += "<div class='request-arg-line'><span class='arg-name'>" + self.convert_to_html_entities(arg) + "</span><input type='text' id='" + (action_name + "___" + arg).replace("/", "_") + "'/></div>"
+                
+                data += "<button class='request-button' onclick='this.disabled = true;launchRequest(\"" + action_name + "\", {" + ", ".join(['"' + arg + '": document.getElementById("' + (action_name + "___" + arg).replace("/", "_") + '").value' for arg in args or []] ) + "}, [" + ", ".join(['"' + method + '"' for method in methods] ) + "]).then(({request, response}) => {document.getElementById(\"" + (action_name + "___request___").replace("/", "_") + "\").innerText = request;document.getElementById(\"" + (action_name + "___result___").replace("/", "_") + "\").innerText = response;this.disabled = false});'>Lancer la requête</button>"
+
+                data += "<pre class='code request-text' id='" + (action_name + "___request___").replace("/", "_") + "'>Request here</pre>"
+                data += "<pre class='code response-text' id='" + (action_name + "___result___").replace("/", "_") + "'>Response to request here</pre>"
+
+                data += "</div></div>"
+                
+            data += "</div></div></div>"
         
         return data + "</main></body></html>"
     
