@@ -6,10 +6,6 @@ from ...templates.nooble_action import NoobleEndpointAction
 
 import apiarist_server_endpoint as _apiarist
 @_apiarist.NoobleEndpointDecorations.description("Obtenir des informations de connection")
-@_apiarist.NoobleEndpointDecorations.arguments(
-    username = "l'adresse mail du compte",
-    password = "le mot de passe"
-)
 @_apiarist.NoobleEndpointDecorations.returns(
     connected = "vrai lorsque l'utilisateur est connecté",
     account = "si connecté, les informations de compte"
