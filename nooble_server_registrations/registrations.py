@@ -41,7 +41,7 @@ class NoobleRegistrationsList():
             a = ""
 
             for _ in range(self._configuration.get_tokens_size()):
-                a += _random.choice(''.join([chr(i) for i in range(32, 126)]))
+                a += _random.choice('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz')
             
             if not a in self._registrations:
                 return a
