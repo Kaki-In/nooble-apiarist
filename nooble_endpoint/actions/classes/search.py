@@ -87,14 +87,20 @@ class SearchClassAction(NoobleEndpointAction):
 
         classes = await configuration.get_database().get_classes().find(
             {
-                "description": {
-                    "$regex": pattern,
-                    "$options": 'i' # case insensitive
-                },
-                "name": {
-                    "$regex": pattern,
-                    "$options": 'i' # case insensitive
-                },
+                "$or": [
+                    {
+                        "name": {
+                            "$regex": pattern,
+                            "$options": 'i' # case insensitive
+                        },
+                    },
+                    {
+                        "description": {
+                            "$regex": pattern,
+                            "$options": 'i' # case insensitive
+                        },
+                    },
+                ]
             },
             skip = offset,
             limit = count

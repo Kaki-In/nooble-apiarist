@@ -96,22 +96,32 @@ class SearchAccountAction(NoobleEndpointAction):
 
         accounts = await configuration.get_database().get_accounts().find(
             {
-                "mail": {
-                    "$regex": pattern,
-                    "$options": 'i' # case insensitive
-                },
-                "profile.first_name": {
-                    "$regex": pattern,
-                    "$options": 'i' # case insensitive
-                },
-                "profile.last_name": {
-                    "$regex": pattern,
-                    "$options": 'i' # case insensitive
-                },
-                "profile.description": {
-                    "$regex": pattern,
-                    "$options": 'i' # case insensitive
-                }
+                "$or": [
+                    {
+                        "mail": {
+                            "$regex": pattern,
+                            "$options": 'i' # case insensitive
+                        }
+                    },
+                    {
+                        "profile.first_name": {
+                            "$regex": pattern,
+                            "$options": 'i' # case insensitive
+                        }
+                    },
+                    {
+                        "profile.last_name": {
+                            "$regex": pattern,
+                            "$options": 'i' # case insensitive
+                        }
+                    },
+                    {
+                        "profile.description": {
+                            "$regex": pattern,
+                            "$options": 'i' # case insensitive
+                        }
+                    },
+                ]
             },
             skip = offset,
             limit = count
