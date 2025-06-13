@@ -3,6 +3,7 @@ import typing as _T
 
 import asyncio as _asyncio
 import random as _random
+import hashlib as _hashlib
 
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
@@ -66,7 +67,7 @@ class ForgotPasswordAction(NoobleEndpointAction):
         new_password = self.create_new_password()
         await account.update({
             "$set": {
-                "password": new_password
+                "password": _hashlib.sha256(new_password.encode()).hexdigest()
             }
         })
         
