@@ -76,6 +76,6 @@ class UpdatePasswordAction(NoobleEndpointAction):
 
         await configuration.get_mail_service().send_new_password_mail(await account.get_object(), new_password)
 
-        return self.make_response(None, configuration, 500)
+        return await self.make_response(None, configuration, 500)
         
 
