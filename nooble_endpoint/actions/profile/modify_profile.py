@@ -80,17 +80,19 @@ class ModifyProfileAction(NoobleEndpointAction):
             if not badge in [badge[0] for badge in owned_badges]:
                 return False
         
-        file_image = configuration.get_database().get_files().get_file(args["profile_image"])
+        if args["profile_image"] is not None:
+            file_image = configuration.get_database().get_files().get_file(args["profile_image"])
+            
+            if not await file_image.exists():
+                return False
+            
+            if not await file_image.get_filetype() != _nooble_database_types.FileType.PROFILE_ICON:
+                return False
         
-        if not await file_image.exists():
-            return False
-        
-        if not await file_image.get_filetype() != _nooble_database_types.FileType.PROFILE_ICON:
-            return False
-        
-        decoration  = configuration.get_database().get_decorations().get_decoration(args["active_decoration"])
-        if not await decoration.exists():
-            return False
+        if args["active_decoration"] is not None:
+            decoration  = configuration.get_database().get_decorations().get_decoration(args["active_decoration"])
+            if not await decoration.exists():
+                return False
 
         return True
     

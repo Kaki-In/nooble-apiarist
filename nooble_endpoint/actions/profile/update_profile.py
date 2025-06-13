@@ -69,17 +69,19 @@ class UpdateProfileAction(NoobleEndpointAction):
             if type(badge) is not int:
                 return False
             
-        file_image = configuration.get_database().get_files().get_file(args["profile_image"])
+        if args["profile_image"] is not None:
+            file_image = configuration.get_database().get_files().get_file(args["profile_image"])
+            
+            if not await file_image.exists():
+                return False
+                
+            if not await file_image.get_filetype() != _nooble_database_types.FileType.PROFILE_ICON:
+                return False
         
-        if not await file_image.exists():
-            return False
-        
-        if not await file_image.get_filetype() != _nooble_database_types.FileType.PROFILE_ICON:
-            return False
-        
-        decoration  = configuration.get_database().get_decorations().get_decoration(args["active_decoration"])
-        if not await decoration.exists():
-            return False
+        if args["active_decoration"] is not None:
+            decoration  = configuration.get_database().get_decorations().get_decoration(args["active_decoration"])
+            if not await decoration.exists():
+                return False
 
         return True
     
@@ -99,15 +101,16 @@ class UpdateProfileAction(NoobleEndpointAction):
             if not badge in [i[0] for i in safe["badges"]]:
                 return False
             
-        decoration: str = args["active_decoration"]
+        decoration: str|None = args["active_decoration"]
 
-        if not decoration in safe["decorations"]:
+        if decoration is not None and not decoration in safe["decorations"]:
             return False
         
-        profile_image = configuration.get_database().get_files().get_file(args["profile_image"])
+        if args["profile_image"] is not None:
+            profile_image = configuration.get_database().get_files().get_file(args["profile_image"])
 
-        if account.get_id() != await profile_image.get_sender_id():
-            return False
+            if account.get_id() != await profile_image.get_sender_id():
+                return False
         
         return True
 
@@ -119,7 +122,7 @@ class UpdateProfileAction(NoobleEndpointAction):
         active_decoration:str|None = args["active_decoration"]
         active_badges: list[str] = args["active_badges"]
         description: str = args["description"]
-        profile_image: str = args["profile_image"]
+        profile_image: str|None = args["profile_image"]
 
         account = await self.get_account(request, configuration)
 
