@@ -48,6 +48,8 @@ class NoobleObject(_T.Generic[_object_type]):
             array_filters=array_filters
         )
 
+        print(result)
+
         return result.matched_count == 1
 
     async def destroy(self) -> bool:
