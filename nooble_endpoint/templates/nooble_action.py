@@ -41,7 +41,9 @@ class NoobleEndpointAction(_apiarist.ServerEndpointAction[NoobleEndpointConfigur
         return account
     
     async def make_response(self, data: _T.Any, configuration: NoobleEndpointConfiguration, code: int = 202) -> _quart_wrappers.Response:
-        return await configuration.get_quart().make_response((_json.dumps(data), code)) # type:ignore
+        response = await configuration.get_quart().make_response((_json.dumps(data), code))
+        response.mimetype = "application/json"
+        return response # type:ignore
     
     async def get_files(self, request: _quart_wrappers.Request) -> dict[str, _werkzeug_datastructure.FileStorage]:
         return (await request.files)
