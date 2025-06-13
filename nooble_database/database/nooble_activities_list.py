@@ -39,7 +39,7 @@ class NoobleActivitiesList(NoobleCollection[ActivityObject]):
         id = await self.insert_one(object)
         object["_id"] = id
     
-        return NoobleActivity(self.get_collection(), await self.insert_one(object), object)
+        return NoobleActivity(self.get_collection(), id, object)
     
 
 
