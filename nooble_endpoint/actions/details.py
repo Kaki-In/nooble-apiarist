@@ -85,7 +85,7 @@ async function launchRequest(url, values, methods)
                 }
             );
 
-            if (!request_result.ok) throw new Error("" + request_result.status + ": " + request_result.status_text);
+            if (!request_result.ok) throw new Error("" + request_result.status + ": " + request_result.statusText);
 
             result = JSON.stringify(await request_result.json(), null, 2);
         } else {
@@ -98,7 +98,7 @@ async function launchRequest(url, values, methods)
 
             let request_result = await fetch (url.toString());
 
-            if (!request_result.ok) throw new Error("" + request_result.status + ": " + request_result.status_text);
+            if (!request_result.ok) throw new Error("" + request_result.status + ": " + request_result.statusText);
 
             result = JSON.stringify(await request_result.json(), null, 2);
         }
