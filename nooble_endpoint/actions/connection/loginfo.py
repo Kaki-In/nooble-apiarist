@@ -28,7 +28,9 @@ import apiarist_server_endpoint as _apiarist
                     "abc2934",
                     "cb293cdb23f",
                     "..."
-                ]
+                ],
+                "profile_image": "abc837b23",
+                "description": "Ssalut toi"
             },
             "safe": 
             {

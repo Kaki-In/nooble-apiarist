@@ -80,7 +80,7 @@ class ModifyAccountRoleAction(NoobleEndpointAction):
 
         await account.update({
             "$set": {
-                "role": str(role)
+                "role": args["role"]
             }
         })
 

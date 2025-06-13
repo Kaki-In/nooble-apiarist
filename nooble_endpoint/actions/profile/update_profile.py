@@ -53,8 +53,8 @@ class UpdateProfileAction(NoobleEndpointAction):
         if not (
             type(args["first_name"]) is str
         and type(args["last_name"]) is str
-        and type(args["active_decoration"]) is str
-        and type(args["profile_image"]) is str
+        and (type(args["active_decoration"]) is str or args["active_decoration"] == None)
+        and (type(args["profile_image"]) is str or args["profile_image"] == None)
         and type(args["active_badges"]) is list
         and type(args["description"]) is str
         ):
@@ -116,7 +116,7 @@ class UpdateProfileAction(NoobleEndpointAction):
 
         first_name: str = args["first_name"]
         last_name: str = args["last_name"]
-        active_decoration:str = args["active_decoration"]
+        active_decoration:str|None = args["active_decoration"]
         active_badges: list[str] = args["active_badges"]
         description: str = args["description"]
         profile_image: str = args["profile_image"]

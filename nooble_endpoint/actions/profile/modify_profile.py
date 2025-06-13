@@ -59,8 +59,8 @@ class ModifyProfileAction(NoobleEndpointAction):
             type(args["user_id"]) is str
         and type(args["first_name"]) is str
         and type(args["last_name"]) is str
-        and type(args["active_decoration"]) is str
-        and type(args["profile_image"]) is str
+        and (type(args["active_decoration"]) is str or args["active_decoration"] is None)
+        and (type(args["profile_image"]) is str or args["profile_image"] is None)
         and type(args["active_badges"]) is list
         and type(args["description"]) is str
         ):
@@ -121,10 +121,10 @@ class ModifyProfileAction(NoobleEndpointAction):
         user_id: str = args["user_id"]
         first_name: str = args["first_name"]
         last_name: str = args["last_name"]
-        active_decoration: str = args["active_decoration"]
+        active_decoration: str|None = args["active_decoration"]
         active_badges: list[str] = args["active_badges"]
         description: str = args["description"]
-        profile_image: str = args["profile_image"]
+        profile_image: str|None = args["profile_image"]
 
         account = configuration.get_database().get_accounts().get_account(user_id)
 

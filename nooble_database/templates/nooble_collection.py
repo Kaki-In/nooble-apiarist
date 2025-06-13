@@ -19,12 +19,19 @@ class NoobleCollection(_T.Generic[_data_type]):
         
         return result.matched_count
 
-    async def find(self, fields: _T.Mapping) -> list[_data_type]:
+    async def find(self, fields: _T.Mapping, skip:_T.Optional[int]=None, limit:_T.Optional[int]=None) -> list[_data_type]:
         objects = self._coll.find(fields)
+
+        if skip is not None:
+            objects = objects.skip(skip)
+        
+        if limit is not None:
+            objects = objects.limit(limit)
 
         results: list[_data_type] = []
 
         async for i in objects:
+            i["_id"] = str(i["_id"]) # type:ignore
             results.append(i)
 
         return results

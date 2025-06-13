@@ -5,4 +5,5 @@ from .get_accounts import GetClassAccountsAction
 from .get_data import GetClassDataAction
 from .remove_account import RemoveClassAccountAction
 from .edit_class import EditClassAction
+from .search import SearchClassAction
 

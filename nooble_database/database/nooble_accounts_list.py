@@ -73,7 +73,7 @@ class NoobleAccountsList(NoobleCollection[AccountObject]):
             "profile": {
                 "active_badges": [],
                 "active_decoration": None,
-                "description": "Neither more nor less than {first_name} {last_name}",
+                "description": f"Neither more nor less than {first_name} {last_name}",
                 "first_name": first_name,
                 "last_name": last_name,
                 "profile_image": None

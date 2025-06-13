@@ -38,7 +38,10 @@ import apiarist_server_endpoint as _apiarist
         "description": "Foobar",
         "classes": [
             "bc3849dec2"
-        ]
+        ],
+        "profile_image": "abc837b23",
+        "description": "Ssalut toi"
+
     }
 )
 class GetProfileInfoAction(NoobleEndpointAction):
@@ -66,13 +69,16 @@ class GetProfileInfoAction(NoobleEndpointAction):
         if account is None:
             return await self.make_response(None, configuration, 500) 
         
-        profile_info: dict = await account.get_profile().get_object() # type: ignore
+        account_object = await account.get_object()
 
-        if await account.get_role() != _nooble_database_roles.Role.ADMIN:
+        profile_info: dict = account_object["profile"] # type: ignore
+
+        if account_object["role"] != "admin":
             profile_info["classes"] = [(await nooble_class.ensure_object())["_id"] for nooble_class in await configuration.get_database().get_classes().get_account_classes(account.get_id())]
         
-        owned_badges = await account.get_safe().get_owned_badges()
+        owned_badges = account_object["safe"]["badges"]
 
         profile_info["badges"] = [badge for badge in owned_badges if badge[0] in profile_info["badges"]]
+        profile_info["role"] = account_object["role"]
         
         return await self.make_response(profile_info, configuration, 200)
