@@ -42,13 +42,11 @@ class NoobleObject(_T.Generic[_object_type]):
     async def update(self, fields: _T.Mapping[str, _T.Any], array_filters: _T.Optional[_T.Sequence[_T.Mapping[str, _T.Any]]] = None) -> bool:
         result = await self._coll.update_one(
             {
-                '_id': self._id
+                '_id': _bson.ObjectId(self._id)
             },
             fields,
             array_filters=array_filters
         )
-
-        print(result)
 
         return result.matched_count == 1
 
