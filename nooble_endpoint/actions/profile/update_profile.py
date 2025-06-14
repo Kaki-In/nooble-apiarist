@@ -134,7 +134,7 @@ class UpdateProfileAction(NoobleEndpointAction):
                 "profile": {
                     "first_name": first_name,
                     "last_name": last_name,
-                    "active_decorations": active_decoration,
+                    "active_decoration": active_decoration,
                     "active_badges": active_badges,
                     "description": description,
                     "profile_image": profile_image
