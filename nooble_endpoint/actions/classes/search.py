@@ -12,8 +12,7 @@ import apiarist_server_endpoint as _apiarist
 )
 @_apiarist.NoobleEndpointDecorations.validity(
     "le compte est supérieur à 0",
-    "le nombre de cours à ignorer est supérieur ou égal à 0",
-    "le pattern n'est pas vide"
+    "le nombre de cours à ignorer est supérieur ou égal à 0"
 )
 @_apiarist.NoobleEndpointDecorations.allow_only_when(
     "l'utilisateur est connecté",
@@ -59,8 +58,7 @@ class SearchClassAction(NoobleEndpointAction):
             return False
         
         if not (
-            args["pattern"]
-        and args["count"] > 0
+            args["count"] > 0
         and args["offset"] >= 0
         ):
             return False

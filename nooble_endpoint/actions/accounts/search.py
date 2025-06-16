@@ -12,8 +12,7 @@ import apiarist_server_endpoint as _apiarist
 )
 @_apiarist.NoobleEndpointDecorations.validity(
     "le compte est supérieur à 0",
-    "le nombre de comptes à ignorer est supérieur ou égal à 0",
-    "le pattern n'est pas vide"
+    "le nombre de comptes à ignorer est supérieur ou égal à 0"
 )
 @_apiarist.NoobleEndpointDecorations.allow_only_when(
     "l'utilisateur est connecté",
@@ -54,8 +53,7 @@ class SearchAccountAction(NoobleEndpointAction):
         args = await self.get_request_args(request)
 
         if not (
-            "pattern" in args
-        and "offset" in args
+            "offset" in args
         and "count" in args
         ):
             return False
