@@ -1,6 +1,7 @@
 import nooble_database.database as _nooble_database
 import nooble_database.objects as _nooble_database_objects
 import datetime as _datetime
+import bson as _bson
 
 class NoobleAccountsNotifier():
     def __init__(self, database: _nooble_database.NoobleDatabase) -> None:
@@ -14,7 +15,7 @@ class NoobleAccountsNotifier():
                 "_id":
                 {
                     "$in": [
-                        account for account in people
+                        _bson.ObjectId(account) for account in people
                     ]
                 }
             },
