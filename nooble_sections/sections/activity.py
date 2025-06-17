@@ -14,6 +14,7 @@ class ClientActivitySectionDataObject(_T.TypedDict):
     editable_javascript:str
 
     css:str
+    arguments: dict[str, _T.Any]
 
 class NoobleActivitySection(NoobleSection[str, ClientActivitySectionDataObject, _nooble_database_objects.section_objects.ActivitySectionDataObject]):
     def __init__(self, activity_file: str, activities_manager: _nooble_activities_manager.NoobleActivitiesManager, resources_manager: _nooble_resources_manager.NoobleResourcesManager) -> None:
@@ -40,7 +41,8 @@ class NoobleActivitySection(NoobleSection[str, ClientActivitySectionDataObject, 
             "id": self.get_data(),
             "css": activity.get_css(),
             "javascript": await activity.get_javascript(activity_data, database, account),
-            "editable_javascript": await activity.get_javascript(activity_data, database, account)
+            "editable_javascript": await activity.get_javascript(activity_data, database, account),
+            "arguments": await activity.get_arguments(activity_data, database, account)
         }
     
     async def export_to_database_json_data(self, database: _nooble_database.NoobleDatabase) -> _nooble_database_objects.section_objects.ActivitySectionDataObject:
