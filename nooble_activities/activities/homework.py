@@ -14,81 +14,6 @@ class HomeworkActivity(NoobleActivity):
     def create_empty_file(self) -> bytes:
         return _json.dumps([]).encode()
     
-    async def get_html(self, file:bytes, database: _nooble_database.NoobleDatabase, account:_nooble_database.NoobleAccount) -> str:
-        account_role = await account.get_role()
-
-        data = _json.loads(file)
-
-        if account_role == _nooble_database_objects.Role.STUDENT:
-            given_file = None
-            student_homework = None
-
-            for homework in data['homework']:
-                if account.get_id() == homework['sender_id']:
-                    given_file = await database.get_files().get_file(homework['file_id']).ensure_object()
-                    student_homework = homework
-            
-            if given_file is not None and student_homework is not None:
-                return f"""
-<h2> Rendre un devoir </h2>
-<div id="homework-giveback">
-    <span>Devoir rendu</span>
-    <a href='{self.get_file_url(student_homework["file_id"])}' target='_blank'>
-        {given_file['filename']}
-    </a>
-    <button id="delete-button">Supprimer le devoir</button>
-</div>
-"""
-            else:
-
-                return """
-<h2> Rendre un devoir </h2>
-<div id="homework-giveback">
-    <input type="file" id="homework-file">
-    </input>
-</div>
-"""
-        else:
-            result = """
-<h2>Devoirs rendus</h2>
-<ul class='homework-list'>
-"""
-            for homework in data['homework']:
-                sender = database.get_accounts().get_account(homework['sender_id'])
-
-                if await sender.exists():
-                    profile = await sender.get_profile().ensure_object()
-                    sender_name = profile['last_name'] + ' ' + profile['first_name']
-                else:
-                    sender_name = "Unknown Student"
-                
-                student_file = await database.get_files().get_file(homework['file_id']).get_object()
-                
-                result += f"""
-    <li class='homework'>
-        <span class='homework_student'>
-            {sender_name}
-        </span>
-        <a href='{self.get_file_url(homework["file_id"])}&type=section file' target='_blank'>
-            {student_file['filename']}
-        </a>
-    </li>
-"""
-            result += """
-</ul>"""
-
-            return result
-        
-    async def get_editable_html(self, file: bytes, database: _nooble_database.NoobleDatabase, account: _nooble_database.NoobleAccount) -> str:
-        return """
-<h2> Rendre un devoir </h2>
-<div class='homework-edit'>
-    <span>
-        Rien à éditer ici
-    </span>
-</div>
-"""
-
     def get_css(self) -> str:
         return """
 
@@ -169,8 +94,17 @@ class Activity // the Activity name is mandatory
 """
 
     async def get_arguments(self, file: bytes, database: _nooble_database.NoobleDatabase, account: _nooble_database.NoobleAccount) -> _T.Any:
+        file_data = _json.loads(file)
+
+        given = None
+
+        for homework in file_data:
+            if homework['sender_id'] == account.get_id():
+                given = homework
+
         return {
-            "student": await account.get_role() == _nooble_database_objects.Role.STUDENT
+            "is_student": await account.get_role() == _nooble_database_objects.Role.STUDENT,
+            "has_given_file": given
         }
 
     async def get_used_files(self, file: bytes, database: _nooble_database.NoobleDatabase) -> list[str]:

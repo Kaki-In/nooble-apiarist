@@ -19,12 +19,6 @@ class NoobleActivity():
     def get_file_url(self, file_id: str) -> str:
         return f"/resources/download?id={file_id}&type=section file"
     
-    async def get_html(self, file:bytes, database: _nooble_database.NoobleDatabase, account:_nooble_database.NoobleAccount) -> str:
-        raise NotImplementedError("not implemented for " + repr(self))
-    
-    async def get_editable_html(self, file:bytes, database: _nooble_database.NoobleDatabase, account:_nooble_database.NoobleAccount) -> str:
-        raise NotImplementedError("not implemented for " + repr(self))
-    
     async def get_javascript(self, file:bytes, database: _nooble_database.NoobleDatabase, account:_nooble_database.NoobleAccount) -> str:
         raise NotImplementedError("not implemented for " + repr(self))
     
