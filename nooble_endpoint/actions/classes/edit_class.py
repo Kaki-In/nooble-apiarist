@@ -65,7 +65,7 @@ class EditClassAction(NoobleEndpointAction):
         try:
             wrapped_section = configuration.get_sections().export(args["content"])
 
-            if not wrapped_section.is_valid(configuration.get_database()):
+            if not await wrapped_section.is_valid(configuration.get_database()):
                 return False
 
         except Exception as exc:
