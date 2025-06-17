@@ -119,7 +119,7 @@ async function launchRequest(url, values, methods, file)
         }
     }
 
-    return {request: JSON.stringify(data), response: result};
+    return {request: JSON.stringify(data, null, 2), response: result};
 }
 
         """ \
