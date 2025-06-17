@@ -47,6 +47,13 @@ class NoobleEndpointDecorations():
             return _nooble_endpoint_example((_json.dumps(example_in, indent=4), _json.dumps(example_out, indent=4)), func)
             
         return examples
+    
+    @staticmethod
+    def needs_file(file_name):
+        def needs_file(endpoint: _T.Any):
+            return _nooble_endpoint_needs_file(file_name, endpoint)
+        
+        return needs_file
 
 class _NoobleEndpointDescriptedObject(_T.Generic[_description_type, _object]):
     def __init__(self, name:str, content: _description_type, obj: _T.Any) -> None:
@@ -117,6 +124,8 @@ class _nooble_endpoint_example(_NoobleEndpointDescriptedObject[tuple[str, str], 
     def __init__(self, content: tuple[str, str], obj: _T.Any) -> None:
         super().__init__("example", content, obj)
 
-    
+class _nooble_endpoint_needs_file(_NoobleEndpointDescriptedObject[str, _T.Any]):
+    def __init__(self, file_name: str, obj: _T.Any) -> None:
+        super().__init__("needs_file", file_name, obj)
 
 

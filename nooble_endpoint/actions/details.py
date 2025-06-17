@@ -31,6 +31,7 @@ class ApiDetailsAction(NoobleEndpointAction):
         "pre{position: relative;display: inline;}" \
         "pre.code{display: block;box-sizing:border-box;padding:30px;background:#d5d5d5;overflow-x:auto;border-radius:3px}" \
         "pre.argument-name{color:#d35b22}" \
+        "pre.argument-file{color:#53bd59}" \
         "pre.returns-name{color:#5c23fb}" \
         "body{position: relative;display:flex;flex-direction:row;margin:0px;}" \
         "body > *{height: 100%;box-sizing: border-box;}" \
@@ -54,10 +55,10 @@ class ApiDetailsAction(NoobleEndpointAction):
         "<script>" \
         """
 
-async function launchRequest(url, values, methods)
+async function launchRequest(url, values, methods, file)
 {
     let data = {};
-
+    
     for (let value of Object.keys(values))
     {
         try 
@@ -78,10 +79,22 @@ async function launchRequest(url, values, methods)
 
         if (methods.includes("POST")) 
         {
+            const formData = new FormData();
+            for (let argname of Object.keys(data))
+            {
+                console.log(argname, data[argname]);
+                formData.append(argname, data[argname]);
+            }
+
+            if (file !== undefined)
+            {
+                formData.append("file", file.files[0])
+            }
+
             let request_result = await fetch (link, 
                 {
                     method: "POST",
-                    body: JSON.stringify(data)
+                    body: file === undefined? JSON.stringify(data) : formData
                 }
             );
 
@@ -141,6 +154,8 @@ async function launchRequest(url, values, methods)
         for action_name in actions_names:
             action, methods = self._endpoint.get_action(action_name)
 
+            action_needs_file = self.get_action_content("needs_file", action)
+
             description:_T.Optional[str] = self.get_action_content("description", action)
 
             if description is None:
@@ -165,7 +180,11 @@ async function launchRequest(url, values, methods)
                 for arg_name in args:
                     data += "<li><pre class='argument-name'>" + self.convert_to_html_entities(arg_name) + "</pre> : " + self.convert_to_html_entities(args[arg_name]) + "</li>"
             
+                if action_needs_file:
+                    data += "<li><pre class='argument-file'>" + self.convert_to_html_entities(action_needs_file) + "</pre> : un fichier requis</li>"
+
                 data += "</ul>"
+
 
             validity:_T.Optional[list[str]] = self.get_action_content("validity", action)
 
@@ -226,8 +245,11 @@ async function launchRequest(url, values, methods)
 
                     for arg in args:
                         data += "<div class='request-arg-line'><span class='arg-name'>" + self.convert_to_html_entities(arg) + "</span><input type='text' id='" + (action_name + "___" + arg).replace("/", "_") + "'/></div>"
-                
-                data += "<button class='request-button' onclick='this.disabled = true;launchRequest(\"" + action_name + "\", {" + ", ".join(['"' + arg + '": document.getElementById("' + (action_name + "___" + arg).replace("/", "_") + '").value' for arg in args or []] ) + "}, [" + ", ".join(['"' + method + '"' for method in methods] ) + "]).then(({request, response}) => {document.getElementById(\"" + (action_name + "___request___").replace("/", "_") + "\").innerText = request;document.getElementById(\"" + (action_name + "___result___").replace("/", "_") + "\").innerText = response;this.disabled = false});'>Lancer la requête</button>"
+                    
+                    if action_needs_file:
+                        data += "<div class='request-arg-line'><span class='arg-name'>" + self.convert_to_html_entities("Fichier:") + "</span><input type='file' id='" + (action_name + "___uploaded_file___").replace("/", "_") + "'/></div>"
+
+                data += "<button class='request-button' onclick='this.disabled = true;launchRequest(\"" + action_name + "\", {" + ", ".join(['"' + arg + '": document.getElementById("' + (action_name + "___" + arg).replace("/", "_") + '").value' for arg in args or []] ) + "}, [" + ", ".join(['"' + method + '"' for method in methods] ) + "]" + ((", document.getElementById(\"" + (action_name + "___uploaded_file___").replace("/", "_") + "\")") if action_needs_file else "" )  + ").then(({request, response}) => {document.getElementById(\"" + (action_name + "___request___").replace("/", "_") + "\").innerText = request;document.getElementById(\"" + (action_name + "___result___").replace("/", "_") + "\").innerText = response;this.disabled = false});'>Lancer la requête</button>"
 
                 data += "<pre class='code request-text' id='" + (action_name + "___request___").replace("/", "_") + "'>Request here</pre>"
                 data += "<pre class='code response-text' id='" + (action_name + "___result___").replace("/", "_") + "'>Response to request here</pre>"

@@ -47,7 +47,13 @@ class ServerEndpointAction(_T.Generic[_configuration_type]):
             except:
                 pass
 
-
+        form_args = await request.form
+        for arg in form_args.copy():
+            try:
+                request_args[arg] = form_args[arg]
+            except:
+                pass
+        
         args.update(request_args)
 
         return args

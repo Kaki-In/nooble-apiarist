@@ -18,7 +18,14 @@ class NoobleResourcesManager():
     def create_file(self, content: bytes) -> NoobleFileResource:
         filename = self.create_random_filepath()
 
-        a = open(filename, 'wb')
+        basedir_filename = self._configuration.get_base_directory() + _os.path.sep + filename
+
+        dirname = _os.path.dirname(basedir_filename)
+
+        if not _os.path.exists(dirname):
+            _os.makedirs(dirname)
+
+        a = open(basedir_filename, 'wb')
         a.write(content)
         a.close()
 
@@ -29,7 +36,9 @@ class NoobleResourcesManager():
 
         dirpath = self.get_actual_dirpath()
 
-        while not a or a in _os.listdir(dirpath):
+        based_dirpath = self._configuration.get_base_directory() + _os.path.sep + dirpath
+        
+        while not a or (_os.path.exists(based_dirpath) and a in _os.listdir(based_dirpath)):
             a = ""
 
             for _ in range(self._configuration.get_random_filenames_length()):

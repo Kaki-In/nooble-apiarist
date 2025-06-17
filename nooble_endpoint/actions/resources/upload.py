@@ -16,8 +16,7 @@ import apiarist_server_endpoint as _apiarist
 )
 @_apiarist.NoobleEndpointDecorations.arguments(
     name = "le nom personnalisé du fichier",
-    type = "le type de fichier",
-    file = "en tant que fichier, le fichier à inclure (comprenant un nom de fichier)"
+    type = "le type de fichier (profile icon, decoration banner)",
 )
 @_apiarist.NoobleEndpointDecorations.validity(
     "le type de fichier spécifié correspond bien à un type de fichier valide",
@@ -38,7 +37,7 @@ import apiarist_server_endpoint as _apiarist
 @_apiarist.NoobleEndpointDecorations.example(
     {
         "name": "bootstraaaaap",
-        "type": "profile image"
+        "type": "profile icon"
     },
     {
         "id": "bcd9238de",
@@ -46,6 +45,7 @@ import apiarist_server_endpoint as _apiarist
         "size": 2449,
     }
 )
+@_apiarist.NoobleEndpointDecorations.needs_file("file")
 class UploadFileAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
         args = await self.get_request_args(request)
@@ -73,10 +73,10 @@ class UploadFileAction(NoobleEndpointAction):
         
         files = await self.get_files(request)
 
-        if not "file-content" in files:
+        if not "file" in files:
             return False
         
-        if not files["file-content"].filename :
+        if not files["file"].filename :
             return False
         
         return True
@@ -95,19 +95,18 @@ class UploadFileAction(NoobleEndpointAction):
         name: str = args["name"]
         file_type = _nooble_database_file_types.FileType.from_raw_filetype(args["type"])
 
-        file_content = (await self.get_files(request))["file-content"]
+        file_content = (await self.get_files(request))["file"]
         if not file_content.filename:
             return await self.make_response(None, configuration, 500)
         
         filename: str = file_content.filename
 
-        file_bytes = _io.BytesIO()
-        await _asyncio.get_event_loop().run_in_executor(None, file_content.save, file_bytes)
+        file_bytes = file_content.stream.read()
 
-        if not await self.ensure_veracity(file_type, file_bytes.getvalue()):
+        if not await self.ensure_veracity(file_type, file_bytes):
             return await self.make_response("invalid file given", configuration, 400)
 
-        file = configuration.get_resources().create_file(file_bytes.getvalue())
+        file = configuration.get_resources().create_file(file_bytes)
 
         created_file = await configuration.get_database().get_files().create_new_file(
             name,
@@ -123,7 +122,7 @@ class UploadFileAction(NoobleEndpointAction):
 
         return await self.make_response(
             {
-                "new_file": data["_id"],
+                "new_file": str(data["_id"]),
                 "size": data["size"],
                 "date": data["sent_date"]
             },
