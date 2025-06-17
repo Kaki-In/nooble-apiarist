@@ -86,7 +86,7 @@ class ModifyProfileAction(NoobleEndpointAction):
             if not await file_image.exists():
                 return False
             
-            if not await file_image.get_filetype() != _nooble_database_types.FileType.PROFILE_ICON:
+            if await file_image.get_filetype() != _nooble_database_types.FileType.PROFILE_ICON:
                 return False
         
         if args["active_decoration"] is not None:

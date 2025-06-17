@@ -66,7 +66,7 @@ class UpdateProfileAction(NoobleEndpointAction):
             return True # non-allowed request
         
         for badge in args['active_badges']:
-            if type(badge) is not int:
+            if type(badge) is not str:
                 return False
             
         if args["profile_image"] is not None:
@@ -75,7 +75,7 @@ class UpdateProfileAction(NoobleEndpointAction):
             if not await file_image.exists():
                 return False
                 
-            if not await file_image.get_filetype() != _nooble_database_types.FileType.PROFILE_ICON:
+            if await file_image.get_filetype() != _nooble_database_types.FileType.PROFILE_ICON:
                 return False
         
         if args["active_decoration"] is not None:
