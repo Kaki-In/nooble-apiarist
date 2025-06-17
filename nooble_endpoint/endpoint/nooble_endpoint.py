@@ -62,6 +62,7 @@ class NoobleEndpoint(_server_endpoint.ServerEndpoint[NoobleEndpointConfiguration
         self.add_action("/safe/quota", GetQuotaAction(), "GET")
 
         self.add_action("/activities/list", GetActivitiesListAction(), "GET")
+        self.add_action("/activities/init", InitializeActivityAction(), "GET")
 
         self.add_activity_resources(NoobleHomeworkActivityPack())
     

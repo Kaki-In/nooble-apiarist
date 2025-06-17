@@ -11,12 +11,13 @@ from .section_exporters.rich_text import NoobleRichTextSectionExporter
 from .section_exporters.video import NoobleVideoSectionExporter
 
 import nooble_activities.manager as _nooble_activities_manager
+import nooble_resources_manager as _nooble_resources_manager
 
-def get_default_sections_map(activities_manager: _nooble_activities_manager.NoobleActivitiesManager) -> NoobleSectionsMap:
+def get_default_sections_map(activities_manager: _nooble_activities_manager.NoobleActivitiesManager, resources_manager: _nooble_resources_manager.NoobleResourcesManager) -> NoobleSectionsMap:
     map = NoobleSectionsMap()
 
     map.add_exporter(NoobleContainerSectionExporter())
-    map.add_exporter(NoobleActivitySectionExporter(activities_manager))
+    map.add_exporter(NoobleActivitySectionExporter(activities_manager, resources_manager))
     map.add_exporter(NoobleImageSectionExporter())
     map.add_exporter(NoobleAudioSectionExporter())
     map.add_exporter(NoobleFileSectionExporter())

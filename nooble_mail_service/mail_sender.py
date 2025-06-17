@@ -8,6 +8,7 @@ import email.mime.text as _email_text
 import email.mime.image as _email_image
 import email.utils as _email_utils
 import asyncio as _asyncio
+import traceback as _traceback
 
 import ssl as _ssl
 
@@ -79,6 +80,7 @@ class NoobleMailSender():
             )
             smtp.quit()
         except Exception as exc:
+            _traceback.print_exc()
             print("[ MAIL_SENDER ] an error occured!", repr(exc))
 
     async def send_new_password_mail(self, account: _nooble_database_objects.AccountObject, new_password: str) -> None:

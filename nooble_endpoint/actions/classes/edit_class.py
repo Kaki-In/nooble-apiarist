@@ -2,6 +2,7 @@ import quart.wrappers as _quart_wrappers
 
 import nooble_database.objects as _nooble_database_objects
 import datetime as _datetime
+import traceback as _traceback
 
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
@@ -107,9 +108,16 @@ class EditClassAction(NoobleEndpointAction):
 
         nooble_class = configuration.get_database().get_classes().get_class(args["id"])
 
-        previous_class_content = configuration.get_sections().export(await nooble_class.get_content())
-        actual_used_files = await previous_class_content.get_recursive_used_files(configuration.get_database())
+        try:
+            previous_class_content = configuration.get_sections().export(await nooble_class.get_content())
 
+            actual_used_files = await previous_class_content.get_recursive_used_files(configuration.get_database())
+
+        except Exception as exc:
+            print("warning: could not read already-present class content")
+            actual_used_files = []
+
+        
         title:str = args["title"]
         description:str = args["description"]
         content:_nooble_database_objects.SectionObject = args["content"]
@@ -131,7 +139,7 @@ class EditClassAction(NoobleEndpointAction):
                     "description": description,
                     "last_modification": _datetime.datetime.now().timestamp(),
                     "last_modifier": account.get_id(),
-                    "content": await ensured_content.export_to_database_json_data(configuration.get_database())
+                    "content": await ensured_content.export_to_database_json(configuration.get_database())
                 }
             }
         )

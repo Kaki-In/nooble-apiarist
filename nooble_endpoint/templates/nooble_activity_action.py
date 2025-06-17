@@ -26,22 +26,26 @@ class NoobleEndpointActivityAction(NoobleEndpointAction):
         if not await file.exists():
             return None
         
-        if not await file.get_filetype() == _nooble_database_objects.FileType.SECTION_FILE:
-            return None
-        
-        activity, local_file = configuration.get_activities().get_activity_from_file(await file.get_filepath())
+        file_data = await file.ensure_object()
 
-        if not activity.get_name() == self._name:
+        if file_data["filetype"] != "section file":
             return None
         
-        return file, local_file
+        activity_name = file_data["name"]
+
+        if not activity_name == self._name:
+            return None
+        
+        activity_file = configuration.get_resources().get_file(file_data["filepath"])
+        
+        return file, activity_file.get_content()
     
     async def overwrite_savefile(self, data: bytes, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> None:
         args = await self.get_request_args(request)
 
         file = configuration.get_database().get_files().get_file(args["activity_id"])
     
-        configuration.get_resources().get_file(await file.get_filepath()).overwrite(self._name.encode() + b'\n' + data)
+        configuration.get_resources().get_file(await file.get_filepath()).overwrite(data)
 
         
 
