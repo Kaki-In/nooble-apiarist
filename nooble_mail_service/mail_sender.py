@@ -6,6 +6,7 @@ import smtplib as _smtplib
 import email.mime.multipart as _email_multipart
 import email.mime.text as _email_text
 import email.mime.image as _email_image
+import email.utils as _email_utils
 import asyncio as _asyncio
 
 import ssl as _ssl
@@ -54,6 +55,7 @@ class NoobleMailSender():
         msg_root['Subject'] = subject
         msg_root['From'] = sender_address
         msg_root['To'] = receiver_address
+        msg_root["Date"] = _email_utils.formatdate(localtime=True)
 
         # Partie alternative : text/plain + text/html
         msg_alternative = _email_multipart.MIMEMultipart('alternative')

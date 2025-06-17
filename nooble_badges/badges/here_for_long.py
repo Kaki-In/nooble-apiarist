@@ -23,7 +23,7 @@ class HereForLongBadge(NoobleBadge):
         super().__init__("here_for_long", 5)
 
     async def get_price_to_level(self, level: int, account: NoobleAccount) -> int:
-        return (HERE_FOR_LONG_BADGE_YEARS[level]) * 100
+        return (HERE_FOR_LONG_BADGE_YEARS[level]) * 10
     
     async def is_elligible_to_level(self, level: int, account: NoobleAccount) -> bool:
         return (_datetime.datetime.now() - await account.get_creation_date()) > _datetime.timedelta(days = HERE_FOR_LONG_BADGE_YEARS[level] * 365)

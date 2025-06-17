@@ -66,16 +66,16 @@ class ListBadgesAction(NoobleEndpointAction):
                     "name": badge.get_name(),
                     "level": badge_level+1,
                     "price": await badge.get_price_to_level(badge_level + 1, account),
-                    "title": badge.get_title(badge_level),
-                    "description": badge.get_description(badge_level)
+                    "title": badge.get_title(badge_level + 1),
+                    "description": badge.get_description(badge_level + 1)
                 })
             else:
                 unreached_badges.append({
                     "name": badge.get_name(),
                     "level": badge_level+1,
                     "price": await badge.get_price_to_level(badge_level + 1, account),
-                    "title": badge.get_title(badge_level),
-                    "description": badge.get_description(badge_level)
+                    "title": badge.get_title(badge_level + 1),
+                    "description": badge.get_description(badge_level + 1)
                 })
 
         return await self.make_response({

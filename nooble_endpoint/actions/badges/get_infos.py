@@ -53,7 +53,7 @@ class GetBadgeInfoAction(NoobleEndpointAction):
         if not args["name"] in badges.get_badges_names():
             return False
         
-        if not args["level"] in range(badges.get_badge(args["name"]).get_max_level()):
+        if not args["level"] in range(badges.get_badge(args["name"]).get_max_level() + 1):
             return False
         
         return True
