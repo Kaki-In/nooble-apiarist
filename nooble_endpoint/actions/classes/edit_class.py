@@ -137,7 +137,7 @@ class EditClassAction(NoobleEndpointAction):
                 "$set": {
                     "name": title,
                     "description": description,
-                    "last_modification": _datetime.datetime.now().timestamp(),
+                    "last_modification": int(_datetime.datetime.now().timestamp()),
                     "last_modifier": account.get_id(),
                     "content": await ensured_content.export_to_database_json(configuration.get_database())
                 }
