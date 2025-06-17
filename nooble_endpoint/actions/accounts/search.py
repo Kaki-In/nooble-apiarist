@@ -66,8 +66,7 @@ class SearchAccountAction(NoobleEndpointAction):
             return False
         
         if not (
-            args["pattern"]
-        and args["count"] > 0
+            args["count"] > 0
         and args["offset"] >= 0
         ):
             return False
