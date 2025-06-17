@@ -59,16 +59,13 @@ async function launchRequest(url, values, methods, file)
 {
     let data = {};
     
-    for (let value of Object.keys(values))
+    for (let argname of Object.keys(values))
     {
         try 
         {
-            data[value] = JSON.parse(values[value]);
+            data[argname] = JSON.parse(values[argname]);
         } catch (e) {
-            return {
-                request: "ERROR",
-                response: ""
-            }
+            data[argname] = values[argname]
         }
     }
 
@@ -117,7 +114,7 @@ async function launchRequest(url, values, methods, file)
         }
     } catch (e) {
         return {
-            request: JSON.stringify(data),
+            request: JSON.stringify(data, null, 2),
             response: e.message
         }
     }

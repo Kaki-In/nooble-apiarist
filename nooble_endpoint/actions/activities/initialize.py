@@ -19,14 +19,14 @@ import apiarist_server_endpoint as _apiarist
     "l'utiliser est un administrateur ou un professeur"
 )
 @_apiarist.NoobleEndpointDecorations.returns(
-    file_id = "l'identifiant du nouveau fichier d'activité"
+    new_file = "l'identifiant du nouveau fichier d'activité"
 )
 @_apiarist.NoobleEndpointDecorations.example(
     {
         "activity_name": "homework"
     },
     {
-        "file_id": "3bd2a7c8bd3"
+        "new_file": "3bd2a7c8bd3"
     }
 )
 class InitializeActivityAction(NoobleEndpointAction):
