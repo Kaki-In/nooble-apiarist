@@ -1,5 +1,6 @@
 import quart.wrappers as _quart_wrappers
 import quart as _quart
+import io as _io
 
 import nooble_database.objects.file_types as _nooble_database_file_types
 import datetime as _datetime
@@ -71,7 +72,9 @@ class DownloadFileAction(NoobleEndpointAction):
 
         filename = file_object["filename"]
 
-        return await _quart.send_file(resource.get_content(), "document/"+filename.split(".")[-1],
+        bytes_io = _io.BytesIO(resource.get_content())
+
+        return await _quart.send_file(bytes_io, "document/"+filename.split(".")[-1],
                                       as_attachment=True,
                                       attachment_filename=filename,
                                       last_modified=_datetime.datetime.fromtimestamp(file_object["sent_date"]))
