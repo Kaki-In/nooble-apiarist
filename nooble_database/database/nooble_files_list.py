@@ -12,18 +12,22 @@ class NoobleFilesList(NoobleCollection[FileObject]):
     
     async def get_sender_files(self, sender_id: str, files_type: FileType | None = None) -> list[NoobleFile]:
         if files_type is None:
-            files = self.get_collection().find(
-                sender = sender_id
+            files = await self.find(
+                {
+                    "sender": sender_id
+                }
             )
         else:
-            files = self.get_collection().find(
-                sender = sender_id,
-                file_type = str(files_type)
+            files = await self.find(
+                {
+                    "sender": sender_id,
+                    "file_type": str(files_type)
+                }
             )
 
         file_results: list[NoobleFile] = []
 
-        async for file in files:
+        for file in files:
             file_results.append(NoobleFile(self.get_collection(), file['_id']))
 
         return file_results
