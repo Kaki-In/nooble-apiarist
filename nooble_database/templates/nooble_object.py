@@ -52,7 +52,7 @@ class NoobleObject(_T.Generic[_object_type]):
 
     async def destroy(self) -> bool:
         result = await self._coll.delete_one({
-            "_id": self._id
+            "_id": _bson.ObjectId(self._id)
         })
 
         return result.deleted_count == 1

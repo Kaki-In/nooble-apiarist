@@ -21,10 +21,10 @@ class NoobleFilesList(NoobleCollection[FileObject]):
             files = await self.find(
                 {
                     "sender": sender_id,
-                    "file_type": str(files_type)
+                    "filetype": str(files_type)
                 }
             )
-
+        
         file_results: list[NoobleFile] = []
 
         for file in files:
