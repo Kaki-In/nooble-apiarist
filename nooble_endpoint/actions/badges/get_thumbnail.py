@@ -1,6 +1,8 @@
 import quart.wrappers as _quart_wrappers
 import quart as _quart
 
+import io as _io
+
 from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
@@ -55,8 +57,5 @@ class GetBadgeThumbnailAction(NoobleEndpointAction):
         badge = configuration.get_badges().get_badge(badge_name)
         badge_image = await badge.get_image(badge_level)
 
-        return _quart.send_file(bytes(badge_image), "image/png")
-
-
-
+        return await _quart.send_file(_io.BytesIO(bytes(badge_image)), "image/png")
 
