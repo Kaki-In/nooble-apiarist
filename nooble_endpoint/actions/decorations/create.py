@@ -74,7 +74,7 @@ class CreateDecorationAction(NoobleEndpointAction):
 
         file = configuration.get_database().get_files().get_file(args["image_id"])
 
-        if not await file.get_sender_id() != account.get_id():
+        if await file.get_sender_id() != account.get_id():
             return False
         
         return True
