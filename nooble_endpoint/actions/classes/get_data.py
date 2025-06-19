@@ -56,14 +56,6 @@ class GetClassDataAction(NoobleEndpointAction):
         if account is None:
             return False
 
-        args = await self.get_request_args(request)
-
-        if not (
-            (await account.get_role()).is_admin()
-            or account.get_id() in await configuration.get_database().get_classes().get_class(args["class_id"]).get_accounts_ids()
-        ):
-            return False
-        
         return True
 
     async def main(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request):
