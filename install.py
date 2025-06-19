@@ -144,6 +144,7 @@ def main(args):
         lambda:require_dependencies(
             pyvips = ("pyvips", False),
             quart = ("quart", True),
+            quart_cors = ("quart_cors", True),
             pymongo = ("pymongo", True),
             Pillow = ("PIL._imaging", True)
         ),
