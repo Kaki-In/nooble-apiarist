@@ -44,7 +44,7 @@ class BuyDecorationAction(NoobleEndpointAction):
         if not await decoration.exists():
             return False
         
-        if not decoration in await account.get_safe().get_owned_decorations():
+        if decoration in await account.get_safe().get_owned_decorations():
             return False
         
         return True
