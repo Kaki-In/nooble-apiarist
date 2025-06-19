@@ -1,6 +1,6 @@
 from .connection import ForgotPasswordAction, LoginAction, GetLogInfoAction, LogoutAction
 from .profile import GetProfileInfoAction, ModifyProfileAction, UpdateProfileAction
-from .classes import AddClassAccountAction, CreateClassAction, DeleteClassAction, GetClassAccountsAction, GetClassDataAction, RemoveClassAccountAction, EditClassAction, SearchClassAction
+from .classes import AddClassAccountAction, CreateClassAction, DeleteClassAction, GetClassAccountsAction, GetClassDataAction, RemoveClassAccountAction, EditClassAction, SearchClassAction, GetClassContentAction
 from .accounts import AddAccountAction, DeleteAccountAction, ModifyAccountMailAction, ModifyAccountRoleAction, UpdatePasswordAction, SearchAccountAction
 from .resources import GetSelfFilesAction, UploadFileAction, DownloadFileAction, DeleteFileAction
 from .thread import GetThreadAction, MarkActivitiesAsReadAction
