@@ -74,13 +74,15 @@ class BuyDecorationAction(NoobleEndpointAction):
                 "quota": quota
             }, configuration, 402)
         
-        await account.get_safe().decrease(price)
         quota -= price
 
         await account.update({
             "$push": {
                 "safe.decorations": decoration_id
-            }
+            },
+            "$inc":{
+                "safe.quota": -price
+            } 
         })
 
         return await self.make_response(

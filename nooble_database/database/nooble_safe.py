@@ -27,8 +27,8 @@ class NoobleSafe(NoobleSubObject[AccountObject, SafeObject]):
     async def decrease(self, count: int) -> None:
         await self.get_parent_object().update(
             {
-                "$dec": {
-                    'safe.quota': count
+                "$inc": {
+                    'safe.quota': -count
                 }
             }
         )
