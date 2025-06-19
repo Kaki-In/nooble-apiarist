@@ -3,6 +3,8 @@ from ..templates.nooble_collection import NoobleCollection
 from .nooble_decoration import NoobleDecoration
 from ..objects.decoration_object import DecorationObject
 
+import bson as _bson
+
 class NoobleDecorationsList(NoobleCollection[DecorationObject]):
     def get_decoration(self, id: str) -> NoobleDecoration:
         return NoobleDecoration(self.get_collection(), id)
@@ -29,7 +31,7 @@ class NoobleDecorationsList(NoobleCollection[DecorationObject]):
     
     async def get_decoration_from_image(self, image_id: str) -> NoobleDecoration | None:
         result = await self.find_one({
-            "image_id": image_id
+            "image_id": _bson.ObjectId(image_id)
         })
 
         if result is None:
