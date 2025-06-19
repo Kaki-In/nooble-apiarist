@@ -78,7 +78,7 @@ class GetProfileInfoAction(NoobleEndpointAction):
         
         owned_badges = account_object["safe"]["badges"]
 
-        profile_info["badges"] = [badge for badge in owned_badges if badge[0] in profile_info["badges"]]
+        profile_info["active_badges"] = [badge for badge in owned_badges if badge[0] in profile_info["active_badges"]]
         profile_info["role"] = account_object["role"]
         
         return await self.make_response(profile_info, configuration, 200)

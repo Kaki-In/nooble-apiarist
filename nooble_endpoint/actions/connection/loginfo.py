@@ -75,7 +75,7 @@ class GetLogInfoAction(NoobleEndpointAction):
         
         owned_badges = await account.get_safe().get_owned_badges()
 
-        profile_info["badges"] = [badge for badge in owned_badges if badge[0] in profile_info["active_badges"]]
+        profile_info["active_badges"] = [badge for badge in owned_badges if badge[0] in profile_info["active_badges"]]
         
         account_object = await account.get_object()
 
