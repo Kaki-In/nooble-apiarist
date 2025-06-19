@@ -19,7 +19,8 @@ import apiarist_server_endpoint as _apiarist
 @_apiarist.NoobleEndpointDecorations.returns(
     max_level = "le niveau maximum du badge",
     title = "le titre de ce badge",
-    description = "la description de ce badge"
+    description = "la description de ce badge",
+    price = "le prix du badge"
 )
 @_apiarist.NoobleEndpointDecorations.example(
     {
@@ -29,7 +30,8 @@ import apiarist_server_endpoint as _apiarist
     {
         "max_level": 5,
         "title": "Citizen",
-        "description": 'You have been here for 10 years'
+        "description": 'You have been here for 10 years',
+        "price": 20
     }
 )
 class GetBadgeInfoAction(NoobleEndpointAction):
@@ -78,6 +80,7 @@ class GetBadgeInfoAction(NoobleEndpointAction):
             "max_level": badge.get_max_level(),
             "title": badge.get_title(badge_level),
             "description": badge.get_description(badge_level),
+            "price": badge.get_price_to_level(badge_level, account)
         }, configuration)
 
 
