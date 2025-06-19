@@ -5,7 +5,8 @@ class ServerEndpointConfiguration():
     def __init__(self, host: str, port: int):
         self._host = host
         self._port = port
-        self._quart = _quart.Quart(__name__, subdomain_matching=True)
+        self._quart = _quart.Quart(__name__)
+        self._quart.config["CORS_HEADERS"] = 'Content-Type'
 
     def get_host(self) -> str:
         return self._host
