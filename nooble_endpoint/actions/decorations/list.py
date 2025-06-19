@@ -45,11 +45,11 @@ class ListDecorationsAction(NoobleEndpointAction):
         new_decorations = []
 
         for decoration in all_decorations:
-            decoration_name = await decoration.get_name()
+            decoration_id = decoration.get_id()
 
             decoration_object = await decoration.get_object()
 
-            if not decoration_name in owned_decorations:
+            if not decoration_id in owned_decorations:
                 new_decorations.append(
                     {
                         "id": decoration.get_id(),

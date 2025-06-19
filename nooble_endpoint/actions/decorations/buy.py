@@ -22,7 +22,7 @@ import apiarist_server_endpoint as _apiarist
     {
         "decoration": "b279d810d9f"
     },
-    None
+    40
 )
 class BuyDecorationAction(NoobleEndpointAction):
     async def is_valid(self, configuration: NoobleEndpointConfiguration, request: _quart_wrappers.Request) -> bool:
