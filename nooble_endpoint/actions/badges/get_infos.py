@@ -80,7 +80,7 @@ class GetBadgeInfoAction(NoobleEndpointAction):
             "max_level": badge.get_max_level(),
             "title": badge.get_title(badge_level),
             "description": badge.get_description(badge_level),
-            "price": badge.get_price_to_level(badge_level, account)
+            "price": await badge.get_price_to_level(badge_level, account)
         }, configuration)
 
 
