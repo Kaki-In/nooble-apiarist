@@ -10,7 +10,7 @@ class NoobleMailSenderSettings(NoobleSettingsFile[MailSenderConfigurationObject]
             "identity": {
                 "address": "no-reply@nooble.flopcreation.fr",
                 "name": "Angular Nooble",
-                "website": "https://nooble.flopcreation.fr"
+                "website": "https://api.nooble-angular.flopcreation.fr"
             },
             "smtp": {
                 "smtp_host": "gmail.com",
