@@ -6,7 +6,7 @@ from ...configuration import NoobleEndpointConfiguration
 from ...templates.nooble_action import NoobleEndpointAction
 
 import apiarist_server_endpoint as _apiarist
-@_apiarist.NoobleEndpointDecorations.description("Obtenir les informations d'un cours")
+@_apiarist.NoobleEndpointDecorations.description("Obtenir le contenu d'un cours")
 @_apiarist.NoobleEndpointDecorations.arguments(
     class_id = "l'identifiant du cours"
 )
@@ -15,22 +15,21 @@ import apiarist_server_endpoint as _apiarist
 )
 @_apiarist.NoobleEndpointDecorations.allow_only_when(
     "l'utilisateur est connecté",
+    "l'utilisateur est un administrateur ou",
+    "l'utilisateur a accès à ce cours"
 )
 @_apiarist.NoobleEndpointDecorations.returns(
-    description = "la description du cours",
-    last_modification = "l'heure de dernière modification",
-    last_modifier = "l'identifiant du dernier compte ayant modifié le cours",
-    name = "le nom du cours"
+    content = "le contenu du cours",
 )
 @_apiarist.NoobleEndpointDecorations.example(
     {
         "class_id": "fdcb23b428"
     },
     {
-        "description": "Angular",
-        "last_modification": 2948759329234,
-        "last_modifier": "dbfc327493",
-        "name": "WE4B"
+        "content": {
+            "type": "section",
+            "data": "..."
+        }
     }
 )
 class GetClassDataAction(NoobleEndpointAction):
@@ -79,12 +78,13 @@ class GetClassDataAction(NoobleEndpointAction):
 
         class_data = await nooble_class.ensure_object()
         
+        content = class_data["content"]
+
+        client_content = await configuration.get_sections().export(content).export_to_client_json(configuration.get_database(), account)
+
         return await self.make_response(
             {
-                "description": class_data["description"],
-                "last_modification": class_data["last_modification"],
-                "last_modifier": class_data["last_modifier"],
-                "name": class_data["name"]
+                "content": client_content,
             },
             configuration
         )
