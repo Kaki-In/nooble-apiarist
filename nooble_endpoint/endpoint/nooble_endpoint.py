@@ -36,6 +36,7 @@ class NoobleEndpoint(_server_endpoint.ServerEndpoint[NoobleEndpointConfiguration
         self.add_action("/accounts/modify-role", ModifyAccountRoleAction(), "POST")
         self.add_action("/accounts/update-password", UpdatePasswordAction(), "POST")
         self.add_action("/accounts/search", SearchAccountAction(), "GET")
+        self.add_action("/accounts/get-info", GetAccountInformationAction(), "GET")
 
         self.add_action("/resources/get-self-files", GetSelfFilesAction(), "GET")
         self.add_action("/resources/upload", UploadFileAction(), "POST")

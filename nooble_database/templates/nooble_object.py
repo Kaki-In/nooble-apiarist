@@ -30,6 +30,9 @@ class NoobleObject(_T.Generic[_object_type]):
         return result
     
     async def exists(self) -> bool:
+        if not len(str(self._id)) in (12, 24):
+            return False
+        
         result = await self._coll.find_one(_bson.ObjectId(self._id))
         return result is not None
     
