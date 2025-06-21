@@ -11,7 +11,8 @@ from ...templates.nooble_action import NoobleEndpointAction
     mail = "nouvelle adresse mail à appliquer au compte"
 )
 @_apiarist.NoobleEndpointDecorations.validity(
-    "un compte utilisateur est bien décrit par l'identifiant"
+    "un compte utilisateur est bien décrit par l'identifiant",
+    "l'adresse n'est pas déjà définie"
 )
 @_apiarist.NoobleEndpointDecorations.allow_only_when(
     "l'utilisateur est connecté",
@@ -44,6 +45,11 @@ class ModifyAccountMailAction(NoobleEndpointAction):
         account = configuration.get_database().get_accounts().get_account(args["user_id"])
 
         if not await account.exists():
+            return False
+        
+        mail_associated_account = await configuration.get_database().get_accounts().get_account_by_mail(args["mail"])
+
+        if mail_associated_account is not None:
             return False
         
         return True
