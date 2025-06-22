@@ -24,7 +24,7 @@ class NoobleEndpointConfiguration(_server_endpoint.ServerEndpointConfiguration):
         self._resources = _nooble_resources.NoobleResourcesManager(configuration.get_resources_manager_settings())
 
         self._activities_manager = _nooble_activities.get_default_activity_manager(self._resources)
-        self._sections_map = _nooble_sections.get_default_sections_map(self._activities_manager, self._resources)
+        self._sections_map = _nooble_sections.get_default_sections_map(self._activities_manager, self._resources, binding_settings)
 
         self._notifications = _nooble_notifications.NoobleAccountsNotifier(self._database)
 
