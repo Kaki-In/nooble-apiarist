@@ -21,7 +21,14 @@ class ServerEndpoint(_T.Generic[_configuration_type]):
 
     def add_action(self, name: str, action: ServerEndpointAction[_configuration_type] | _NoobleEndpointDescriptedObject, *methods: str) -> None:
         async def action_launcher():
-            return await action(self._configuration, _quart.request)
+            response = await action(self._configuration, _quart.request)
+
+            if type(response) is not _quart.Response:
+                response = await _quart.make_response(response)
+
+            response.headers.add("Access-Control-Allow-Origin", "*")
+
+            return response
         
         action_launcher.__name__ = str(self._id)
         self._id += 1

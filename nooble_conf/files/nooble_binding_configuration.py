@@ -9,6 +9,9 @@ class NoobleBindingSettings(NoobleSettingsSubFile[EndpointConfigurationObject, B
     def get_host(self) -> str:
         return self.get_data()['host']
     
+    def get_host_url(self) -> str:
+        return self.get_data()["host_url"]
+    
     def get_port(self) -> int:
         return self.get_data()["port"]
     

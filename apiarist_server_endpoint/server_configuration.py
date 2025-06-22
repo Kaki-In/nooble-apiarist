@@ -6,8 +6,8 @@ class ServerEndpointConfiguration():
     def __init__(self, host: str, port: int):
         self._host = host
         self._port = port
-        self._quart = _quart_cors.cors(_quart.Quart(__name__), allow_origin="*.flopcreation.fr")
-
+        self._quart = _quart_cors.cors(_quart.Quart(__name__), allow_origin="*")
+                
     def get_host(self) -> str:
         return self._host
     

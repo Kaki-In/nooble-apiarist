@@ -17,7 +17,7 @@ class DeleteHomeworkFileActivityAction(NoobleEndpointActivityAction):
         if account is None:
             return True # non-allowed request
         
-        file_data = await _json.loads(file_result[1])
+        file_data = _json.loads(file_result[1])
 
         gave_back_homework = False
         for homework in file_data:
@@ -51,7 +51,7 @@ class DeleteHomeworkFileActivityAction(NoobleEndpointActivityAction):
         if activity_files is None:
             return await self.make_response(None, configuration, 500)
 
-        file_data = await _json.loads(activity_files[1])
+        file_data = _json.loads(activity_files[1])
 
         for homework_index in range(len(file_data)):
             homework = file_data[homework_index]
@@ -66,6 +66,8 @@ class DeleteHomeworkFileActivityAction(NoobleEndpointActivityAction):
                 file_data.pop(homework_index)
 
                 break
+        
+        await self.overwrite_savefile(_json.dumps(file_data).encode(), configuration, request)
 
         return await self.make_response(None, configuration)
             

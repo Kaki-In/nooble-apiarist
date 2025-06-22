@@ -16,7 +16,7 @@ class NoobleFileResource():
         return data
     
     def overwrite(self, data:bytes) -> None:
-        file = open(self._base_directory + _os.path.sep + self._path, "rb")
+        file = open(self._base_directory + _os.path.sep + self._path, "wb")
         file.write(data)
         file.close()
 

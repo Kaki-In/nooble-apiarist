@@ -4,6 +4,7 @@ import nooble_database.database as _nooble_database
 import nooble_database.objects as _nooble_database_objects
 import nooble_activities.manager as _nooble_activities_manager
 import nooble_resources_manager as _nooble_resources_manager
+import nooble_conf.files as _nooble_conf_files
 
 import typing as _T
 
@@ -17,11 +18,12 @@ class ClientActivitySectionDataObject(_T.TypedDict):
     arguments: dict[str, _T.Any]
 
 class NoobleActivitySection(NoobleSection[str, ClientActivitySectionDataObject, _nooble_database_objects.section_objects.ActivitySectionDataObject]):
-    def __init__(self, activity_file: str, activities_manager: _nooble_activities_manager.NoobleActivitiesManager, resources_manager: _nooble_resources_manager.NoobleResourcesManager) -> None:
+    def __init__(self, activity_file: str, activities_manager: _nooble_activities_manager.NoobleActivitiesManager, resources_manager: _nooble_resources_manager.NoobleResourcesManager, configuration: _nooble_conf_files.NoobleBindingSettings) -> None:
         super().__init__("activity", activity_file)
 
         self._manager = activities_manager
         self._resources = resources_manager
+        self._configuration = configuration
 
     async def get_used_files(self, database: _nooble_database.NoobleDatabase) -> list[str]:
         file = database.get_files().get_file(self.get_data())
@@ -39,10 +41,10 @@ class NoobleActivitySection(NoobleSection[str, ClientActivitySectionDataObject, 
 
         return {
             "id": self.get_data(),
-            "css": activity.get_css(),
-            "javascript": await activity.get_javascript(activity_data, database, account),
-            "editable_javascript": await activity.get_javascript(activity_data, database, account),
-            "arguments": await activity.get_arguments(activity_data, database, account)
+            "css": activity.get_css(self._configuration),
+            "javascript": await activity.get_javascript(activity_data, database, account, self._configuration),
+            "editable_javascript": await activity.get_editable_javascript(activity_data, database, account, self._configuration),
+            "arguments": await activity.get_arguments(activity_data, database, account, self._configuration)
         }
     
     async def export_to_database_json_data(self, database: _nooble_database.NoobleDatabase) -> _nooble_database_objects.section_objects.ActivitySectionDataObject:

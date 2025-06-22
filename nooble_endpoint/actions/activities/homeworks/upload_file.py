@@ -23,11 +23,6 @@ class UploadHomeworkFileActivityAction(NoobleEndpointActivityAction):
         if type(args["name"]) is not str:
             return False
         
-        try:
-            _nooble_database_objects.FileType.from_raw_filetype(args["type"])
-        except ValueError:
-            return False
-
         files = await self.get_files(request)
 
         if not "file-content" in files:
@@ -41,7 +36,7 @@ class UploadHomeworkFileActivityAction(NoobleEndpointActivityAction):
         if account is None:
             return True # non-allowed request
         
-        file_data = await _json.loads(file_result[1])
+        file_data = _json.loads(file_result[1])
 
         for homework in file_data:
             if homework['sender_id'] == account.get_id(): # homework already laid
@@ -66,12 +61,12 @@ class UploadHomeworkFileActivityAction(NoobleEndpointActivityAction):
         if account is None:
             return await self.make_response(None, configuration, 500)
         
-        activity_files = await self.get_activity_file(configuration, request)
-
+        activity_files = await self.get_activity_file(configuration, request)\
+        
         if activity_files is None:
             return await self.make_response(None, configuration, 500)
 
-        activity_data = await _json.loads(activity_files[1])
+        activity_data = _json.loads(activity_files[1])
 
         args = await self.get_request_args(request)
         
@@ -83,10 +78,9 @@ class UploadHomeworkFileActivityAction(NoobleEndpointActivityAction):
         
         filename: str = file_content.filename
 
-        file_bytes = _io.BytesIO()
-        await _asyncio.get_event_loop().run_in_executor(None, file_content.save, file_bytes)
+        file_bytes = await _asyncio.get_event_loop().run_in_executor(None, file_content.stream.read)
 
-        file = configuration.get_resources().create_file(file_bytes.getvalue())
+        file = configuration.get_resources().create_file(file_bytes)
 
         new_file = await configuration.get_database().get_files().create_new_file(
             name,
@@ -105,6 +99,8 @@ class UploadHomeworkFileActivityAction(NoobleEndpointActivityAction):
             }
         )
 
-        await self.overwrite_savefile(activity_data, configuration, request)
+        await self.overwrite_savefile(_json.dumps(activity_data).encode(), configuration, request)
+
+        return await self.make_response(new_file.get_id(), configuration)
 
 

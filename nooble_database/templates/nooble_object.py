@@ -20,13 +20,13 @@ class NoobleObject(_T.Generic[_object_type]):
     async def get_object(self) -> _object_type :
         result = await self._coll.find_one(_bson.ObjectId(self._id))
 
+        if result is None:
+            raise ReferenceError('no such object')
+        
         result["_id"] = str(result["_id"]) #type:ignore
 
         self._last_object = result
 
-        if result is None:
-            raise ReferenceError('no such object')
-        
         return result
     
     async def exists(self) -> bool:

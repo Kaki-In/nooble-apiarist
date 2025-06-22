@@ -10,10 +10,11 @@ class NoobleEndpointSettings(NoobleSettingsFile[EndpointConfigurationObject]):
         super().__init__(path, {
             "binding": {
                 "host": "0.0.0.0",
-                 "port": 8622,
-                 "cert_file": None,
-                 "key_file": None,
-                 "use_ssl":  False
+                "host_url": "http://localhost:8622",
+                "port": 8622,
+                "cert_file": None,
+                "key_file": None,
+                "use_ssl":  False
             },
             "registrations": {
                 "token_duration_minutes": 1440,
