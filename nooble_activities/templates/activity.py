@@ -15,7 +15,7 @@ class NoobleActivity():
         raise NotImplementedError("not implemented for " + repr(self))
     
     def get_resource_url(self, name:str, configuration: _nooble_conf_files.NoobleBindingSettings) -> str:
-        return configuration.get_host_url() + "/activities/resource/" + self._name + "/" + name
+        return configuration.get_host_url() + "/activities/resources/" + self._name + "/" + name
     
     def get_download_url(self, file_id: str, configuration: _nooble_conf_files.NoobleBindingSettings) -> str:
         return configuration.get_host_url() + f"/resources/download?id={file_id}&type=section%20file"
