@@ -19,8 +19,6 @@ class NoobleEndpointAction(_apiarist.ServerEndpointAction[NoobleEndpointConfigur
             response.set_cookie("conn-token", token)
     
     async def get_account(self, request: _quart_wrappers.Request, configuration: NoobleEndpointConfiguration) -> _nooble_database.NoobleAccount | None:
-        account = await configuration.get_database().get_accounts().get_existing_account_by_mail("eden.morey@utbm.fr")
-
         token = self.get_client_token(request)
 
         if token is None:

@@ -190,8 +190,8 @@ class Activity {
             editDiv.appendChild(title);
             
             const filename = document.createElement('a');
-            filename.href = `""" + self.get_download_url("{this._activity_args.has_given_file.file_id}", configuration) + """`;
-            filename.target = "_blank";
+            filename.href = `""" + self.get_download_url("${this._activity_args.has_given_file.file_id}", configuration) + """`;
+            console.log(filename.href);
             filename.className = 'homework-filename';
             filename.textContent = currentFile.name || 'Fichier sans nom';
             editDiv.appendChild(filename);
@@ -325,23 +325,13 @@ class Activity {
             const downloadLink = document.createElement('a');
             downloadLink.className = 'homework-download-link';
             downloadLink.textContent = 'Télécharger';
-            downloadLink.onclick = () => this.downloadFile(homework.file_id);
+            downloadLink.href = `""" + self.get_download_url("${homework.file_id}", configuration) + """`;
             listItem.appendChild(downloadLink);
             
             listContainer.appendChild(listItem);
         });
         
         containerDiv.appendChild(listContainer);
-    }
-
-    async downloadFile(fileId) {
-        try {
-            const url = `""" + self.get_download_url("{fileId}", configuration) + """`;
-            window.open(url, '_blank');
-        } catch (error) {
-            console.error('Erreur lors du téléchargement:', error);
-            alert('Erreur lors du téléchargement du fichier');
-        }
     }
 
     refreshStudentView(div) {
