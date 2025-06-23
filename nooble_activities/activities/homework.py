@@ -430,7 +430,15 @@ class Activity {
 
             for homework in file_data:
                 homework_file = await database.get_files().get_file(homework["file_id"]).ensure_object()
-                student = (await database.get_accounts().get_account(homework["sender_id"]).ensure_object())["profile"]
+                
+                try :
+                    student = (await database.get_accounts().get_account(homework["sender_id"]).ensure_object())["profile"]
+                except:
+                    student = {
+                        'first_name': "Deleted",
+                        'last_name': "User"
+                    }
+
                 args["homework_list"].append({
                     "student_name": student["first_name"] + " " + student["last_name"],
                     "name": homework_file["name"],
