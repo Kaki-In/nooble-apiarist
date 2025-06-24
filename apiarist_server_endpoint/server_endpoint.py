@@ -38,6 +38,10 @@ class ServerEndpoint(_T.Generic[_configuration_type]):
             response.headers["Access-Control-Allow-Headers"] = "Content-Type"
             response.headers["Access-Control-Allow-Methods"] = "GET,POST,OPTIONS"
 
+            response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
+            response.headers["Pragma"] = "no-cache"
+            response.headers["Expires"] = "0"
+
             return response
         
         action_launcher.__name__ = str(self._id)
