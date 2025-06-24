@@ -21,12 +21,22 @@ class ServerEndpoint(_T.Generic[_configuration_type]):
 
     def add_action(self, name: str, action: ServerEndpointAction[_configuration_type] | _NoobleEndpointDescriptedObject, *methods: str) -> None:
         async def action_launcher():
-            response = await action(self._configuration, _quart.request)
+            request = _quart.request
 
-            if type(response) is not _quart.Response:
+            if request.method == "OPTIONS":
+                response = await _quart.make_response("", 204)
+            else:
+                response = await action(self._configuration, request)
+
+            if not isinstance(response, _quart.Response):
                 response = await _quart.make_response(response)
 
-            response.headers.add("Access-Control-Allow-Origin", "*")
+            origin = request.headers.get("Origin") or "*"
+
+            response.headers["Access-Control-Allow-Origin"] = origin
+            response.headers["Access-Control-Allow-Credentials"] = "true"
+            response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+            response.headers["Access-Control-Allow-Methods"] = "GET,POST,OPTIONS"
 
             return response
         
@@ -35,7 +45,7 @@ class ServerEndpoint(_T.Generic[_configuration_type]):
 
         self._actions[name] = (action, list(methods))
 
-        self._configuration._quart.route(name, methods=list(methods)) (action_launcher)
+        self._configuration._quart.route(name, methods=list(methods)+["OPTIONS"]) (action_launcher)
 
     def get_actions(self) -> list[str]:
         return list(self._actions)
