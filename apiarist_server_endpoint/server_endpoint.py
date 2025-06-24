@@ -10,9 +10,10 @@ import typing as _T
 _configuration_type = _T.TypeVar("_configuration_type", bound = ServerEndpointConfiguration)
 
 class ServerEndpoint(_T.Generic[_configuration_type]):
-    def __init__(self, configuration: _configuration_type):
+    def __init__(self, configuration: _configuration_type, base_origin: str):
         self._configuration = configuration
         self._id = 0
+        self._base_origin = base_origin
         
         self._actions:dict[str, tuple[ServerEndpointAction | _NoobleEndpointDescriptedObject, list[str]]] = {}
 
@@ -31,7 +32,7 @@ class ServerEndpoint(_T.Generic[_configuration_type]):
             if not isinstance(response, _quart.Response):
                 response = await _quart.make_response(response)
 
-            origin = request.headers.get("Origin") or "*"
+            origin = request.headers.get("Origin") or self._base_origin
 
             response.headers["Access-Control-Allow-Origin"] = origin
             response.headers["Access-Control-Allow-Credentials"] = "true"

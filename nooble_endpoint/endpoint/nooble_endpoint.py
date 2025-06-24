@@ -7,7 +7,7 @@ from ..templates.nooble_activity_pack import NoobleActivityActionsPack
 
 class NoobleEndpoint(_server_endpoint.ServerEndpoint[NoobleEndpointConfiguration]):
     def __init__(self, configuration: NoobleEndpointConfiguration):
-        super().__init__(configuration)
+        super().__init__(configuration, configuration.get_configuration().get_host_url())
 
         self.add_action("/", ApiDetailsAction(self), "GET")
 
