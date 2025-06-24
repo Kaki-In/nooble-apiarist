@@ -82,7 +82,7 @@ class DeleteFileAction(NoobleEndpointAction):
             await account.update(
                 {
                     "$set": {
-                        "profile_image": None
+                        "profile.profile_image": None
                     }
                 }
             )
