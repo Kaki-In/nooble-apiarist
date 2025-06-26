@@ -10,7 +10,8 @@ import apiarist_server_endpoint as _apiarist
 )
 @_apiarist.NoobleEndpointDecorations.validity(
     "le nom de badge désigne un badge existant",
-    "il est possible d'obtenir un nouveau niveau de ce badge"
+    "il est possible d'obtenir un nouveau niveau de ce badge",
+    "l'utilisateur est elligible à ce badge"
 )
 @_apiarist.NoobleEndpointDecorations.allow_only_when(
     "l'utilisateur est connecté"
@@ -54,6 +55,9 @@ class BuyBadgeAction(NoobleEndpointAction):
                 actual_badge_level = badge[1]
         
         if actual_badge_level == badges.get_badge(args["name"]).get_max_level():
+            return False
+        
+        if not await badges.get_badge(args['name']).is_elligible_to_level(actual_badge_level + 1, account):
             return False
         
         return True

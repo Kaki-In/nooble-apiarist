@@ -38,6 +38,8 @@ class NoobleEndpointAction(_apiarist.ServerEndpointAction[NoobleEndpointConfigur
             configuration.get_registrations().remove_registration(token)
             return None
         
+        await account.get_object() # reload object
+        
         return account
     
     async def make_response(self, data: _T.Any, configuration: NoobleEndpointConfiguration, code: int = 202) -> _quart_wrappers.Response:
