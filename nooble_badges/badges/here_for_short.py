@@ -4,7 +4,7 @@ from ..templates.badge import NoobleBadge
 import local_utils.images as _local_utils_images
 import datetime as _datetime
 
-HERE_FOR_SHORT_BADGE_PRICES = [1, 2, 3, 5, 10, 20]
+HERE_FOR_SHORT_BADGE_PRICES = [1, 2, 3, 5, 10, 20, 40]
 
 class HereForShortBadge(NoobleBadge):
     """

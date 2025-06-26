@@ -58,6 +58,8 @@ class ListBadgesAction(NoobleEndpointAction):
                 if owned_badge[0] == badge_name:
                     badge_level = owned_badge[1]
             
+            print(badge_level, badge.get_max_level())
+            
             if badge_level >= badge.get_max_level():
                 continue
 
