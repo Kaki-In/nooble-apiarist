@@ -59,7 +59,7 @@ class NoobleEndpoint(_server_endpoint.ServerEndpoint[NoobleEndpointConfiguration
         self.add_action("/decorations/modify", ModifyDecorationAction(), "POST")
 
         self.add_action("/safe", GetSafeAction(), "GET")
-        self.add_action("/safe/bages", GetBadgesAction(), "GET")
+        self.add_action("/safe/badges", GetBadgesAction(), "GET")
         self.add_action("/safe/decorations", GetDecorationsAction(), "GET")
         self.add_action("/safe/quota", GetQuotaAction(), "GET")
 
