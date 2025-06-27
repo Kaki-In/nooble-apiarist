@@ -12,11 +12,11 @@ class NoobleEndpointAction(_apiarist.ServerEndpointAction[NoobleEndpointConfigur
     def get_client_token(self, request: _quart_wrappers.Request) -> str | None:
         return request.cookies.get("conn-token", None)
     
-    def set_client_token(self, response: _quart_wrappers.Response, token: str | None) -> None:
+    def set_client_token(self, response: _quart_wrappers.Response, token: str | None, configuration: NoobleEndpointConfiguration) -> None:
         if token is None:
             response.delete_cookie("conn-token")
         else:
-            response.set_cookie("conn-token", token)
+            response.set_cookie("conn-token", token, domain=configuration.get_configuration().get_cookies_domain())
     
     async def get_account(self, request: _quart_wrappers.Request, configuration: NoobleEndpointConfiguration) -> _nooble_database.NoobleAccount | None:
         token = self.get_client_token(request)

@@ -11,6 +11,7 @@ class NoobleEndpointSettings(NoobleSettingsFile[EndpointConfigurationObject]):
             "binding": {
                 "host": "0.0.0.0",
                 "host_url": "http://localhost:8622",
+                "cookies_domain": None,
                 "port": 8622,
                 "cert_file": None,
                 "key_file": None,
