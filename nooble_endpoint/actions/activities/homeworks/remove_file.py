@@ -67,6 +67,8 @@ class DeleteHomeworkFileActivityAction(NoobleEndpointActivityAction):
 
                 break
         
+        await account.get_safe().decrease(110)
+
         await self.overwrite_savefile(_json.dumps(file_data).encode(), configuration, request)
 
         return await self.make_response(None, configuration)

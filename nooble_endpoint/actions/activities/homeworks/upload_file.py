@@ -99,6 +99,8 @@ class UploadHomeworkFileActivityAction(NoobleEndpointActivityAction):
             }
         )
 
+        await account.get_safe().increase(100)
+
         await self.overwrite_savefile(_json.dumps(activity_data).encode(), configuration, request)
 
         return await self.make_response(new_file.get_id(), configuration)
