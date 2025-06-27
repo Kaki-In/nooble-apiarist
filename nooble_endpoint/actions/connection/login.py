@@ -72,6 +72,6 @@ class LoginAction(NoobleEndpointAction):
             "last_name": (await account.ensure_object())["profile"]["last_name"],
         }, configuration)
 
-        self.set_client_token(response, configuration.get_registrations().add_registration(account))
+        self.set_client_token(response, configuration.get_registrations().add_registration(account), configuration)
         
         return response
