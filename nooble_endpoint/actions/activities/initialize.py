@@ -91,7 +91,7 @@ class InitializeActivityAction(NoobleEndpointAction):
         return await self.make_response({
             "new_file": str(data["_id"]),
             "css": activity.get_css(configuration.get_configuration()),
-            "javascript": activity.get_javascript(file_bytes, configuration.get_database(), account, configuration.get_configuration()),
-            "editable_javascript": activity.get_editable_javascript(file_bytes, configuration.get_database(), account, configuration.get_configuration())
+            "javascript": await activity.get_javascript(file_bytes, configuration.get_database(), account, configuration.get_configuration()),
+            "editable_javascript": await activity.get_editable_javascript(file_bytes, configuration.get_database(), account, configuration.get_configuration())
         }, configuration)
 
