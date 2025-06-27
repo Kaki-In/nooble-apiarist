@@ -45,6 +45,8 @@ class DeleteFileAction(NoobleEndpointAction):
         if file_type == _nooble_database_file_types.FileType.DECORATION_BANNER:
             decoration = await configuration.get_database().get_decorations().get_decoration_from_image(file.get_id())
 
+            print(decoration)
+
             if decoration is not None:
                 return False
             

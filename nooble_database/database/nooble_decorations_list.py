@@ -31,7 +31,7 @@ class NoobleDecorationsList(NoobleCollection[DecorationObject]):
     
     async def get_decoration_from_image(self, image_id: str) -> NoobleDecoration | None:
         result = await self.find_one({
-            "image": _bson.ObjectId(image_id)
+            "image": image_id
         })
 
         if result is None:
