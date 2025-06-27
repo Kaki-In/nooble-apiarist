@@ -19,14 +19,20 @@ import apiarist_server_endpoint as _apiarist
     "l'utiliser est un administrateur ou un professeur"
 )
 @_apiarist.NoobleEndpointDecorations.returns(
-    new_file = "l'identifiant du nouveau fichier d'activité"
+    new_file = "l'identifiant du nouveau fichier d'activité",
+    css = "le fichier css de l'activité",
+    javascript = "le fichier javascript en mode lecture de l'activité",
+    editable_javascript = "le fichier javascript en mode écriture de l'áctivité"
 )
 @_apiarist.NoobleEndpointDecorations.example(
     {
         "activity_name": "homework"
     },
     {
-        "new_file": "3bd2a7c8bd3"
+        "new_file": "3bd2a7c8bd3",
+        "css": "p{color:red}",
+        "javascript": "...",
+        "editable_javascript": "..."
     }
 )
 class InitializeActivityAction(NoobleEndpointAction):
@@ -83,6 +89,9 @@ class InitializeActivityAction(NoobleEndpointAction):
         data = await created_file.ensure_object()
 
         return await self.make_response({
-            "new_file": str(data["_id"])
+            "new_file": str(data["_id"]),
+            "css": activity.get_css(configuration.get_configuration()),
+            "javascript": activity.get_javascript(file_bytes, configuration.get_database(), account, configuration.get_configuration()),
+            "editable_javascript": activity.get_editable_javascript(file_bytes, configuration.get_database(), account, configuration.get_configuration())
         }, configuration)
 
