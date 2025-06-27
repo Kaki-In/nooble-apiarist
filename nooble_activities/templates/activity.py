@@ -20,6 +20,9 @@ class NoobleActivity():
     def get_download_url(self, file_id: str, configuration: _nooble_conf_files.NoobleBindingSettings) -> str:
         return configuration.get_host_url() + f"/resources/download?id={file_id}&type=section%20file"
     
+    def get_profile_image_url(self, file_id: str, configuration: _nooble_conf_files.NoobleBindingSettings) -> str:
+        return configuration.get_host_url() + f"/resources/download?id={file_id}&type=profile%20icon"
+    
     async def get_javascript(self, file: bytes, database: _nooble_database.NoobleDatabase, account: _nooble_database.NoobleAccount, configuration: _nooble_conf_files.NoobleBindingSettings) -> str:
         raise NotImplementedError("not implemented for " + repr(self))
         return """

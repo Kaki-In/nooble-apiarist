@@ -67,6 +67,7 @@ class NoobleEndpoint(_server_endpoint.ServerEndpoint[NoobleEndpointConfiguration
         self.add_action("/activities/init", InitializeActivityAction(), "POST")
 
         self.add_activity_resources(NoobleHomeworkActivityPack())
+        self.add_activity_resources(NoobleMessengerActivityPack())
     
     def add_activity_resources(self, resource: NoobleActivityActionsPack) -> None:
         for action_name in resource.get_actions():
