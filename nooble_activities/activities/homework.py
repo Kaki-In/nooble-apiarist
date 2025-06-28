@@ -337,7 +337,11 @@ class Activity {
     }
 
     refreshStudentView(div) {
-        div.innerHTML = '';
+        for (let child of div.children)
+        {
+            if (child.tagName.toLowerCase() !== 'STYLE')
+            div.removeChild(child);
+        }
         
         this.onRenderStudent(div);
     }
