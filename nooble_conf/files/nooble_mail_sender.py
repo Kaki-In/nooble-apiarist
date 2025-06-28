@@ -8,9 +8,9 @@ class NoobleMailSenderSettings(NoobleSettingsFile[MailSenderConfigurationObject]
     def __init__(self, path: str) -> None:
         super().__init__(path, {
             "identity": {
-                "address": "no-reply@nooble.flopcreation.fr",
+                "address": "no-reply@nooble-angular.flopcreation.fr",
                 "name": "Angular Nooble",
-                "website": "https://api.nooble-angular.flopcreation.fr"
+                "website": "https://nooble-angular.flopcreation.fr"
             },
             "smtp": {
                 "smtp_host": "gmail.com",
