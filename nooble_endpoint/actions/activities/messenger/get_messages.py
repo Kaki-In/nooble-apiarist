@@ -42,7 +42,7 @@ class GetMessagesActivityAction(NoobleEndpointActivityAction):
 
         result = []
 
-        for message in file_data:
+        for message in file_data['messages']:
             user = configuration.get_database().get_accounts().get_account(message['user_id'])
 
             if await user.exists():
