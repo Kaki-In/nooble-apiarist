@@ -339,7 +339,7 @@ class Activity {
     refreshStudentView(div) {
         for (let child of div.children)
         {
-            if (child.tagName.toLowerCase() !== 'STYLE')
+            if (child.tagName.toUpperCase() !== 'STYLE')
             div.removeChild(child);
         }
         
