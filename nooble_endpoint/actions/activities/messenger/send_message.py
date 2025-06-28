@@ -49,14 +49,10 @@ class SendMessageActivityAction(NoobleEndpointActivityAction):
 
         file_data = _json.loads(activity_files[1])
 
-        account_data = await account.ensure_object()
-
         message: str = (await self.get_request_args(request))["message"]
 
         file_data["messages"].append({
             "user_id": account.get_id(),
-            "user_name": account_data["profile"]["first_name"] + " " + account_data["profile"]["last_name"],
-            "user_avatar_id": account_data["profile"]["profile_image"],
             "timestamp": _datetime.datetime.now().timestamp(),
             "content": message
         })

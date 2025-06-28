@@ -40,7 +40,24 @@ class GetMessagesActivityAction(NoobleEndpointActivityAction):
 
         file_data = _json.loads(activity_files[1])
 
-        return await self.make_response(file_data, configuration)
+        result = []
+
+        for message in file_data:
+            user = configuration.get_database().get_accounts().get_account(message['user_id'])
+
+            if await user.exists():
+                user_info = await user.ensure_object()
+
+                sent_message = {
+                    "user_name": user_info['profile']['first_name'] + ' ' + user_info['profile']['last_name'],
+                    "user_avatar_id": user_info["profile"]['profile_image'],
+                }
+
+                sent_message.update(message)
+
+                result.append(sent_message)
+
+        return await self.make_response(result, configuration)
             
 
 
