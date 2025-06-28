@@ -53,11 +53,16 @@ class GetMessagesActivityAction(NoobleEndpointActivityAction):
                     "user_avatar_id": user_info["profile"]['profile_image'],
                 }
 
-                sent_message.update(message)
+            else:
+                sent_message = {
+                    "user_name": "Unknown user",
+                    "user_avatar_id": None,
+                }
 
-                result.append(sent_message)
-
-        return await self.make_response(result, configuration)
+            sent_message.update(message)
+            result.append(sent_message)
+        
+        return await self.make_response({"messages": result}, configuration)
             
 
 
