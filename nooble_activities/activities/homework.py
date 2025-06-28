@@ -252,7 +252,8 @@ class Activity {
         try {
             const response = await fetch(`""" + self.get_resource_url("upload", configuration) + """`, {
                 method: 'POST',
-                body: formData
+                body: formData,
+                credentials: 'include'
             });
             
             if (response.ok) {
@@ -279,7 +280,8 @@ class Activity {
                 method: 'POST',
                 body: JSON.stringify({
                     activity_id: this._activity_id
-                })
+                }),
+                credentials: 'include'
             });
             
             if (response.ok) {
